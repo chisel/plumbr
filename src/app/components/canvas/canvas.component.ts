@@ -17,16 +17,16 @@ export class CanvasComponent implements OnInit {
   public canvasHeightAddition: number = 0;
 
   @HostListener('document:keydown.space', ['$event'])
-  onMoveModeEnable(event: KeyboardEvent) {
+  onMoveModeEnable() {
 
-    this.canvas.canvasMoveMode = true;
+    this._canvas.canvasMoveMode = true;
 
   }
 
   @HostListener('document:keyup.space', ['$event'])
-  onMoveModeDisable(event: any) {
+  onMoveModeDisable() {
 
-    this.canvas.canvasMoveMode = false;
+    this._canvas.canvasMoveMode = false;
 
   }
 
@@ -38,12 +38,12 @@ export class CanvasComponent implements OnInit {
     // Ignore if left click button is not held
     if ( event.buttons !== 1 ) {
 
-      this.canvasMoving = false;
+      this._canvas.canvasMoving = false;
       return;
 
     }
 
-    this.canvasMoving = true;
+    this._canvas.canvasMoving = true;
     event.preventDefault();
 
     // Move the canvas
@@ -61,7 +61,7 @@ export class CanvasComponent implements OnInit {
 
     if ( ! this.canvasMoveMode || event.buttons !== 1 ) return;
 
-    this.canvasMoving = true;
+    this._canvas.canvasMoving = true;
     event.preventDefault();
 
   }
@@ -71,40 +71,39 @@ export class CanvasComponent implements OnInit {
 
     if ( ! this.canvasMoveMode || event.buttons !== 0 ) return;
 
-    this.canvasMoving = false;
+    this._canvas.canvasMoving = false;
     event.preventDefault();
 
   }
 
   constructor(
-    private canvas: CanvasService
+    private _canvas: CanvasService
   ) { }
 
   ngOnInit(): void {
 
     // Update canvas status
-    this.canvas.canvasEnabled$(enabled => this.canvasEnabled = enabled);
+    this._canvas.canvasEnabled$(enabled => this.canvasEnabled = enabled);
 
     // Update canvas move mode
-    this.canvas.canvasMoveMode$(enabled => {
+    this._canvas.canvasMoveMode$(enabled => this.canvasMoveMode = enabled);
 
-      this.canvasMoveMode = enabled;
-
-      if ( ! enabled ) this.canvasMoving = false;
-
-    });
+    // Update canvas moving mode
+    this._canvas.canvasMoving$(enabled => this.canvasMoving = enabled);
 
   }
 
   public onElementMovementStart() {
 
-    this.canvas.canvasEnabled = false;
+    this._canvas.canvasEnabled = false;
+    this._canvas.headerEnabled = false;
 
   }
 
   public onElementMovementEnd() {
 
-    this.canvas.canvasEnabled = true;
+    this._canvas.canvasEnabled = true;
+    this._canvas.headerEnabled = true;
 
   }
 

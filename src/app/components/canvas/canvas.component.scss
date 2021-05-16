@@ -13,6 +13,7 @@
   z-index: 0;
   min-width: 100%;
   min-height: 100%;
+  margin-top: rem(100px);
 
   /** GRID BACKGROUND **/
   // background: linear-gradient(to right, color('gray-medium') 1px, transparent 1px),
@@ -24,11 +25,8 @@
 
   background-size: rem(15px) rem(15px);
 
-  &.grab { cursor: grab; }
-  &.grabbing { cursor: grabbing; }
-
   & > * {
-    position: relative;
+    position: absolute;
   }
 
 }

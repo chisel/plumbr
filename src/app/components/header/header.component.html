@@ -1,4 +1,10 @@
-<header>
+<header
+[ngClass]="{
+  grab: canvasMoveMode && ! canvasMoving
+}"
+[ngStyle]="{
+  'pointer-events': ! headerEnabled ? 'none' : 'all'
+}">
   <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 374 130">
     <g class="accent-fill">
       <path d="M347 130H27V0h347l-27 130z"/>
