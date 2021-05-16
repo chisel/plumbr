@@ -96,14 +96,14 @@ export class CanvasComponent implements OnInit {
   public onElementMovementStart() {
 
     this._canvas.canvasEnabled = false;
-    this._canvas.headerEnabled = false;
+    this._canvas.overlaysEnabled = false;
 
   }
 
   public onElementMovementEnd() {
 
     this._canvas.canvasEnabled = true;
-    this._canvas.headerEnabled = true;
+    this._canvas.overlaysEnabled = true;
 
   }
 

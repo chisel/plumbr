@@ -9,7 +9,7 @@ export class CanvasService {
   private _canvasEnabled$ = new BehaviorSubject<boolean>(true);
   private _canvasMoveMode$ = new BehaviorSubject<boolean>(false);
   private _canvasMoving$ = new BehaviorSubject<boolean>(false);
-  private _headerEnabled$ = new BehaviorSubject<boolean>(true);
+  private _overlaysEnabled$ = new BehaviorSubject<boolean>(true);
 
   constructor() { }
 
@@ -84,7 +84,7 @@ export class CanvasService {
 
     this._canvasMoving$.next(newValue);
     // Also update header
-    this._headerEnabled$.next(! newValue);
+    this._overlaysEnabled$.next(! newValue);
 
   }
 
@@ -94,21 +94,21 @@ export class CanvasService {
 
   }
 
-  public get headerEnabled() {
+  public get overlaysEnabled() {
 
-    return this._headerEnabled$.value;
-
-  }
-
-  public set headerEnabled(newValue: boolean) {
-
-    this._headerEnabled$.next(newValue);
+    return this._overlaysEnabled$.value;
 
   }
 
-  public headerEnabled$(observer: (enabled: boolean) => void) {
+  public set overlaysEnabled(newValue: boolean) {
 
-    return this._headerEnabled$.subscribe(observer);
+    this._overlaysEnabled$.next(newValue);
+
+  }
+
+  public overlaysEnabled$(observer: (enabled: boolean) => void) {
+
+    return this._overlaysEnabled$.subscribe(observer);
 
   }
 

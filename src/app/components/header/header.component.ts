@@ -20,7 +20,7 @@ export class HeaderComponent implements OnInit {
 
     this._canvas.canvasMoveMode$(enabled => this.canvasMoveMode = enabled);
     this._canvas.canvasMoving$(enabled => this.canvasMoving = enabled);
-    this._canvas.headerEnabled$(enabled => this.headerEnabled = enabled);
+    this._canvas.overlaysEnabled$(enabled => this.headerEnabled = enabled);
 
   }
 
