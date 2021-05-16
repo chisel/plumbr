@@ -59,18 +59,20 @@ export class CanvasComponent implements OnInit {
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent) {
 
-    if ( ! this.canvasMoveMode && event.buttons !== 1 ) return;
+    if ( ! this.canvasMoveMode || event.buttons !== 1 ) return;
 
     this.canvasMoving = true;
+    event.preventDefault();
 
   }
 
   @HostListener('mouseup', ['$event'])
   onMouseUp(event: MouseEvent) {
 
-    if ( ! this.canvasMoveMode && event.buttons !== 1 ) return;
+    if ( ! this.canvasMoveMode || event.buttons !== 0 ) return;
 
     this.canvasMoving = false;
+    event.preventDefault();
 
   }
 
@@ -94,6 +96,16 @@ export class CanvasComponent implements OnInit {
 
   }
 
+  public onElementMovementStart() {
 
+    this.canvas.canvasEnabled = false;
+
+  }
+
+  public onElementMovementEnd() {
+
+    this.canvas.canvasEnabled = true;
+
+  }
 
 }

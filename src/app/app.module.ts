@@ -8,6 +8,7 @@ import { CanvasComponent } from './components/canvas/canvas.component';
 import { PipelineComponent } from './components/pipeline/pipeline.component';
 import { ModuleComponent } from './components/module/module.component';
 import { ModalComponent } from './components/modal/modal.component';
+import { MovableDirective } from './directives/movable.directive';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { ModalComponent } from './components/modal/modal.component';
     CanvasComponent,
     PipelineComponent,
     ModuleComponent,
-    ModalComponent
+    ModalComponent,
+    MovableDirective
   ],
   imports: [
     BrowserModule,

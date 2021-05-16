@@ -10,5 +10,10 @@ class="canvas"
   width: 'calc(100% + ' + canvasWidthAddition + 'px)',
   height: 'calc(100% + ' + canvasHeightAddition + 'px)'
 }">
+  <div style="width: 90px; height: 90px; background: red; left: 90px; top: 90px;"
+  [appMovable]="! canvasMoveMode"
+  (onmovementstart)="onElementMovementStart()"
+  (onmovementend)="onElementMovementEnd()">
 
+  </div>
 </div>

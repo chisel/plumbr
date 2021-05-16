@@ -26,4 +26,9 @@
 
   &.grab { cursor: grab; }
   &.grabbing { cursor: grabbing; }
+
+  & > * {
+    position: relative;
+  }
+
 }
