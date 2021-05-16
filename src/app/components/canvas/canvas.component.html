@@ -1,0 +1,14 @@
+<div
+class="canvas"
+[ngClass]="{
+  grab: canvasMoveMode && ! canvasMoving,
+  grabbing: canvasMoveMode && canvasMoving
+}"
+[ngStyle]="{
+  top: canvasTop + 'px',
+  left: canvasLeft + 'px',
+  width: 'calc(100% + ' + canvasWidthAddition + 'px)',
+  height: 'calc(100% + ' + canvasHeightAddition + 'px)'
+}">
+
+</div>

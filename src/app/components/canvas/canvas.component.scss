@@ -1,0 +1,29 @@
+@import '../../../util';
+
+:host {
+  display: block;
+  position: relative;
+  width: 100vw;
+  height: calc(100vh - #{rem(100px)});
+  overflow: hidden;
+}
+
+.canvas {
+  position: relative;
+  z-index: 0;
+  min-width: 100%;
+  min-height: 100%;
+
+  /** GRID BACKGROUND **/
+  // background: linear-gradient(to right, color('gray-medium') 1px, transparent 1px),
+  //             linear-gradient(to bottom, color('gray-medium') 1px, transparent 1px);
+
+  /** DOTTED BACKGROUND **/
+  background-image: radial-gradient(circle, color('gray-dark') 1px, transparent 1px);
+  background-position: left rem(7.5px) top rem(7.5px);
+
+  background-size: rem(15px) rem(15px);
+
+  &.grab { cursor: grab; }
+  &.grabbing { cursor: grabbing; }
+}

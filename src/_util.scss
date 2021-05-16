@@ -1,0 +1,9 @@
+@import 'colors';
+
+@function rem($pixels) {
+  @return #{$pixels / 16px}rem;
+}
+
+@function color($name) {
+  @return map-get($palette, $name);
+}

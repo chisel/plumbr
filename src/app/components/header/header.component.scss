@@ -1,0 +1,23 @@
+@import '../../../util';
+
+.accent-fill {
+  fill: color(accent);
+}
+
+.light-fill {
+  fill: color('gray-light');
+}
+
+svg.logo {
+  height: 100%;
+}
+
+header {
+  height: rem(100px);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-bottom: rem(1px) solid color('gray-medium');
+  box-shadow: 0 0 rem(15px) color('shadow-light');
+  background-color: color('gray-light');
+}

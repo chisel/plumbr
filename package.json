@@ -1,6 +1,8 @@
 {
   "name": "plumbr",
   "version": "0.0.0",
+  "description": "Data flow visualizer for Chisel",
+  "author": "Ramtin Soltani <ramtin@chiselpowered.com>",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
