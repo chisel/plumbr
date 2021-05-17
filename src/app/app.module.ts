@@ -9,6 +9,8 @@ import { PipelineComponent } from './components/pipeline/pipeline.component';
 import { ModuleComponent } from './components/module/module.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { MovableDirective } from './directives/movable.directive';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
 
 @NgModule({
   declarations: [
@@ -18,11 +20,13 @@ import { MovableDirective } from './directives/movable.directive';
     PipelineComponent,
     ModuleComponent,
     ModalComponent,
-    MovableDirective
+    MovableDirective,
+    ToolbarComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

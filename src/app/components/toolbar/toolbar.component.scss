@@ -1,0 +1,101 @@
+@import '../../../util';
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 100000;
+  border-radius: rem(5px);
+  box-shadow: 0 0 rem(15px) color('shadow-light');
+  background-color: color('gray-light-transparent');
+  backdrop-filter: blur(20px) saturate(1.5);
+  padding: rem(20px) rem(15px);
+  margin-top: rem(91px);
+  margin-left: rem(15px);
+}
+
+.toolbar-button {
+  display: flex;
+  min-height: rem(30px);
+  min-width: rem(30px);
+  font-size: rem(18px);
+  justify-content: center;
+  align-items: center;
+  color: color('gray-darker');
+  transition: color .15s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    color: color(accent);
+  }
+}
+
+.toolbar-separator {
+  width: calc(100% + #{rem(30px)});
+  height: rem(2px);
+  background-color: color('gray-medium');
+  margin-bottom: rem(20px);
+  margin-left: rem(-15px);
+}
+
+.toolbar-button:not(:last-child),
+.tooltip:not(:last-child) {
+  margin-bottom: rem(20px)
+}
+
+.tooltips {
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  position: absolute;
+  z-index: 100000;
+  padding: rem(20px) rem(15px);
+  margin-top: rem(91px);
+  margin-left: rem(75px);
+}
+
+.tooltip-text {
+  display: inline-block;
+  width: 0%;
+  overflow: hidden;
+  transition: width .15s ease-in-out;
+
+  span.tooltip-text-small {
+    font-family: 'Roboto Mono', monospace;
+    color: color(accent);
+    font-size: rem(14px);
+    margin-left: rem(5px);
+  }
+}
+
+.tooltip {
+  display: flex;
+  align-items: center;
+  height: rem(30px);
+  width: 0%;
+  max-width: max-content;
+  border-radius: rem(5px);
+  box-shadow: 0 0 rem(15px) color('shadow-light');
+  background-color: color('gray-light-transparent');
+  backdrop-filter: blur(20px) saturate(1.5);
+  padding: 0;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .15s ease-in-out, width .15s ease-in-out, padding .15s ease-in-out;
+
+  &.expanded {
+    width: 100%;
+    padding: 0 rem(10px);
+    opacity: 1;
+    transition-delay: 1s;
+    .tooltip-text {
+      width: 100%;
+      transition-delay: 1s;
+    }
+  }
+}
+
+.tooltip-separator {
+  width: 100%;
+  height: rem(22px);
+}

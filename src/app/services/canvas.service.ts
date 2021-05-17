@@ -57,6 +57,8 @@ export class CanvasService {
 
     // Turn canvasMoving off when value is false
     if ( ! newValue ) this._canvasMoving$.next(false);
+    // Update overlays
+    this._overlaysEnabled$.next(! newValue);
 
     console.log('canvasMoveMode', this._canvasMoveMode$.value);
 
@@ -83,8 +85,6 @@ export class CanvasService {
     if ( newValue === this._canvasMoving$.value ) return;
 
     this._canvasMoving$.next(newValue);
-    // Also update header
-    this._overlaysEnabled$.next(! newValue);
 
   }
 
