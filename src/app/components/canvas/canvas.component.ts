@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools } from '@plumbr/service/toolbar';
 import { StateService, PipelineData } from '@plumbr/service/state';
+import { ModalService } from '@plumbr/service/modal';
 
 @Component({
   selector: 'app-canvas',
@@ -84,7 +85,8 @@ export class CanvasComponent implements OnInit {
   constructor(
     private _canvas: CanvasService,
     private _toolbar: ToolbarService,
-    private _state: StateService
+    private _state: StateService,
+    private _modal: ModalService
   ) { }
 
   ngOnInit(): void {
@@ -103,6 +105,10 @@ export class CanvasComponent implements OnInit {
 
     // Update data
     this._state.data$(data => this.data = data);
+
+    // Listen to modal events to toggle canvas state
+    this._modal.onModalOpen$(() => this._canvas.canvasEnabled = false);
+    this._modal.onModalClosed$(() => this._canvas.canvasEnabled = true);
 
     // Register event handler for canvas position reset
     this._canvas.onCanvasReset$(() => {

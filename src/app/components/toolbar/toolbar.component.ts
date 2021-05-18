@@ -12,6 +12,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools } from '@plumbr/service/toolbar';
+import { ModalService, ModalType } from '@plumbr/service/modal';
 
 @Component({
   selector: 'app-toolbar',
@@ -38,6 +39,7 @@ export class ToolbarComponent implements OnInit {
   constructor(
     private _canvas: CanvasService,
     private _toolbar: ToolbarService,
+    private _modal: ModalService,
     private _renderer: Renderer2
   ) { }
 
@@ -47,12 +49,13 @@ export class ToolbarComponent implements OnInit {
     this._toolbar.selectedTool$(selected => this.selectedTool = selected);
 
     // Register global event handlers for shortcuts
-    this._renderer.listen('window', 'keyup.p', () => { this._toolbar.selectedTool = Tools.Pointer; });
-    this._renderer.listen('window', 'keyup.i', () => { this._toolbar.selectedTool = Tools.Insert; });
-    this._renderer.listen('window', 'keyup.m', () => { this._toolbar.selectedTool = Tools.Move; });
-    this._renderer.listen('window', 'keyup.l', () => { this._toolbar.selectedTool = Tools.Link; });
-    this._renderer.listen('window', 'keyup.e', () => { this._toolbar.selectedTool = Tools.Erase; });
-    this._renderer.listen('window', 'keyup.shift.r', () => { this._canvas.resetCanvasPosition(); });
+    this._renderer.listen('window', 'keyup.p', () => { this.onSelectTool(Tools.Pointer); });
+    this._renderer.listen('window', 'keyup.i', () => { this.onSelectTool(Tools.Insert); });
+    this._renderer.listen('window', 'keyup.m', () => { this.onSelectTool(Tools.Move); });
+    this._renderer.listen('window', 'keyup.l', () => { this.onSelectTool(Tools.Link); });
+    this._renderer.listen('window', 'keyup.e', () => { this.onSelectTool(Tools.Erase); });
+    this._renderer.listen('window', 'keyup.shift.r', () => { this.onResetCanvasPosition(); });
+    this._renderer.listen('window', 'keyup.h', () => { this.onHelp(); });
 
   }
 
@@ -70,13 +73,27 @@ export class ToolbarComponent implements OnInit {
 
   public onSelectTool(tool: Tools) {
 
+    if ( this._modal.currentModal ) return;
+
     this._toolbar.selectedTool = tool;
 
   }
 
   public onResetCanvasPosition() {
 
+    if ( this._modal.currentModal ) return;
+
     this._canvas.resetCanvasPosition();
+
+  }
+
+  public onHelp() {
+
+    if ( this._modal.currentModal ) return;
+
+    this._modal.openModal(ModalType.Help)
+    .then(() => console.log('Modal closed'))
+    .catch(console.error);
 
   }
 

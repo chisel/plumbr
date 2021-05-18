@@ -1,1 +1,17 @@
-<p>modal works!</p>
+<div class="backblur"
+[ngClass]="{ show: showModal }">
+  <div class="modal">
+    <fa-icon
+    (click)="onClose()"
+    class="close-button"
+    [fixedWidth]="true"
+    size="lg"
+    [icon]="faTimes">
+    </fa-icon>
+    <ng-template [ngIf]="currentModal === ModalType.Help">
+      <div class="modal-title">
+        <div class="modal-title-text">Help</div>
+      </div>
+    </ng-template>
+  </div>
+</div>
