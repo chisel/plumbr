@@ -7,6 +7,10 @@
     border-color: color('accent-green');
   }
 
+  &:hover.insert-mode .module-header {
+    background-color: color('accent-green');
+  }
+
 }
 
 .module {
@@ -28,6 +32,7 @@
   height: rem(50px);
   color: color('gray-lighter');
   font-weight: bold;
+  transition: background-color .25s ease-in-out;
 
   &.module-type-0 { background-color: color('accent-green'); }
   &.module-type-1 { background-color: color('accent'); }
