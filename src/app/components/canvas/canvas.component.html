@@ -16,6 +16,13 @@ class="canvas"
   <app-pipeline
   *ngFor="let pipeline of data; let index = index"
   [pipelineData]="pipeline"
+  (click)="onPipelineClick(index)"
+  [ngClass]="{
+    grab: canvasMoveMode && ! canvasMoving,
+    grabbing: canvasMoveMode && canvasMoving,
+    insert: selectedTool === Tools.Insert && ! canvasMoveMode,
+    'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode
+  }"
   [ngStyle]="{
     left: pipeline.position.left + 'px',
     top: pipeline.position.top + 'px'
@@ -23,6 +30,9 @@ class="canvas"
   [appMovable]="! canvasMoveMode && selectedTool === Tools.Move"
   (onmovementstart)="onElementMovementStart()"
   (onmovementend)="onElementMovementEnd($event, index)">
-
+    <app-module
+    *ngFor="let module of pipeline.modules"
+    [moduleData]="module">
+    </app-module>
   </app-pipeline>
 </div>

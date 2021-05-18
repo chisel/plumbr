@@ -77,7 +77,7 @@ export class MovableDirective implements OnInit, OnChanges {
 
     // Update CSS properties
     this._ref.nativeElement.style.cursor = this.movable ? 'grab' + (this._moving ? 'bing' : '') : 'default';
-    this._ref.nativeElement.style.pointerEvents = this.movable ? 'all' : 'none';
+    // this._ref.nativeElement.style.pointerEvents = this.movable ? 'all' : 'none';
 
   }
 

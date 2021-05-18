@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { ModuleData } from '@plumbr/service/state';
 
 @Component({
   selector: 'app-module',
@@ -6,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./module.component.scss']
 })
 export class ModuleComponent implements OnInit {
+
+  @Input('moduleData')
+  public data: ModuleData;
 
   constructor() { }
 

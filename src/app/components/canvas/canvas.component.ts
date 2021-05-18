@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools } from '@plumbr/service/toolbar';
-import { StateService, PipelineData } from '@plumbr/service/state';
+import { StateService, PipelineData, ModuleData } from '@plumbr/service/state';
 import { ModalService, ModalType } from '@plumbr/service/modal';
 
 @Component({
@@ -166,11 +166,27 @@ export class CanvasComponent implements OnInit {
           Math.floor(top / 15) * 15,
           data.description
         );
-        
+
       })
       .catch(console.error);
 
     }
+
+  }
+
+  public onPipelineClick(index: number) {
+
+    if ( this._toolbar.selectedTool !== Tools.Insert ) return;
+
+    this._modal.openModal(ModalType.NewModule)
+    .then((data: ModuleData) => {
+
+      if ( ! data ) return;
+
+      this._state.newModule(index, data.name, data.type, data.description);
+
+    })
+    .catch(console.error);
 
   }
 

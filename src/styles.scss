@@ -2,7 +2,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -17,9 +19,9 @@ html, body {
   flex-direction: column;
 }
 
-.grab { cursor: grab; }
-.grabbing { cursor: grabbing; }
-.insert { cursor: copy; }
+.grab { cursor: grab !important; }
+.grabbing { cursor: grabbing !important; }
+.insert { cursor: copy !important; }
 
 input[type="text"] {
   height: rem(30px);
@@ -62,8 +64,31 @@ textarea {
 
 }
 
+select {
+  appearance: none;
+  height: rem(30px);
+  padding: rem(5px);
+  outline: none;
+  border-radius: rem(3px);
+  border: rem(1px) solid color('gray-medium');
+  font-size: rem(14px);
+  color: color('gray-darker');
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+
+  &:focus {
+    border-color: color(accent);
+  }
+
+  &.ng-invalid {
+    color: color('gray-dark');
+  }
+
+}
+
 input[type="text"],
-textarea {
+textarea,
+select {
 
   &.ng-invalid.ng-touched {
     border-color: color('accent-red');

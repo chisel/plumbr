@@ -50,6 +50,24 @@ export class StateService {
 
   }
 
+  public newModule(
+    pipelineIndex: number,
+    name: string,
+    type: ModuleType,
+    description?: string
+  ) {
+
+    this._data[pipelineIndex].modules.push({
+      name,
+      type,
+      description,
+      fields: []
+    });
+
+    this._data$.next(cloneDeep(this._data));
+
+  }
+
 }
 
 export interface PipelineData {

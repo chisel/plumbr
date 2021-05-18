@@ -17,8 +17,25 @@
       <div class="modal-title">
         <div class="modal-title-text">New Pipeline</div>
       </div>
-      <form #newPipelineForm="ngForm" (ngSubmit)="onNewPipelineFormSubmit(newPipelineForm)">
+      <form #newPipelineForm="ngForm" (ngSubmit)="onFormSubmit(newPipelineForm)">
         <input name="name" type="text" placeholder="Name" required ngModel>
+        <textarea name="description" placeholder="Description" ngModel></textarea>
+        <div class="button-group">
+          <button class="button-secondary" type="button" (click)="onClose()">Cancel</button>
+          <button class="button-primary" type="submit">Create</button>
+        </div>
+      </form>
+    </ng-template>
+    <ng-template [ngIf]="currentModal === ModalType.NewModule">
+      <div class="modal-title">
+        <div class="modal-title-text">New Module</div>
+      </div>
+      <form #newModuleForm="ngForm" (ngSubmit)="onFormSubmit(newModuleForm)">
+        <input name="name" type="text" placeholder="Name" required ngModel>
+        <select name="type" required ngModel>
+          <option value="" disabled selected>Type</option>
+          <option *ngFor="let moduleTypeKey of ModuleTypeKeys; let index = index" [value]="moduleTypeKey">{{ ModuleTypeValues[index] }}</option>
+        </select>
         <textarea name="description" placeholder="Description" ngModel></textarea>
         <div class="button-group">
           <button class="button-secondary" type="button" (click)="onClose()">Cancel</button>
