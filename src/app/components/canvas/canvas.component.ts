@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CanvasService } from '@plumbr/service/canvas';
+import { ToolbarService, Tools } from '@plumbr/service/toolbar';
 
 @Component({
   selector: 'app-canvas',
@@ -15,6 +16,8 @@ export class CanvasComponent implements OnInit {
   public canvasTop: number = 0;
   public canvasWidthAddition: number = 0;
   public canvasHeightAddition: number = 0;
+  public selectedTool: Tools;
+  public Tools = Tools;
 
   @HostListener('document:keydown.space', ['$event'])
   onMoveModeEnable() {
@@ -77,7 +80,8 @@ export class CanvasComponent implements OnInit {
   }
 
   constructor(
-    private _canvas: CanvasService
+    private _canvas: CanvasService,
+    private _toolbar: ToolbarService
   ) { }
 
   ngOnInit(): void {
@@ -90,6 +94,21 @@ export class CanvasComponent implements OnInit {
 
     // Update canvas moving mode
     this._canvas.canvasMoving$(enabled => this.canvasMoving = enabled);
+
+    // Update selected tool
+    this._toolbar.selectedTool$(selected => this.selectedTool = selected);
+
+    // Register event handler for canvas position reset
+    this._canvas.onCanvasReset$(() => {
+
+      this.canvasTop = 0;
+      this.canvasLeft = 0;
+      this.canvasWidthAddition = 0;
+      this.canvasHeightAddition = 0;
+      this.canvasMoveMode = false;
+      this.canvasMoving = false;
+
+    });
 
   }
 

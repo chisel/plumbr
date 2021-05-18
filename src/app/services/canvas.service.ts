@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,7 @@ export class CanvasService {
   private _canvasMoveMode$ = new BehaviorSubject<boolean>(false);
   private _canvasMoving$ = new BehaviorSubject<boolean>(false);
   private _overlaysEnabled$ = new BehaviorSubject<boolean>(true);
+  private _onCanvasReset$ = new Subject<void>();
 
   constructor() { }
 
@@ -109,6 +110,30 @@ export class CanvasService {
   public overlaysEnabled$(observer: (enabled: boolean) => void) {
 
     return this._overlaysEnabled$.subscribe(observer);
+
+  }
+
+  public onCanvasReset$(observer: () => void) {
+
+    return this._onCanvasReset$.subscribe(observer);
+
+  }
+
+  public resetCanvasPosition() {
+
+    this._canvasEnabled$.next(false);
+    this._onCanvasReset$.next();
+
+    const canvas = document.getElementById('canvas');
+
+    canvas.classList.add('smooth');
+
+    setTimeout(() => {
+
+      canvas.classList.remove('smooth');
+      this._canvasEnabled$.next(true);
+
+    }, 250);
 
   }
 

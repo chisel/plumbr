@@ -2,31 +2,69 @@
 [ngStyle]="{
   'pointer-events': ! toolbarEnabled ? 'none' : 'all'
 }">
-  <div class="toolbar-button" (mouseenter)="onMouseEnter(t1)" (mouseleave)="onMouseLeave(t1)">
+  <div class="toolbar-button"
+  [ngClass]="{ selected: selectedTool === Tools.Pointer }"
+  (click)="onSelectTool(Tools.Pointer)"
+  (mouseenter)="onMouseEnter(t0)"
+  (mouseleave)="onMouseLeave(t0)">
+    <fa-icon [fixedWidth]="true" size="lg" [icon]="faMousePointer"></fa-icon>
+  </div>
+  <div class="toolbar-button"
+  [ngClass]="{ selected: selectedTool === Tools.Insert }"
+  (click)="onSelectTool(Tools.Insert)"
+  (mouseenter)="onMouseEnter(t1)"
+  (mouseleave)="onMouseLeave(t1)">
     <fa-icon [fixedWidth]="true" size="lg" [icon]="faPlus"></fa-icon>
   </div>
-  <div class="toolbar-button" (mouseenter)="onMouseEnter(t2)" (mouseleave)="onMouseLeave(t2)">
+  <div class="toolbar-button"
+  [ngClass]="{ selected: selectedTool === Tools.Move }"
+  (click)="onSelectTool(Tools.Move)"
+  (mouseenter)="onMouseEnter(t2)"
+  (mouseleave)="onMouseLeave(t2)">
     <fa-icon [fixedWidth]="true" size="lg" [icon]="faArrowsAlt"></fa-icon>
   </div>
-  <div class="toolbar-button" (mouseenter)="onMouseEnter(t3)" (mouseleave)="onMouseLeave(t3)">
+  <div class="toolbar-button"
+  [ngClass]="{ selected: selectedTool === Tools.Link }"
+  (click)="onSelectTool(Tools.Link)"
+  (mouseenter)="onMouseEnter(t3)"
+  (mouseleave)="onMouseLeave(t3)">
     <fa-icon [fixedWidth]="true" size="lg" [icon]="faLink"></fa-icon>
   </div>
-  <div class="toolbar-button" (mouseenter)="onMouseEnter(t4)" (mouseleave)="onMouseLeave(t4)">
+  <div class="toolbar-button"
+  [ngClass]="{ selected: selectedTool === Tools.Erase }"
+  (click)="onSelectTool(Tools.Erase)"
+  (mouseenter)="onMouseEnter(t4)"
+  (mouseleave)="onMouseLeave(t4)">
     <fa-icon [fixedWidth]="true" size="lg" [icon]="faEraser"></fa-icon>
   </div>
   <div class="toolbar-separator"></div>
-  <div class="toolbar-button" (mouseenter)="onMouseEnter(t5)" (mouseleave)="onMouseLeave(t5)">
+  <div class="toolbar-button"
+  (click)="onResetCanvasPosition()"
+  (mouseenter)="onMouseEnter(t8)"
+  (mouseleave)="onMouseLeave(t8)">
+    <fa-icon [fixedWidth]="true" size="lg" [icon]="faCrosshairs"></fa-icon>
+  </div>
+  <div class="toolbar-button"
+  (mouseenter)="onMouseEnter(t5)"
+  (mouseleave)="onMouseLeave(t5)">
     <fa-icon [fixedWidth]="true" size="lg" [icon]="faFileDownload"></fa-icon>
   </div>
-  <div class="toolbar-button" (mouseenter)="onMouseEnter(t6)" (mouseleave)="onMouseLeave(t6)">
+  <div class="toolbar-button"
+  (mouseenter)="onMouseEnter(t6)"
+  (mouseleave)="onMouseLeave(t6)">
     <fa-icon [fixedWidth]="true" size="lg" [icon]="faFileUpload"></fa-icon>
   </div>
   <div class="toolbar-separator"></div>
-  <div class="toolbar-button" (mouseenter)="onMouseEnter(t7)" (mouseleave)="onMouseLeave(t7)">
+  <div class="toolbar-button"
+  (mouseenter)="onMouseEnter(t7)"
+  (mouseleave)="onMouseLeave(t7)">
     <fa-icon [fixedWidth]="true" size="lg" [icon]="faQuestion"></fa-icon>
   </div>
 </div>
 <div class="tooltips">
+  <div #t0 class="tooltip">
+    <div class="tooltip-text">Pointer tool <span class="tooltip-text-small">p</span></div>
+  </div>
   <div #t1 class="tooltip">
     <div class="tooltip-text">Insert tool <span class="tooltip-text-small">i</span></div>
   </div>
@@ -40,6 +78,9 @@
     <div class="tooltip-text">Erase tool <span class="tooltip-text-small">e</span></div>
   </div>
   <div class="tooltip-separator"></div>
+  <div #t8 class="tooltip">
+    <div class="tooltip-text">Reset Canvas Position <span class="tooltip-text-small">shift+r</span></div>
+  </div>
   <div #t5 class="tooltip">
     <div class="tooltip-text">Import <span class="tooltip-text-small">shift+i</span></div>
   </div>

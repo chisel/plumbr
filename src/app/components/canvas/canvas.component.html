@@ -1,4 +1,5 @@
 <div
+id="canvas"
 class="canvas"
 [ngClass]="{
   grab: canvasMoveMode && ! canvasMoving,
@@ -11,12 +12,12 @@ class="canvas"
   height: 'calc(100% + ' + canvasHeightAddition + 'px)'
 }">
   <div style="width: 90px; height: 90px; background: red; left: 90px; top: 90px;"
-  [appMovable]="! canvasMoveMode"
+  [appMovable]="! canvasMoveMode && selectedTool === Tools.Move"
   (onmovementstart)="onElementMovementStart()"
   (onmovementend)="onElementMovementEnd()">
   </div>
   <div style="width: 90px; height: 90px; background: blue; left: 180px; top: 180px;"
-  [appMovable]="! canvasMoveMode"
+  [appMovable]="! canvasMoveMode && selectedTool === Tools.Move"
   (onmovementstart)="onElementMovementStart()"
   (onmovementend)="onElementMovementEnd()">
   </div>

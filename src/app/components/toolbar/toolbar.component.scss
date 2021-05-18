@@ -24,8 +24,13 @@
   color: color('gray-darker');
   transition: color .15s ease-in-out;
   cursor: pointer;
+  border-radius: rem(5px);
 
-  &:hover {
+  &.selected {
+    color: color(accent);
+  }
+
+  &:hover:not(.selected) {
     color: color(accent);
   }
 }

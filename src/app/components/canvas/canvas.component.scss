@@ -28,4 +28,8 @@
     position: absolute;
   }
 
+  &.smooth {
+    transition: left .25s ease-in-out, top .25s ease-in-out;
+  }
+
 }
