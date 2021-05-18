@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 export class ModalService {
 
   private _onModalOpen$ = new Subject<ModalType>();
-  private _onModalClosed$ = new Subject<void>();
+  private _onModalClosed$ = new Subject<any>();
   private _currentModal: ModalType = null;
 
   constructor() { }
@@ -18,20 +18,20 @@ export class ModalService {
 
   }
 
-  public async openModal(type: ModalType): Promise<void> {
+  public async openModal(type: ModalType): Promise<any> {
 
-    if ( this._currentModal ) throw new Error('A modal is already open!');
+    if ( this._currentModal !== null ) throw new Error('A modal is already open!');
 
     this._currentModal = type;
     this._onModalOpen$.next(type);
 
     // Wait for the modal to be closed
-    await new Promise<void>(resolve => {
+    return new Promise<any>(resolve => {
 
-      const sub = this._onModalClosed$.subscribe(() => {
+      const sub = this._onModalClosed$.subscribe((data: any) => {
 
         sub.unsubscribe();
-        resolve();
+        resolve(data);
 
       });
 
@@ -39,16 +39,16 @@ export class ModalService {
 
   }
 
-  public onModalClosed$(observer: () => void) {
+  public onModalClosed$(observer: (data?: any) => void) {
 
     return this._onModalClosed$.subscribe(observer);
 
   }
 
-  public closeModal() {
+  public closeModal(data?: any) {
 
     this._currentModal = null;
-    this._onModalClosed$.next();
+    this._onModalClosed$.next(data);
 
   }
 

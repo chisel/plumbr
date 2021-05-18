@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools } from '@plumbr/service/toolbar';
 import { StateService, PipelineData } from '@plumbr/service/state';
-import { ModalService } from '@plumbr/service/modal';
+import { ModalService, ModalType } from '@plumbr/service/modal';
 
 @Component({
   selector: 'app-canvas',
@@ -155,11 +155,20 @@ export class CanvasComponent implements OnInit {
       const left = event.clientX + Math.abs(this.canvasLeft) - 345;
       const top = event.clientY + Math.abs(this.canvasTop);
 
-      this._state.newPipeline(
-        'test',
-        Math.floor(left / 15) * 15,
-        Math.floor(top / 15) * 15
-      );
+      this._modal.openModal(ModalType.NewPipeline)
+      .then(data => {
+
+        if ( ! data ) return;
+
+        this._state.newPipeline(
+          data.name,
+          Math.floor(left / 15) * 15,
+          Math.floor(top / 15) * 15,
+          data.description
+        );
+        
+      })
+      .catch(console.error);
 
     }
 

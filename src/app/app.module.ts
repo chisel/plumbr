@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +27,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     FontAwesomeModule
   ],
   providers: [],

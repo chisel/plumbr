@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ModalService, ModalType } from '@plumbr/service/modal';
 
@@ -41,6 +42,14 @@ export class ModalComponent implements OnInit {
   public onClose() {
 
     this._modal.closeModal();
+
+  }
+
+  public onNewPipelineFormSubmit(form: NgForm) {
+
+    if ( form.invalid ) return;
+
+    this._modal.closeModal(form.value);
 
   }
 

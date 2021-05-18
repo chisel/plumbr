@@ -73,7 +73,7 @@ export class ToolbarComponent implements OnInit {
 
   public onSelectTool(tool: Tools) {
 
-    if ( this._modal.currentModal ) return;
+    if ( this._modal.currentModal !== null ) return;
 
     this._toolbar.selectedTool = tool;
 
@@ -81,7 +81,7 @@ export class ToolbarComponent implements OnInit {
 
   public onResetCanvasPosition() {
 
-    if ( this._modal.currentModal ) return;
+    if ( this._modal.currentModal !== null ) return;
 
     this._canvas.resetCanvasPosition();
 
@@ -89,10 +89,9 @@ export class ToolbarComponent implements OnInit {
 
   public onHelp() {
 
-    if ( this._modal.currentModal ) return;
+    if ( this._modal.currentModal !== null ) return;
 
     this._modal.openModal(ModalType.Help)
-    .then(() => console.log('Modal closed'))
     .catch(console.error);
 
   }

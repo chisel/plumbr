@@ -7,14 +7,14 @@
   width: rem(690px);
   padding: rem(30px);
   border-radius: rem(5px);
-  border: rem(3px) solid color('gray-dark');
-  background-color: color('gray-medium');
+  border: rem(3px) solid color('gray-medium');
+  background-color: color('gray-light');
 }
 
 .pipeline-name {
   padding: rem(5px) rem(10px);
   font-size: rem(20px);
-  color: color('gray-light');
+  color: color('gray-lighter');
   font-weight: bold;
   margin-top: rem(-50px);
   text-align: center;

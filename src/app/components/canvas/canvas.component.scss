@@ -15,11 +15,11 @@
   min-height: 100%;
 
   /** GRID BACKGROUND **/
-  // background: linear-gradient(to right, color('gray-medium') 1px, transparent 1px),
-  //             linear-gradient(to bottom, color('gray-medium') 1px, transparent 1px);
+  // background: linear-gradient(to right, color('gray-light') 1px, transparent 1px),
+  //             linear-gradient(to bottom, color('gray-light') 1px, transparent 1px);
 
   /** DOTTED BACKGROUND **/
-  background-image: radial-gradient(circle, color('gray-dark') 1px, transparent 1px);
+  background-image: radial-gradient(circle, color('gray-medium') 1px, transparent 1px);
   background-position: left rem(7.5px) top rem(7.5px);
 
   background-size: rem(15px) rem(15px);
