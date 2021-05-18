@@ -21,7 +21,7 @@ class="canvas"
     grab: canvasMoveMode && ! canvasMoving,
     grabbing: canvasMoveMode && canvasMoving,
     insert: selectedTool === Tools.Insert && ! canvasMoveMode,
-    'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode
+    'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode && ! moduleInsert
   }"
   [ngStyle]="{
     left: pipeline.position.left + 'px',
@@ -31,8 +31,17 @@ class="canvas"
   (onmovementstart)="onElementMovementStart()"
   (onmovementend)="onElementMovementEnd($event, index)">
     <app-module
-    *ngFor="let module of pipeline.modules"
-    [moduleData]="module">
+    *ngFor="let module of pipeline.modules; let mindex = index"
+    [moduleData]="module"
+    [ngClass]="{ 'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode }"
+    (mouseover)="onModuleMouseOver()"
+    (mouseleave)="onModuleMouseLeave()"
+    (click)="onModuleClick($event, index, mindex)">
+      <app-module-field
+      *ngFor="let field of module.fields"
+      [moduleFieldData]="field"
+      [ngClass]="{ 'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode }">
+      </app-module-field>
     </app-module>
   </app-pipeline>
 </div>

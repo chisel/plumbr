@@ -43,5 +43,30 @@
         </div>
       </form>
     </ng-template>
+    <ng-template [ngIf]="currentModal === ModalType.NewModuleField">
+      <div class="modal-title">
+        <div class="modal-title-text">New Field</div>
+      </div>
+      <form #newModuleFieldForm="ngForm" (ngSubmit)="onFormSubmit(newModuleFieldForm)">
+        <select name="operation" required ngModel>
+          <option value="" disabled selected>Operation</option>
+          <option *ngFor="let moduleFieldOperationTypeKey of ModuleFieldOperationTypeKeys; let index = index" [value]="moduleFieldOperationTypeKey">{{ ModuleFieldOperationTypeValues[index] }}</option>
+        </select>
+        <input name="target" type="text" placeholder="Target" required ngModel>
+        <select name="type" required ngModel>
+          <option value="" disabled selected>Type</option>
+          <option *ngFor="let moduleFieldTypeKey of ModuleFieldTypeKeys; let index = index" [value]="moduleFieldTypeKey">{{ ModuleFieldTypeValues[index] }}</option>
+        </select>
+        <label>
+          <input name="conditional" type="checkbox" ngModel>
+          Conditional
+        </label>
+        <textarea name="description" placeholder="Description" ngModel></textarea>
+        <div class="button-group">
+          <button class="button-secondary" type="button" (click)="onClose()">Cancel</button>
+          <button class="button-primary" type="submit">Add</button>
+        </div>
+      </form>
+    </ng-template>
   </div>
 </div>

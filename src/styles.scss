@@ -87,11 +87,42 @@ select {
 }
 
 input[type="text"],
+input[type="checkbox"],
 textarea,
 select {
 
   &.ng-invalid.ng-touched {
     border-color: color('accent-red');
+  }
+
+}
+
+label {
+  height: rem(30px);
+  display: flex;
+  align-items: center;
+}
+
+input[type="checkbox"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: rem(10px);
+  appearance: none;
+  height: rem(16px);
+  width: rem(16px);
+  border-radius: rem(3px);
+  background-color: color('gray-lighter');
+  border: rem(1px) solid color('gray-medium');
+  cursor: pointer;
+
+  &:checked::after {
+    content: "";
+    display: block;
+    width: rem(10px);
+    height: rem(10px);
+    background-color: color(accent);
+    border-radius: rem(2px);
   }
 
 }
@@ -134,4 +165,9 @@ button {
 
   }
 
+}
+
+.field-target span.variable {
+  color: color('accent-pink');
+  font-weight: bold;
 }

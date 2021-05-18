@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ModalService, ModalType } from '@plumbr/service/modal';
-import { ModuleType } from '@plumbr/service/state';
+import { ModuleType, ModuleFieldOperationType, ModuleFieldType } from '@plumbr/service/state';
 
 @Component({
   selector: 'app-modal',
@@ -15,6 +15,10 @@ export class ModalComponent implements OnInit {
   public ModalType = ModalType;
   public ModuleTypeValues = Object.values(ModuleType).slice(0, Object.values(ModuleType).length / 2);
   public ModuleTypeKeys = Object.keys(ModuleType).slice(0, Object.keys(ModuleType).length / 2);
+  public ModuleFieldTypeValues = Object.values(ModuleFieldType).slice(0, Object.values(ModuleFieldType).length / 2);
+  public ModuleFieldTypeKeys = Object.keys(ModuleFieldType).slice(0, Object.keys(ModuleFieldType).length / 2);
+  public ModuleFieldOperationTypeValues = Object.values(ModuleFieldOperationType).slice(0, Object.values(ModuleFieldOperationType).length / 2);
+  public ModuleFieldOperationTypeKeys = Object.keys(ModuleFieldOperationType).slice(0, Object.keys(ModuleFieldOperationType).length / 2);
   public currentModal: ModalType = null;
   public showModal: boolean = false;
 
@@ -52,9 +56,18 @@ export class ModalComponent implements OnInit {
 
     if ( form.invalid ) return;
 
-    // Convert select value to number
-    if ( this.currentModal === ModalType.NewModule )
+    // Cast values to correct type
+    if ( this.currentModal === ModalType.NewModule ) {
+
       form.value.type = parseInt(form.value.type);
+
+    }
+    else if ( this.currentModal === ModalType.NewModuleField ) {
+
+      form.value.operation = parseInt(form.value.operation);
+      form.value.type = parseInt(form.value.type);
+
+    }
 
     this._modal.closeModal(form.value);
 

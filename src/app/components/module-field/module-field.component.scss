@@ -1,0 +1,59 @@
+@import '../../../util';
+
+:host {
+  width: 100%;
+  display: flex;
+  background-color: color('gray-lighter');
+
+  &:nth-child(odd) {
+    background-color: color('gray-light');
+  }
+
+}
+
+.module-field {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: rem(7px) rem(12px);
+  flex-wrap: nowrap;
+  border: rem(3px) solid transparent;
+  transition: border-color .25s ease-in-out;
+
+  .field-operation {
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-right: rem(10px);
+
+    &.field-operation-type-0 { color: color('accent-green'); }
+    &.field-operation-type-1 { color: color(accent); }
+    &.field-operation-type-2 { color: color('accent-purple'); }
+    &.field-operation-type-3 { color: color('accent-red'); }
+    &.field-operation-type-4 { color: color('accent-orange'); }
+
+  }
+
+  .field-type {
+    font-family: 'Roboto Mono', monospace;
+    font-size: rem(14px);
+    padding: rem(3px) rem(8px);
+    border-radius: rem(3px);
+    background-color: color('gray-medium');
+    margin-right: rem(10px);
+  }
+
+  .field-target {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+  }
+
+  fa-icon {
+    font-size: rem(14px);
+    color: color('accent-orange');
+    margin-left: rem(10px);
+  }
+
+}

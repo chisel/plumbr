@@ -12,6 +12,7 @@ import { ModalComponent } from './components/modal/modal.component';
 import { MovableDirective } from './directives/movable.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { ModuleFieldComponent } from './components/module-field/module-field.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
     ModuleComponent,
     ModalComponent,
     MovableDirective,
-    ToolbarComponent
+    ToolbarComponent,
+    ModuleFieldComponent
   ],
   imports: [
     BrowserModule,

@@ -2,6 +2,11 @@
 
 :host {
   width: 100%;
+
+  &:hover.insert-mode .module {
+    border-color: color('accent-green');
+  }
+
 }
 
 .module {
@@ -9,9 +14,10 @@
   display: flex;
   flex-direction: column;
   border-radius: rem(5px);
-  box-shadow: 0 rem(3px) rem(6px) color(shadow);
   overflow: hidden;
   margin-top: rem(20px);
+  border: rem(3px) solid color('gray-medium');
+  transition: border-color .25s ease-in-out;
 }
 
 .module-header {

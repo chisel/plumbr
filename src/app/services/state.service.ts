@@ -68,6 +68,28 @@ export class StateService {
 
   }
 
+  public newField(
+    pipelineIndex: number,
+    moduleIndex: number,
+    operation: ModuleFieldOperationType,
+    target: string,
+    type: ModuleFieldType,
+    conditional: boolean,
+    description?: string
+  ) {
+
+    this._data[pipelineIndex].modules[moduleIndex].fields.push({
+      operation,
+      target,
+      type,
+      conditional,
+      description
+    });
+
+    this._data$.next(cloneDeep(this._data));
+
+  }
+
 }
 
 export interface PipelineData {
@@ -105,7 +127,7 @@ export interface ModuleFieldData {
   target: string;
   type: ModuleFieldType,
   operation: ModuleFieldOperationType;
-  optional: boolean;
+  conditional: boolean;
   description?: string;
 
 }
@@ -116,7 +138,7 @@ export enum ModuleFieldType {
   Dataset,
   File,
   Report,
-  REST_API,
+  'REST API',
   Variable
 
 }

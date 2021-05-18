@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools } from '@plumbr/service/toolbar';
-import { StateService, PipelineData, ModuleData } from '@plumbr/service/state';
+import { StateService, PipelineData, ModuleData, ModuleFieldData } from '@plumbr/service/state';
 import { ModalService, ModalType } from '@plumbr/service/modal';
 
 @Component({
@@ -21,6 +21,7 @@ export class CanvasComponent implements OnInit {
   public selectedTool: Tools;
   public Tools = Tools;
   public data: PipelineData[] = [];
+  public moduleInsert: boolean = false;
 
   @HostListener('document:keydown.space', ['$event'])
   onMoveModeEnable() {
@@ -187,6 +188,45 @@ export class CanvasComponent implements OnInit {
 
     })
     .catch(console.error);
+
+  }
+
+  public onModuleClick(event: MouseEvent, index: number, mindex: number) {
+
+    if ( this._toolbar.selectedTool !== Tools.Insert ) return;
+
+    event.stopImmediatePropagation();
+
+    this._modal.openModal(ModalType.NewModuleField)
+    .then((data: ModuleFieldData) => {
+
+      if ( ! data ) return;
+
+      this._state.newField(
+        index,
+        mindex,
+        data.operation,
+        data.target,
+        data.type,
+        data.conditional,
+        data.description
+      );
+
+    })
+    .catch(console.error);
+
+  }
+
+  public onModuleMouseOver() {
+
+    if ( this.selectedTool === Tools.Insert && ! this.canvasMoveMode )
+      this.moduleInsert = true;
+
+  }
+
+  public onModuleMouseLeave() {
+
+    this.moduleInsert = false;
 
   }
 
