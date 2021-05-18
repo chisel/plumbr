@@ -13,6 +13,7 @@ import {
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools } from '@plumbr/service/toolbar';
 import { ModalService, ModalType } from '@plumbr/service/modal';
+import { StateService } from '@plumbr/service/state';
 
 @Component({
   selector: 'app-toolbar',
@@ -40,6 +41,7 @@ export class ToolbarComponent implements OnInit {
     private _canvas: CanvasService,
     private _toolbar: ToolbarService,
     private _modal: ModalService,
+    private _state: StateService,
     private _renderer: Renderer2
   ) { }
 
@@ -56,6 +58,7 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.e', () => { this.onSelectTool(Tools.Erase); });
     this._renderer.listen('window', 'keyup.shift.r', () => { this.onResetCanvasPosition(); });
     this._renderer.listen('window', 'keyup.h', () => { this.onHelp(); });
+    this._renderer.listen('window', 'keyup.shift.z', () => { this.onUndo(); });
 
   }
 
@@ -93,6 +96,14 @@ export class ToolbarComponent implements OnInit {
 
     this._modal.openModal(ModalType.Help)
     .catch(console.error);
+
+  }
+
+  public onUndo() {
+
+    if ( this._modal.currentModal !== null ) return;
+
+    this._state.undo();
 
   }
 
