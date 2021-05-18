@@ -45,6 +45,12 @@
     <fa-icon [fixedWidth]="true" size="lg" [icon]="faCrosshairs"></fa-icon>
   </div>
   <div class="toolbar-button"
+  (click)="onUndo()"
+  (mouseenter)="onMouseEnter(t9)"
+  (mouseleave)="onMouseLeave(t9)">
+    <fa-icon [fixedWidth]="true" size="lg" [icon]="faUndoAlt"></fa-icon>
+  </div>
+  <div class="toolbar-button"
   (mouseenter)="onMouseEnter(t5)"
   (mouseleave)="onMouseLeave(t5)">
     <fa-icon [fixedWidth]="true" size="lg" [icon]="faFileDownload"></fa-icon>
@@ -81,6 +87,9 @@
   <div class="tooltip-separator"></div>
   <div #t8 class="tooltip">
     <div class="tooltip-text">Reset Canvas Position <span class="tooltip-text-small">shift+r</span></div>
+  </div>
+  <div #t9 class="tooltip">
+    <div class="tooltip-text">Undo <span class="tooltip-text-small">shift+z</span></div>
   </div>
   <div #t5 class="tooltip">
     <div class="tooltip-text">Import <span class="tooltip-text-small">shift+i</span></div>

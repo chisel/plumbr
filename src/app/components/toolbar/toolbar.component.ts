@@ -8,7 +8,8 @@ import {
   faFileDownload,
   faFileUpload,
   faQuestion,
-  faCrosshairs
+  faCrosshairs,
+  faUndoAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools } from '@plumbr/service/toolbar';
@@ -32,6 +33,7 @@ export class ToolbarComponent implements OnInit {
   public faFileUpload = faFileUpload;
   public faQuestion = faQuestion;
   public faCrosshairs = faCrosshairs;
+  public faUndoAlt = faUndoAlt;
 
   public toolbarEnabled: boolean;
   public selectedTool: Tools;

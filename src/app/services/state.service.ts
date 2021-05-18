@@ -13,6 +13,16 @@ export class StateService {
 
   constructor() { }
 
+  private _captureHistory() {
+
+    this._history.push(cloneDeep(this._data));
+
+    // Only keep the last 15 moves
+    if ( this._history.length > 15 )
+      this._history = this._history.slice(-15);
+
+  }
+
   public get data() {
 
     return cloneDeep(this._data);
@@ -32,7 +42,7 @@ export class StateService {
     description?: string
   ) {
 
-    this._history.push(cloneDeep(this._data));
+    this._captureHistory();
 
     this._data.push({
       name,
@@ -47,7 +57,7 @@ export class StateService {
 
   public updatePipelinePosition(index: number, left: number, top: number) {
 
-    this._history.push(cloneDeep(this._data));
+    this._captureHistory();
 
     this._data[index].position = { left, top };
 
@@ -62,7 +72,7 @@ export class StateService {
     description?: string
   ) {
 
-    this._history.push(cloneDeep(this._data));
+    this._captureHistory();
 
     this._data[pipelineIndex].modules.push({
       name,
@@ -85,7 +95,7 @@ export class StateService {
     description?: string
   ) {
 
-    this._history.push(cloneDeep(this._data));
+    this._captureHistory();
 
     this._data[pipelineIndex].modules[moduleIndex].fields.push({
       operation,
@@ -97,16 +107,6 @@ export class StateService {
 
     this._data$.next(cloneDeep(this._data));
 
-  }
-
-  public captureHistory() {
-
-    this._history.push(cloneDeep(this._data));
-
-    // Only keep the last 15 moves
-    if ( this._history.length > 15 )
-      this._history = this._history.slice(-15);
-    
   }
 
   public undo() {
