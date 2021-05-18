@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools } from '@plumbr/service/toolbar';
+import { StateService, PipelineData } from '@plumbr/service/state';
 
 @Component({
   selector: 'app-canvas',
@@ -18,6 +19,7 @@ export class CanvasComponent implements OnInit {
   public canvasHeightAddition: number = 0;
   public selectedTool: Tools;
   public Tools = Tools;
+  public data: PipelineData[] = [];
 
   @HostListener('document:keydown.space', ['$event'])
   onMoveModeEnable() {
@@ -81,7 +83,8 @@ export class CanvasComponent implements OnInit {
 
   constructor(
     private _canvas: CanvasService,
-    private _toolbar: ToolbarService
+    private _toolbar: ToolbarService,
+    private _state: StateService
   ) { }
 
   ngOnInit(): void {
@@ -97,6 +100,9 @@ export class CanvasComponent implements OnInit {
 
     // Update selected tool
     this._toolbar.selectedTool$(selected => this.selectedTool = selected);
+
+    // Update data
+    this._state.data$(data => this.data = data);
 
     // Register event handler for canvas position reset
     this._canvas.onCanvasReset$(() => {
@@ -119,10 +125,37 @@ export class CanvasComponent implements OnInit {
 
   }
 
-  public onElementMovementEnd() {
+  public onElementMovementEnd(element: HTMLElement, index: number) {
 
     this._canvas.canvasEnabled = true;
     this._canvas.overlaysEnabled = true;
+
+    // Update pipeline position
+    this._state.updatePipelinePosition(
+      index,
+      +element.style.left.substr(0, element.style.left.length - 2),
+      +element.style.top.substr(0, element.style.top.length - 2)
+    );
+
+  }
+
+  public onCanvasClick(event: MouseEvent) {
+
+    if ( ! this.canvasEnabled || this.canvasMoveMode ) return;
+
+    // Insert a new pipeline
+    if ( this.selectedTool === Tools.Insert ) {
+
+      const left = event.clientX + Math.abs(this.canvasLeft) - 345;
+      const top = event.clientY + Math.abs(this.canvasTop);
+
+      this._state.newPipeline(
+        'test',
+        Math.floor(left / 15) * 15,
+        Math.floor(top / 15) * 15
+      );
+
+    }
 
   }
 

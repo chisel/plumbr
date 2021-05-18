@@ -61,8 +61,6 @@ export class CanvasService {
     // Update overlays
     this._overlaysEnabled$.next(! newValue);
 
-    console.log('canvasMoveMode', this._canvasMoveMode$.value);
-
   }
 
   public canvasMoveMode$(observer: (enabled: boolean) => void) {

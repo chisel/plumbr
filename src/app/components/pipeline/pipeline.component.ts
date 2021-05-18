@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { StateService, PipelineData } from '@plumbr/service/state';
 
 @Component({
   selector: 'app-pipeline',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PipelineComponent implements OnInit {
 
-  constructor() { }
+  @Input('pipelineData')
+  public data: PipelineData;
 
-  ngOnInit(): void {
+  constructor(
+    private _state: StateService
+  ) { }
+
+  ngOnInit(): void { }
+
+  public onClick() {
+
+    
+
   }
 
 }

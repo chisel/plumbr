@@ -19,10 +19,10 @@ export class MovableDirective implements OnInit, OnChanges {
   public movable: boolean;
 
   @Output('onmovementstart')
-  public onMovementStart = new EventEmitter<void>();
+  public onMovementStart = new EventEmitter<HTMLElement>();
 
   @Output('onmovementend')
-  public onMovementEnd = new EventEmitter<void>();
+  public onMovementEnd = new EventEmitter<HTMLElement>();
 
   constructor(
     private _ref: ElementRef<HTMLElement>
@@ -97,7 +97,7 @@ export class MovableDirective implements OnInit, OnChanges {
 
     MovableDirective._currentlyMoving = this._ref;
 
-    this.onMovementStart.next();
+    this.onMovementStart.next(this._ref.nativeElement);
 
   }
 
@@ -120,7 +120,7 @@ export class MovableDirective implements OnInit, OnChanges {
 
     MovableDirective._currentlyMoving = null;
 
-    this.onMovementEnd.next();
+    this.onMovementEnd.next(this._ref.nativeElement);
 
   }
 

@@ -1,9 +1,11 @@
 <div
 id="canvas"
 class="canvas"
+(click)="onCanvasClick($event)"
 [ngClass]="{
   grab: canvasMoveMode && ! canvasMoving,
-  grabbing: canvasMoveMode && canvasMoving
+  grabbing: canvasMoveMode && canvasMoving,
+  insert: selectedTool === Tools.Insert && ! canvasMoveMode
 }"
 [ngStyle]="{
   top: canvasTop + 'px',
@@ -11,14 +13,16 @@ class="canvas"
   width: 'calc(100% + ' + canvasWidthAddition + 'px)',
   height: 'calc(100% + ' + canvasHeightAddition + 'px)'
 }">
-  <div style="width: 90px; height: 90px; background: red; left: 90px; top: 90px;"
+  <app-pipeline
+  *ngFor="let pipeline of data; let index = index"
+  [pipelineData]="pipeline"
+  [ngStyle]="{
+    left: pipeline.position.left + 'px',
+    top: pipeline.position.top + 'px'
+  }"
   [appMovable]="! canvasMoveMode && selectedTool === Tools.Move"
   (onmovementstart)="onElementMovementStart()"
-  (onmovementend)="onElementMovementEnd()">
-  </div>
-  <div style="width: 90px; height: 90px; background: blue; left: 180px; top: 180px;"
-  [appMovable]="! canvasMoveMode && selectedTool === Tools.Move"
-  (onmovementstart)="onElementMovementStart()"
-  (onmovementend)="onElementMovementEnd()">
-  </div>
+  (onmovementend)="onElementMovementEnd($event, index)">
+
+  </app-pipeline>
 </div>
