@@ -24,6 +24,7 @@
     text-transform: uppercase;
     font-weight: bold;
     margin-right: rem(10px);
+    min-width: rem(60px);
 
     &.field-operation-type-0 { color: color('accent-green'); }
     &.field-operation-type-1 { color: color(accent); }
@@ -40,6 +41,8 @@
     border-radius: rem(3px);
     background-color: color('gray-medium');
     margin-right: rem(10px);
+    min-width: rem(100px);
+    text-align: center;
   }
 
   .field-target {

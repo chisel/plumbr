@@ -1,17 +1,32 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash-es';
+import * as lz from 'lz-string';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StateService {
 
+  public static LOCALSTORAGE_KEY: string = 'plumbr-state';
+
   private _data: PipelineData[] = [];
   private _data$ = new BehaviorSubject<PipelineData[]>([]);
   private _history: PipelineData[][] = [];
 
-  constructor() { }
+  constructor() {
+
+    // Load data from localstorage
+    const stored = localStorage.getItem(StateService.LOCALSTORAGE_KEY);
+
+    if ( ! stored ) return;
+
+    this._data = JSON.parse(lz.decompress(stored));
+    this._data$.next(this._data);
+
+    console.log('State loaded from localstorage');
+
+  }
 
   private _captureHistory() {
 
@@ -20,6 +35,23 @@ export class StateService {
     // Only keep the last 15 moves
     if ( this._history.length > 15 )
       this._history = this._history.slice(-15);
+
+  }
+
+  private _updateData(newValue: PipelineData[], skipHistory?: boolean) {
+
+    // Add the current state to history
+    if ( ! skipHistory ) this._captureHistory();
+    // Set the data with the new value
+    this._data = newValue;
+    // Emit the data change to all subscribers
+    this._data$.next(cloneDeep(this._data));
+    // Saved the compressed version of the current state to localstorage
+    const uncompressed = JSON.stringify(this._data);
+    const compressed = lz.compress(uncompressed);
+    localStorage.setItem(StateService.LOCALSTORAGE_KEY, compressed);
+
+    console.log(`Saved state (original ${uncompressed.length} bytes | compressed ${compressed.length} bytes)`);
 
   }
 
@@ -42,26 +74,26 @@ export class StateService {
     description?: string
   ) {
 
-    this._captureHistory();
+    let newValue = this.data;
 
-    this._data.push({
+    newValue.push({
       name,
       description,
       modules: [],
       position: { left, top }
     });
 
-    this._data$.next(cloneDeep(this._data));
+    this._updateData(newValue);
 
   }
 
   public updatePipelinePosition(index: number, left: number, top: number) {
 
-    this._captureHistory();
+    let newValue = this.data;
 
-    this._data[index].position = { left, top };
+    newValue[index].position = { left, top };
 
-    this._data$.next(cloneDeep(this._data));
+    this._updateData(newValue);
 
   }
 
@@ -72,16 +104,16 @@ export class StateService {
     description?: string
   ) {
 
-    this._captureHistory();
+    let newValue = this.data;
 
-    this._data[pipelineIndex].modules.push({
+    newValue[pipelineIndex].modules.push({
       name,
       type,
       description,
       fields: []
     });
 
-    this._data$.next(cloneDeep(this._data));
+    this._updateData(newValue);
 
   }
 
@@ -95,9 +127,9 @@ export class StateService {
     description?: string
   ) {
 
-    this._captureHistory();
+    let newValue = this.data;
 
-    this._data[pipelineIndex].modules[moduleIndex].fields.push({
+    newValue[pipelineIndex].modules[moduleIndex].fields.push({
       operation,
       target,
       type,
@@ -105,15 +137,15 @@ export class StateService {
       description
     });
 
-    this._data$.next(cloneDeep(this._data));
+    this._updateData(newValue);
 
   }
 
   public undo() {
 
-    this._data = this._history.pop() || this._data;
+    let newValue = this._history.pop() || this.data;
 
-    this._data$.next(cloneDeep(this._data));
+    this._updateData(newValue, true);
 
   }
 
