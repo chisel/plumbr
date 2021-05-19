@@ -176,21 +176,34 @@ export class CanvasComponent implements OnInit {
 
   }
 
-  public onPipelineClick(index: number) {
+  public onPipelineClick(event: MouseEvent, index: number) {
 
     if ( this.canvasMoveMode ) return;
 
-    if ( this._toolbar.selectedTool !== Tools.Insert ) return;
+    if ( this._toolbar.selectedTool === Tools.Insert ) {
 
-    this._modal.openModal(ModalType.NewModule)
-    .then((data: ModuleData) => {
+      event.stopImmediatePropagation();
 
-      if ( ! data ) return;
+      this._modal.openModal(ModalType.NewModule)
+      .then((data: ModuleData) => {
 
-      this._state.newModule(index, data.name, data.type, data.description);
+        if ( ! data ) return;
 
-    })
-    .catch(console.error);
+        this._state.newModule(index, data.name, data.type, data.description);
+
+      })
+      .catch(console.error);
+
+    }
+    else if ( this._toolbar.selectedTool === Tools.Erase ) {
+
+      event.stopImmediatePropagation();
+
+      this._state.deletePipeline(index);
+      this.moduleHovered = false;
+      this.moduleFieldHovered = false;
+
+    }
 
   }
 
@@ -198,27 +211,52 @@ export class CanvasComponent implements OnInit {
 
     if ( this.canvasMoveMode ) return;
 
-    if ( this._toolbar.selectedTool !== Tools.Insert ) return;
+    if ( this._toolbar.selectedTool === Tools.Insert ) {
+
+      event.stopImmediatePropagation();
+
+      this._modal.openModal(ModalType.NewModuleField)
+      .then((data: ModuleFieldData) => {
+
+        if ( ! data ) return;
+
+        this._state.newField(
+          index,
+          mindex,
+          data.operation,
+          data.target,
+          data.type,
+          data.conditional,
+          data.description
+        );
+
+      })
+      .catch(console.error);
+
+    }
+    else if ( this._toolbar.selectedTool === Tools.Erase ) {
+
+      event.stopImmediatePropagation();
+
+      this._state.deleteModule(index, mindex);
+      this.moduleHovered = false;
+      this.moduleFieldHovered = false;
+
+    }
+
+  }
+
+  public onModuleFieldClick(event: MouseEvent, index: number, mindex: number, findex: number) {
+
+    if ( this.canvasMoveMode ) return;
+
+    if ( this._toolbar.selectedTool !== Tools.Erase ) return;
 
     event.stopImmediatePropagation();
 
-    this._modal.openModal(ModalType.NewModuleField)
-    .then((data: ModuleFieldData) => {
-
-      if ( ! data ) return;
-
-      this._state.newField(
-        index,
-        mindex,
-        data.operation,
-        data.target,
-        data.type,
-        data.conditional,
-        data.description
-      );
-
-    })
-    .catch(console.error);
+    this._state.deleteModuleField(index, mindex, findex);
+    this.moduleHovered = false;
+    this.moduleFieldHovered = false;
 
   }
 

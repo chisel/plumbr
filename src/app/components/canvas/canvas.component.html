@@ -16,7 +16,7 @@ class="canvas"
   <app-pipeline
   *ngFor="let pipeline of data; let index = index"
   [pipelineData]="pipeline"
-  (click)="onPipelineClick(index)"
+  (click)="onPipelineClick($event, index)"
   [ngClass]="{
     grab: canvasMoveMode && ! canvasMoving,
     grabbing: canvasMoveMode && canvasMoving,
@@ -42,8 +42,9 @@ class="canvas"
     (mouseleave)="onModuleMouseLeave()"
     (click)="onModuleClick($event, index, mindex)">
       <app-module-field
-      *ngFor="let field of module.fields"
+      *ngFor="let field of module.fields; let findex = index"
       [moduleFieldData]="field"
+      (click)="onModuleFieldClick($event, index, mindex, findex)"
       (mousemove)="onModuleFieldMouseHover()"
       (mouseleave)="onModuleFieldMouseLeave()"
       [ngClass]="{

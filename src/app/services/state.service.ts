@@ -141,7 +141,39 @@ export class StateService {
 
   }
 
+  public deletePipeline(index: number) {
+
+    let newValue = this.data;
+
+    newValue.splice(index, 1);
+
+    this._updateData(newValue);
+
+  }
+
+  public deleteModule(index: number, mindex: number) {
+
+    let newValue = this.data;
+
+    newValue[index].modules.splice(mindex, 1);
+
+    this._updateData(newValue);
+
+  }
+
+  public deleteModuleField(index: number, mindex: number, findex: number) {
+
+    let newValue = this.data;
+
+    newValue[index].modules[mindex].fields.splice(findex, 1);
+
+    this._updateData(newValue);
+
+  }
+
   public undo() {
+
+    if ( ! this._history.length ) return;
 
     let newValue = this._history.pop() || this.data;
 
