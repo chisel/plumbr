@@ -21,7 +21,8 @@ export class CanvasComponent implements OnInit {
   public selectedTool: Tools;
   public Tools = Tools;
   public data: PipelineData[] = [];
-  public moduleInsert: boolean = false;
+  public moduleHovered: boolean = false;
+  public moduleFieldHovered: boolean = false;
 
   @HostListener('document:keydown.space', ['$event'])
   onMoveModeEnable() {
@@ -177,6 +178,8 @@ export class CanvasComponent implements OnInit {
 
   public onPipelineClick(index: number) {
 
+    if ( this.canvasMoveMode ) return;
+
     if ( this._toolbar.selectedTool !== Tools.Insert ) return;
 
     this._modal.openModal(ModalType.NewModule)
@@ -192,6 +195,8 @@ export class CanvasComponent implements OnInit {
   }
 
   public onModuleClick(event: MouseEvent, index: number, mindex: number) {
+
+    if ( this.canvasMoveMode ) return;
 
     if ( this._toolbar.selectedTool !== Tools.Insert ) return;
 
@@ -217,16 +222,27 @@ export class CanvasComponent implements OnInit {
 
   }
 
-  public onModuleMouseOver() {
+  public onModuleMouseHover() {
 
-    if ( this.selectedTool === Tools.Insert && ! this.canvasMoveMode )
-      this.moduleInsert = true;
+    this.moduleHovered = true;
 
   }
 
   public onModuleMouseLeave() {
 
-    this.moduleInsert = false;
+    this.moduleHovered = false;
+
+  }
+
+  public onModuleFieldMouseHover() {
+
+    this.moduleFieldHovered = true;
+
+  }
+
+  public onModuleFieldMouseLeave() {
+
+    this.moduleFieldHovered = false;
 
   }
 

@@ -171,4 +171,9 @@ button {
 .field-target span.variable {
   color: color('accent-pink');
   font-weight: bold;
+  transition: color .25s ease-in-out;
+}
+
+app-module-field.erase-mode:hover .field-target span.variable {
+  color: color('gray-lighter');
 }

@@ -8,6 +8,14 @@
   }
 }
 
+:host:hover.erase-mode .pipeline {
+  border-color: color('accent-red');
+
+  .pipeline-name {
+    background-color: color('accent-red');
+  }
+}
+
 .pipeline {
   display: flex;
   flex-direction: column;

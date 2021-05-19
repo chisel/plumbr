@@ -9,6 +9,22 @@
     background-color: color('gray-light');
   }
 
+  &:hover.erase-mode .module-field {
+    background-color: color('accent-red');
+    color: color('gray-lighter');
+
+    .field-type {
+      background-color: transparent;
+      border-color: color('gray-lighter');
+    }
+
+    fa-icon,
+    .field-operation {
+      color: color('gray-lighter');
+    }
+
+  }
+
 }
 
 .module-field {
@@ -17,14 +33,14 @@
   align-items: center;
   padding: rem(7px) rem(12px);
   flex-wrap: nowrap;
-  border: rem(3px) solid transparent;
-  transition: border-color .25s ease-in-out;
+  transition: background-color .25s ease-in-out, color .25s ease-in-out;
 
   .field-operation {
     text-transform: uppercase;
     font-weight: bold;
     margin-right: rem(10px);
-    min-width: rem(60px);
+    min-width: rem(65px);
+    transition: color .25s ease-in-out;
 
     &.field-operation-type-0 { color: color('accent-green'); }
     &.field-operation-type-1,
@@ -46,8 +62,10 @@
     border-radius: rem(3px);
     background-color: color('gray-medium');
     margin-right: rem(10px);
-    min-width: rem(100px);
+    min-width: rem(105px);
     text-align: center;
+    border: rem(2px) solid transparent;
+    transition: border-color .25s ease-in-out, background-color .25s ease-in-out;
   }
 
   .field-target {
@@ -62,6 +80,7 @@
     font-size: rem(14px);
     color: color('accent-orange');
     margin-left: rem(10px);
+    transition: color .25s ease-in-out;
   }
 
 }

@@ -11,6 +11,14 @@
     background-color: color('accent-green');
   }
 
+  &:hover.erase-mode .module {
+    border-color: color('accent-red');
+  }
+
+  &:hover.erase-mode .module-header {
+    background-color: color('accent-red');
+  }
+
 }
 
 .module {

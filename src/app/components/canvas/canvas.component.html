@@ -21,7 +21,8 @@ class="canvas"
     grab: canvasMoveMode && ! canvasMoving,
     grabbing: canvasMoveMode && canvasMoving,
     insert: selectedTool === Tools.Insert && ! canvasMoveMode,
-    'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode && ! moduleInsert
+    'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode && ! moduleHovered,
+    'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && ! moduleHovered
   }"
   [ngStyle]="{
     left: pipeline.position.left + 'px',
@@ -33,14 +34,21 @@ class="canvas"
     <app-module
     *ngFor="let module of pipeline.modules; let mindex = index"
     [moduleData]="module"
-    [ngClass]="{ 'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode }"
-    (mouseover)="onModuleMouseOver()"
+    [ngClass]="{
+      'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode && moduleHovered,
+      'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered
+    }"
+    (mousemove)="onModuleMouseHover()"
     (mouseleave)="onModuleMouseLeave()"
     (click)="onModuleClick($event, index, mindex)">
       <app-module-field
       *ngFor="let field of module.fields"
       [moduleFieldData]="field"
-      [ngClass]="{ 'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode }">
+      (mousemove)="onModuleFieldMouseHover()"
+      (mouseleave)="onModuleFieldMouseLeave()"
+      [ngClass]="{
+        'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && moduleFieldHovered
+      }">
       </app-module-field>
     </app-module>
   </app-pipeline>
