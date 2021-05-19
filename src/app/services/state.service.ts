@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash-es';
 import { compress, decompress } from 'lz-string';
 import { saveAs as saveFile } from 'file-saver';
+import { ModalService, ModalType } from './modal.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,12 @@ export class StateService {
   private _data: PipelineData[] = [];
   private _data$ = new BehaviorSubject<PipelineData[]>([]);
   private _history: PipelineData[][] = [];
+  /** Flag for export only and not localstorage. */
+  private _unsavedChanges: boolean = false;
 
-  constructor() {
+  constructor(
+    private _modal: ModalService
+  ) {
 
     // Load data from localstorage
     const stored = localStorage.getItem(StateService.LOCALSTORAGE_KEY);
@@ -40,6 +45,8 @@ export class StateService {
   }
 
   private _updateData(newValue: PipelineData[], skipHistory?: boolean) {
+
+    this._unsavedChanges = true;
 
     // Add the current state to history
     if ( ! skipHistory ) this._captureHistory();
@@ -182,7 +189,19 @@ export class StateService {
 
   }
 
-  public import() {
+  public async import() {
+
+    // Check if there are unsaved changes
+    if ( this._unsavedChanges ) {
+
+      const confirmed: boolean = !! await this._modal.openModal(ModalType.Confirmation, {
+        title: 'Project Import',
+        message: 'All work done after the last export will be lost once another file is imported. Do you wish to proceed?'
+      });
+
+      if ( ! confirmed ) return;
+
+    }
 
     // Create input element
     const input: HTMLInputElement = document.createElement('input');
@@ -258,6 +277,8 @@ export class StateService {
     });
 
     saveFile(blob, 'plumbr.flow');
+
+    this._unsavedChanges = false;
 
   }
 

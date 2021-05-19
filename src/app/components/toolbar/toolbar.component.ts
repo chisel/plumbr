@@ -61,6 +61,8 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.shift.r', () => { this.onResetCanvasPosition(); });
     this._renderer.listen('window', 'keyup.h', () => { this.onHelp(); });
     this._renderer.listen('window', 'keyup.shift.z', () => { this.onUndo(); });
+    this._renderer.listen('window', 'keyup.shift.i', () => { this.onImport(); });
+    this._renderer.listen('window', 'keyup.shift.e', () => { this.onExport(); });
 
   }
 

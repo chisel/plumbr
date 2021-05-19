@@ -6,24 +6,24 @@ import { Subject } from 'rxjs';
 })
 export class ModalService {
 
-  private _onModalOpen$ = new Subject<ModalType>();
+  private _onModalOpen$ = new Subject<OpenModalData>();
   private _onModalClosed$ = new Subject<any>();
   private _currentModal: ModalType = null;
 
   constructor() { }
 
-  public onModalOpen$(observer: (type: ModalType) => void) {
+  public onModalOpen$(observer: (data: OpenModalData) => void) {
 
     return this._onModalOpen$.subscribe(observer);
 
   }
 
-  public async openModal(type: ModalType): Promise<any> {
+  public async openModal(type: ModalType, context?: ConfirmationContext): Promise<any> {
 
     if ( this._currentModal !== null ) throw new Error('A modal is already open!');
 
     this._currentModal = type;
-    this._onModalOpen$.next(type);
+    this._onModalOpen$.next({ type, context });
 
     // Wait for the modal to be closed
     return new Promise<any>(resolve => {
@@ -65,6 +65,21 @@ export enum ModalType {
   NewPipeline,
   NewModule,
   NewModuleField,
+  Confirmation,
   Help
+
+}
+
+export interface OpenModalData {
+
+  type: ModalType;
+  context?: ConfirmationContext;
+
+}
+
+export interface ConfirmationContext {
+
+  title: string;
+  message: string;
 
 }

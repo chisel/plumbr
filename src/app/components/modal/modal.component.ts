@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { ModalService, ModalType } from '@plumbr/service/modal';
+import { ModalService, OpenModalData, ModalType } from '@plumbr/service/modal';
 import {
   ModuleType,
   ModuleFieldOperationType,
@@ -26,7 +26,7 @@ export class ModalComponent implements OnInit {
   public ModuleFieldTypeKeys = Object.keys(ModuleFieldType).slice(0, Object.keys(ModuleFieldType).length / 2);
   public ModuleFieldOperationTypeValues = Object.values(ModuleFieldOperationType).slice(0, Object.values(ModuleFieldOperationType).length / 2);
   public ModuleFieldOperationTypeKeys = Object.keys(ModuleFieldOperationType).slice(0, Object.keys(ModuleFieldOperationType).length / 2);
-  public currentModal: ModalType = null;
+  public currentModal: OpenModalData = null;
   public showModal: boolean = false;
 
   constructor(
@@ -35,9 +35,9 @@ export class ModalComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this._modal.onModalOpen$(type => {
+    this._modal.onModalOpen$(data => {
 
-      this.currentModal = type;
+      this.currentModal = data;
       this.showModal = true;
 
     });
@@ -59,17 +59,23 @@ export class ModalComponent implements OnInit {
 
   }
 
+  public onConfirm() {
+
+    this._modal.closeModal(true);
+
+  }
+
   public onFormSubmit(form: NgForm) {
 
     if ( form.invalid ) return;
 
     // Cast values to correct type
-    if ( this.currentModal === ModalType.NewModule ) {
+    if ( this.currentModal.type === ModalType.NewModule ) {
 
       form.value.type = parseInt(form.value.type);
 
     }
-    else if ( this.currentModal === ModalType.NewModuleField ) {
+    else if ( this.currentModal.type === ModalType.NewModuleField ) {
 
       form.value.operation = parseInt(form.value.operation);
       form.value.type = parseInt(form.value.type);

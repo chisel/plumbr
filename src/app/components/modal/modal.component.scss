@@ -71,7 +71,7 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    color: color('gray-darker');
+    color: color(accent);
   }
 
 }
@@ -100,4 +100,13 @@ form {
     flex-grow: 1;
   }
 
+}
+
+.button-group-50 > * {
+  width: 50%;
+}
+
+p {
+  margin-top: rem(20px);
+  margin-bottom: rem(30px);
 }

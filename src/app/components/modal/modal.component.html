@@ -8,25 +8,25 @@
     size="lg"
     [icon]="faTimes">
     </fa-icon>
-    <ng-template [ngIf]="currentModal === ModalType.Help">
+    <ng-template [ngIf]="currentModal?.type === ModalType.Help">
       <div class="modal-title">
         <div class="modal-title-text">Help</div>
       </div>
     </ng-template>
-    <ng-template [ngIf]="currentModal === ModalType.NewPipeline">
+    <ng-template [ngIf]="currentModal?.type === ModalType.NewPipeline">
       <div class="modal-title">
         <div class="modal-title-text">New Pipeline</div>
       </div>
       <form #newPipelineForm="ngForm" (ngSubmit)="onFormSubmit(newPipelineForm)">
         <input name="name" type="text" placeholder="Name" required ngModel>
         <textarea name="description" placeholder="Description" ngModel></textarea>
-        <div class="button-group">
+        <div class="button-group button-group-50">
           <button class="button-secondary" type="button" (click)="onClose()">Cancel</button>
           <button class="button-primary" type="submit">Create</button>
         </div>
       </form>
     </ng-template>
-    <ng-template [ngIf]="currentModal === ModalType.NewModule">
+    <ng-template [ngIf]="currentModal?.type === ModalType.NewModule">
       <div class="modal-title">
         <div class="modal-title-text">New Module</div>
       </div>
@@ -37,13 +37,13 @@
           <option *ngFor="let moduleTypeKey of ModuleTypeKeys; let index = index" [value]="moduleTypeKey">{{ ModuleTypeValues[index] }}</option>
         </select>
         <textarea name="description" placeholder="Description" ngModel></textarea>
-        <div class="button-group">
+        <div class="button-group button-group-50">
           <button class="button-secondary" type="button" (click)="onClose()">Cancel</button>
           <button class="button-primary" type="submit">Create</button>
         </div>
       </form>
     </ng-template>
-    <ng-template [ngIf]="currentModal === ModalType.NewModuleField">
+    <ng-template [ngIf]="currentModal?.type === ModalType.NewModuleField">
       <div class="modal-title">
         <div class="modal-title-text">New Field</div>
       </div>
@@ -62,11 +62,21 @@
           Conditional
         </label>
         <textarea name="description" placeholder="Description" ngModel></textarea>
-        <div class="button-group">
+        <div class="button-group button-group-50">
           <button class="button-secondary" type="button" (click)="onClose()">Cancel</button>
           <button class="button-primary" type="submit">Add</button>
         </div>
       </form>
+    </ng-template>
+    <ng-template [ngIf]="currentModal?.type === ModalType.Confirmation">
+      <div class="modal-title">
+        <div class="modal-title-text">{{ currentModal.context.title }}</div>
+      </div>
+      <p>{{ currentModal.context.message }}</p>
+      <div class="button-group button-group-50">
+        <button class="button-secondary" type="button" (click)="onClose()">Cancel</button>
+        <button class="button-danger" type="button" (click)="onConfirm()">Proceed</button>
+      </div>
     </ng-template>
   </div>
 </div>
