@@ -109,4 +109,20 @@ export class ToolbarComponent implements OnInit {
 
   }
 
+  public onImport() {
+
+    if ( this._modal.currentModal !== null ) return;
+
+    this._state.import();
+
+  }
+
+  public onExport() {
+
+    if ( this._modal.currentModal !== null ) return;
+
+    this._state.export();
+
+  }
+
 }
