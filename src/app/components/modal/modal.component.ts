@@ -2,7 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ModalService, ModalType } from '@plumbr/service/modal';
-import { ModuleType, ModuleFieldOperationType, ModuleFieldType } from '@plumbr/service/state';
+import {
+  ModuleType,
+  ModuleFieldOperationType,
+  ModuleFieldType,
+  PipelineData,
+  ModuleData,
+  ModuleFieldData
+} from '@plumbr/service/state';
 
 @Component({
   selector: 'app-modal',
@@ -67,7 +74,13 @@ export class ModalComponent implements OnInit {
       form.value.operation = parseInt(form.value.operation);
       form.value.type = parseInt(form.value.type);
 
+      if ( form.value.conditional !== true ) delete form.value.conditional;
+
     }
+
+    // Delete empty descriptions (to reduce size)
+    if ( (<PipelineData|ModuleData|ModuleFieldData>form.value).description === '' )
+      delete form.value.description;
 
     this._modal.closeModal(form.value);
 

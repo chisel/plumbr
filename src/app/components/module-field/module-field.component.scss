@@ -27,10 +27,15 @@
     min-width: rem(60px);
 
     &.field-operation-type-0 { color: color('accent-green'); }
-    &.field-operation-type-1 { color: color(accent); }
-    &.field-operation-type-2 { color: color('accent-purple'); }
-    &.field-operation-type-3 { color: color('accent-red'); }
-    &.field-operation-type-4 { color: color('accent-orange'); }
+    &.field-operation-type-1,
+    &.field-operation-type-2,
+    &.field-operation-type-3
+    {
+      color: color(accent);
+    }
+    &.field-operation-type-4 { color: color('accent-purple'); }
+    &.field-operation-type-5 { color: color('accent-red'); }
+    &.field-operation-type-6 { color: color('accent-orange'); }
 
   }
 

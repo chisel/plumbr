@@ -123,7 +123,7 @@ export class StateService {
     operation: ModuleFieldOperationType,
     target: string,
     type: ModuleFieldType,
-    conditional: boolean,
+    conditional?: true,
     description?: string
   ) {
 
@@ -186,7 +186,7 @@ export interface ModuleFieldData {
   target: string;
   type: ModuleFieldType,
   operation: ModuleFieldOperationType;
-  conditional: boolean;
+  conditional?: true;
   description?: string;
 
 }
@@ -205,8 +205,10 @@ export enum ModuleFieldType {
 export enum ModuleFieldOperationType {
 
   Read,
+  Write,
   Create,
   Update,
+  Append,
   Delete,
   Clean
 
