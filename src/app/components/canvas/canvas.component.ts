@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools, SelectedItem } from '@plumbr/service/toolbar';
 import { StateService, PipelineData, ModuleData, ModuleFieldData, ModuleFieldOperationType } from '@plumbr/service/state';
-import { ModalService, ModalType } from '@plumbr/service/modal';
+import { ModalService, ModalType, PipelineContext, ModuleContext, ModuleFieldContext } from '@plumbr/service/modal';
 
 @Component({
   selector: 'app-canvas',
@@ -166,7 +166,7 @@ export class CanvasComponent implements OnInit {
       const left = event.clientX + Math.abs(this.canvasLeft) - 345;
       const top = event.clientY + Math.abs(this.canvasTop);
 
-      this._modal.openModal(ModalType.NewPipeline)
+      this._modal.openModal(ModalType.Pipeline)
       .then(data => {
 
         if ( ! data ) return;
@@ -199,7 +199,7 @@ export class CanvasComponent implements OnInit {
 
       event.stopImmediatePropagation();
 
-      this._modal.openModal(ModalType.NewModule)
+      this._modal.openModal(ModalType.Module)
       .then((data: ModuleData) => {
 
         if ( ! data ) return;
@@ -225,6 +225,24 @@ export class CanvasComponent implements OnInit {
 
       if ( event.shiftKey ) this._toolbar.addToSelection({ pipelineIndex: index });
       else this._toolbar.setSelection({ pipelineIndex: index });
+
+    }
+    else if ( this._toolbar.selectedTool === Tools.Edit ) {
+
+      event.stopImmediatePropagation();
+
+      this._modal.openModal<PipelineContext>(ModalType.Pipeline, {
+        name: this.data[index].name,
+        description: this.data[index].description
+      })
+      .then((data: PipelineData) => {
+
+        if ( ! data ) return;
+
+        this._state.updatePipelineData(index, data.name, data.description);
+
+      })
+      .catch(console.error);
 
     }
 
@@ -255,7 +273,7 @@ export class CanvasComponent implements OnInit {
 
       event.stopImmediatePropagation();
 
-      this._modal.openModal(ModalType.NewModuleField)
+      this._modal.openModal(ModalType.ModuleField)
       .then((data: ModuleFieldData) => {
 
         if ( ! data ) return;
@@ -295,6 +313,25 @@ export class CanvasComponent implements OnInit {
         pipelineIndex: index,
         moduleIndex: mindex
       });
+
+    }
+    else if ( this._toolbar.selectedTool === Tools.Edit ) {
+
+      event.stopImmediatePropagation();
+
+      this._modal.openModal<ModuleContext>(ModalType.Module, {
+        name: this.data[index].modules[mindex].name,
+        type: this.data[index].modules[mindex].type,
+        description: this.data[index].modules[mindex].description
+      })
+      .then((data: ModuleData) => {
+
+        if ( ! data ) return;
+
+        this._state.updateModuleData(index, mindex, data.name, data.type, data.description);
+
+      })
+      .catch(console.error);
 
     }
 
@@ -344,6 +381,27 @@ export class CanvasComponent implements OnInit {
         moduleIndex: mindex,
         fieldIndex: findex
       });
+
+    }
+    else if ( this._toolbar.selectedTool === Tools.Edit ) {
+
+      event.stopImmediatePropagation();
+
+      this._modal.openModal<ModuleFieldContext>(ModalType.ModuleField, {
+        operation: this.data[index].modules[mindex].fields[findex].operation,
+        target: this.data[index].modules[mindex].fields[findex].target,
+        type: this.data[index].modules[mindex].fields[findex].type,
+        conditional: this.data[index].modules[mindex].fields[findex].conditional,
+        description: this.data[index].modules[mindex].fields[findex].description
+      })
+      .then((data: ModuleFieldData) => {
+
+        if ( ! data ) return;
+
+        this._state.updateFieldData(index, mindex, findex, data.operation, data.target, data.type, data.conditional, data.description);
+
+      })
+      .catch(console.error);
 
     }
 

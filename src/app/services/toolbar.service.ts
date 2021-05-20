@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { StateService, PipelineData, ModuleData, ModuleFieldData } from './state.service';
-import { ModalService, ModalType } from './modal.service';
+import { ModalService, ModalType, PipelineContext, ModuleContext, ModuleFieldContext } from './modal.service';
 import { cloneDeep } from 'lodash-es';
 
 @Injectable({
@@ -384,7 +384,7 @@ export class ToolbarService {
     // Inserting into canvas
     if ( this._selectionType === SelectionType.Empty ) {
 
-      this._modal.openModal(ModalType.NewPipeline)
+      this._modal.openModal(ModalType.Pipeline)
       .then(data => {
 
         if ( ! data ) return;
@@ -412,7 +412,7 @@ export class ToolbarService {
     // Inserting into pipeline (single select only)
     else if ( this._selection$.value.length === 1 && this._selectionType === SelectionType.Pipeline ) {
 
-      this._modal.openModal(ModalType.NewModule)
+      this._modal.openModal(ModalType.Module)
       .then(data => {
 
         if ( ! data ) return;
@@ -431,7 +431,7 @@ export class ToolbarService {
     // Inserting into module (single select only)
     else if ( this._selection$.value.length === 1 && this._selectionType === SelectionType.Module ) {
 
-      this._modal.openModal(ModalType.NewModuleField)
+      this._modal.openModal(ModalType.ModuleField)
       .then(data => {
 
         if ( ! data ) return;
@@ -453,11 +453,99 @@ export class ToolbarService {
 
   }
 
+  public editSelected() {
+
+    // Only single selected element allowed
+    if ( this._selection$.value.length !== 1 ) return;
+
+    // Editing pipeline
+    if ( this._selectionType === SelectionType.Pipeline ) {
+
+      const index = this._selection$.value[0].pipelineIndex;
+      const pipeline = this._state.data[index];
+
+      this._modal.openModal<PipelineContext>(ModalType.Pipeline, {
+        name: pipeline.name,
+        description: pipeline.description
+      })
+      .then((data: PipelineData) => {
+
+        if ( ! data ) return;
+
+        this._state.updatePipelineData(index, data.name, data.description);
+
+      })
+      .catch(console.error)
+      .finally(() => this.clearSelection());
+
+    }
+    // Editing module
+    else if ( this._selectionType === SelectionType.Module ) {
+
+      const index = this._selection$.value[0].pipelineIndex;
+      const mindex = this._selection$.value[0].moduleIndex;
+      const module = this._state.data[index].modules[mindex];
+
+      this._modal.openModal<ModuleContext>(ModalType.Module, {
+        name: module.name,
+        type: module.type,
+        description: module.description
+      })
+      .then((data: ModuleData) => {
+
+        if ( ! data ) return;
+
+        this._state.updateModuleData(index, mindex, data.name, data.type, data.description);
+
+      })
+      .catch(console.error)
+      .finally(() => this.clearSelection());
+
+    }
+    // Editing module field
+    else if ( this._selectionType === SelectionType.Field ) {
+
+      const index = this._selection$.value[0].pipelineIndex;
+      const mindex = this._selection$.value[0].moduleIndex;
+      const findex = this._selection$.value[0].fieldIndex;
+      const field = this._state.data[index].modules[mindex].fields[findex];
+
+      this._modal.openModal<ModuleFieldContext>(ModalType.ModuleField, {
+        operation: field.operation,
+        target: field.target,
+        type: field.type,
+        conditional: field.conditional,
+        description: field.description
+      })
+      .then((data: ModuleFieldData) => {
+
+        if ( ! data ) return;
+
+        this._state.updateFieldData(
+          index,
+          mindex,
+          findex,
+          data.operation,
+          data.target,
+          data.type,
+          data.conditional,
+          data.description
+        );
+
+      })
+      .catch(console.error)
+      .finally(() => this.clearSelection());
+
+    }
+
+  }
+
 }
 
 export enum Tools {
   Select,
   Insert,
+  Edit,
   Move,
   Link,
   Erase

@@ -70,12 +70,12 @@ export class ModalComponent implements OnInit {
     if ( form.invalid ) return;
 
     // Cast values to correct type
-    if ( this.currentModal.type === ModalType.NewModule ) {
+    if ( this.currentModal.type === ModalType.Module ) {
 
       form.value.type = parseInt(form.value.type);
 
     }
-    else if ( this.currentModal.type === ModalType.NewModuleField ) {
+    else if ( this.currentModal.type === ModalType.ModuleField ) {
 
       form.value.operation = parseInt(form.value.operation);
       form.value.type = parseInt(form.value.type);

@@ -17,6 +17,13 @@
     <fa-icon [fixedWidth]="true" size="lg" [icon]="faPlus"></fa-icon>
   </div>
   <div class="toolbar-button"
+  [ngClass]="{ selected: selectedTool === Tools.Edit }"
+  (click)="onSelectTool(Tools.Edit)"
+  (mouseenter)="onMouseEnter(t10)"
+  (mouseleave)="onMouseLeave(t10)">
+    <fa-icon [fixedWidth]="true" size="lg" [icon]="faPencilAlt"></fa-icon>
+  </div>
+  <div class="toolbar-button"
   [ngClass]="{ selected: selectedTool === Tools.Move }"
   (click)="onSelectTool(Tools.Move)"
   (mouseenter)="onMouseEnter(t2)"
@@ -76,6 +83,9 @@
   </div>
   <div #t1 class="tooltip">
     <div class="tooltip-text">Insert tool <span class="tooltip-text-small">i</span></div>
+  </div>
+  <div #t10 class="tooltip">
+    <div class="tooltip-text">Edit tool <span class="tooltip-text-small">t</span></div>
   </div>
   <div #t2 class="tooltip">
     <div class="tooltip-text">Move tool <span class="tooltip-text-small">m</span></div>

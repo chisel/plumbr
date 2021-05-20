@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { ModuleType, ModuleFieldOperationType, ModuleFieldType } from './state.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class ModalService {
 
   }
 
-  public async openModal(type: ModalType, context?: MessageContext): Promise<any> {
+  public async openModal<T=any>(type: ModalType, context?: T): Promise<any> {
 
     if ( this._currentModal !== null ) throw new Error('A modal is already open!');
 
@@ -62,9 +63,9 @@ export class ModalService {
 
 export enum ModalType {
 
-  NewPipeline,
-  NewModule,
-  NewModuleField,
+  Pipeline,
+  Module,
+  ModuleField,
   Confirmation,
   Prompt,
   Help
@@ -74,7 +75,7 @@ export enum ModalType {
 export interface OpenModalData {
 
   type: ModalType;
-  context?: MessageContext;
+  context?: any;
 
 }
 
@@ -82,5 +83,30 @@ export interface MessageContext {
 
   title: string;
   message: string;
+
+}
+
+export interface PipelineContext {
+
+  name: string;
+  description?: string;
+
+}
+
+export interface ModuleContext {
+
+  name: string;
+  type: ModuleType | '';
+  description?: string;
+
+}
+
+export interface ModuleFieldContext {
+
+  operation: ModuleFieldOperationType | '';
+  target: string;
+  type: ModuleFieldType | '';
+  conditional?: true;
+  description?: string;
 
 }

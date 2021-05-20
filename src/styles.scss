@@ -184,13 +184,13 @@ button {
   transition: color .25s ease-in-out;
 }
 
-*:hover.erase-mode,
-*:hover.move-mode,
-*:hover.insert-mode,
+app-module-field:hover.erase-mode,
+app-module-field:hover.move-mode,
+app-module-field:hover.insert-mode,
+app-module-field:hover.edit-mode,
 *.selected {
 
-  .indicator-dot,
-  .indicator-dot.conditional.info {
+  .indicator-dot {
     background: color('gray-lighter');
   }
 
@@ -214,6 +214,7 @@ button {
 
 app-module-field.erase-mode:hover,
 app-module-field.move-mode:hover,
+app-module-field.edit-mode:hover,
 app-module-field.selected {
   .field-target span.variable {
     color: color('gray-lighter');

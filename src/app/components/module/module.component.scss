@@ -14,6 +14,15 @@
     border-color: color('accent-green-dark');
   }
 
+  &:hover.edit-mode .module {
+    border-color: color('accent-orange');
+  }
+
+  &:hover.edit-mode .module-header {
+    background-color: color('accent-orange');
+    border-color: color('accent-orange-dark');
+  }
+
   &:hover.erase-mode .module {
     border-color: color('accent-red');
   }

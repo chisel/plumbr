@@ -9,7 +9,8 @@ import {
   faFileUpload,
   faQuestion,
   faCrosshairs,
-  faUndoAlt
+  faUndoAlt,
+  faPencilAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools } from '@plumbr/service/toolbar';
@@ -34,6 +35,7 @@ export class ToolbarComponent implements OnInit {
   public faQuestion = faQuestion;
   public faCrosshairs = faCrosshairs;
   public faUndoAlt = faUndoAlt;
+  public faPencilAlt = faPencilAlt;
 
   public toolbarEnabled: boolean;
   public selectedTool: Tools;
@@ -55,6 +57,7 @@ export class ToolbarComponent implements OnInit {
     // Register global event handlers for shortcuts
     this._renderer.listen('window', 'keyup.s', () => { this.onSelectTool(Tools.Select); });
     this._renderer.listen('window', 'keyup.i', () => { this.onSelectTool(Tools.Insert); });
+    this._renderer.listen('window', 'keyup.t', () => { this.onSelectTool(Tools.Edit); });
     this._renderer.listen('window', 'keyup.m', () => { this.onSelectTool(Tools.Move); });
     this._renderer.listen('window', 'keyup.l', () => { this.onSelectTool(Tools.Link); });
     this._renderer.listen('window', 'keyup.e', () => { this.onSelectTool(Tools.Erase); });
@@ -70,6 +73,7 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.shift.x', () => { this.onCutSelection(); });
     this._renderer.listen('window', 'keyup.shift.d', () => { this.onDuplicate(); });
     this._renderer.listen('window', 'keyup.shift.a', () => { this.onInsert(); });
+    this._renderer.listen('window', 'keyup.shift.t', () => { this.onEdit(); });
 
   }
 
@@ -87,7 +91,7 @@ export class ToolbarComponent implements OnInit {
 
   public onSelectTool(tool: Tools) {
 
-    if ( this._modal.currentModal !== null ) return;
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._toolbar.selectedTool = tool;
 
@@ -95,7 +99,7 @@ export class ToolbarComponent implements OnInit {
 
   public onResetCanvasPosition() {
 
-    if ( this._modal.currentModal !== null ) return;
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._canvas.resetCanvasPosition();
 
@@ -103,7 +107,7 @@ export class ToolbarComponent implements OnInit {
 
   public onHelp() {
 
-    if ( this._modal.currentModal !== null ) return;
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._modal.openModal(ModalType.Help)
     .catch(console.error);
@@ -112,7 +116,7 @@ export class ToolbarComponent implements OnInit {
 
   public onUndo() {
 
-    if ( this._modal.currentModal !== null ) return;
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._state.undo();
 
@@ -120,7 +124,7 @@ export class ToolbarComponent implements OnInit {
 
   public onImport() {
 
-    if ( this._modal.currentModal !== null ) return;
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._state.import();
 
@@ -128,7 +132,7 @@ export class ToolbarComponent implements OnInit {
 
   public onExport() {
 
-    if ( this._modal.currentModal !== null ) return;
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._state.export();
 
@@ -136,7 +140,7 @@ export class ToolbarComponent implements OnInit {
 
   public onEraseSelection() {
 
-    if ( this._modal.currentModal !== null ) return;
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.deleteSelectedItems();
@@ -145,7 +149,7 @@ export class ToolbarComponent implements OnInit {
 
   public onCopySelection() {
 
-    if ( this._modal.currentModal !== null ) return;
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.copySelected();
@@ -154,7 +158,7 @@ export class ToolbarComponent implements OnInit {
 
   public onPaste() {
 
-    if ( this._modal.currentModal !== null ) return;
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.paste();
@@ -163,7 +167,7 @@ export class ToolbarComponent implements OnInit {
 
   public onCutSelection() {
 
-    if ( this._modal.currentModal !== null ) return;
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.cutSelected();
@@ -172,7 +176,7 @@ export class ToolbarComponent implements OnInit {
 
   public onDuplicate() {
 
-    if ( this._modal.currentModal !== null ) return;
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.duplicateSelected();
@@ -181,10 +185,19 @@ export class ToolbarComponent implements OnInit {
 
   public onInsert() {
 
-    if ( this._modal.currentModal !== null ) return;
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.insertIntoSelected();
+
+  }
+
+  public onEdit() {
+
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._toolbar.selectedTool !== Tools.Select ) return;
+
+    this._toolbar.editSelected();
 
   }
 

@@ -9,6 +9,15 @@
 
 }
 
+:host:hover.edit-mode .pipeline {
+  border-color: color('accent-orange');
+
+  .pipeline-name {
+    background-color: color('accent-orange');
+  }
+
+}
+
 :host:hover.erase-mode .pipeline {
   border-color: color('accent-red');
 

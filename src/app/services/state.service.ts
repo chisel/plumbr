@@ -108,6 +108,17 @@ export class StateService {
 
   }
 
+  public updatePipelineData(index: number, name: string, description?: string) {
+
+    let newValue = this.data;
+
+    newValue[index].name = name;
+    newValue[index].description = description;
+
+    this._updateData(newValue);
+
+  }
+
   public newModule(
     pipelineIndex: number,
     name: string,
@@ -137,6 +148,18 @@ export class StateService {
 
     const old = newValue[pipelineIndex].modules.splice(oldIndex, 1)[0];
     newValue[pipelineIndex].modules.splice(newIndex, 0, old);
+
+    this._updateData(newValue);
+
+  }
+
+  public updateModuleData(pipelineIndex: number, moduleIndex: number, name: string, type: ModuleType, description?: string) {
+
+    let newValue = this.data;
+
+    newValue[pipelineIndex].modules[moduleIndex].name = name;
+    newValue[pipelineIndex].modules[moduleIndex].type = type;
+    newValue[pipelineIndex].modules[moduleIndex].description = description;
 
     this._updateData(newValue);
 
@@ -175,6 +198,29 @@ export class StateService {
 
     const old = newValue[pipelineIndex].modules[moduleIndex].fields.splice(oldIndex, 1)[0];
     newValue[pipelineIndex].modules[moduleIndex].fields.splice(newIndex, 0, old);
+
+    this._updateData(newValue);
+
+  }
+
+  public updateFieldData(
+    pipelineIndex: number,
+    moduleIndex: number,
+    fieldIndex: number,
+    operation: ModuleFieldOperationType,
+    target: string,
+    type: ModuleFieldType,
+    conditional?: true,
+    description?: string
+  ) {
+
+    let newValue = this.data;
+
+    newValue[pipelineIndex].modules[moduleIndex].fields[fieldIndex].operation = operation;
+    newValue[pipelineIndex].modules[moduleIndex].fields[fieldIndex].target = target;
+    newValue[pipelineIndex].modules[moduleIndex].fields[fieldIndex].type = type;
+    newValue[pipelineIndex].modules[moduleIndex].fields[fieldIndex].conditional = conditional;
+    newValue[pipelineIndex].modules[moduleIndex].fields[fieldIndex].description = description;
 
     this._updateData(newValue);
 
