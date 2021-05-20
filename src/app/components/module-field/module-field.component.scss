@@ -4,13 +4,14 @@
   width: 100%;
   display: flex;
   background-color: color('gray-lighter');
+  transition: transform .25s ease-in-out, box-shadow .25s ease-in-out;
 
-  &:nth-child(odd) {
+  &:nth-of-type(even) {
     background-color: color('gray-light');
   }
 
-  &:hover.erase-mode .module-field {
-    background-color: color('accent-red');
+  &:hover.erase-mode .module-field,
+  &:hover.move-mode .module-field {
     color: color('gray-lighter');
 
     .field-type {
@@ -23,6 +24,21 @@
       color: color('gray-lighter');
     }
 
+  }
+
+  &:hover.erase-mode .module-field {
+    background-color: color('accent-red');
+  }
+
+  &:hover.move-mode .module-field {
+    background-color: color(accent);
+  }
+
+  &.stackable-moving-child {
+    transform: translateY(-10px);
+    box-shadow: 0 rem(10px) rem(15px) color(shadow);
+    user-select: none;
+    cursor: grabbing;
   }
 
 }

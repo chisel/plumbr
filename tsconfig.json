@@ -23,7 +23,8 @@
       "dom"
     ],
     "paths": {
-      "@plumbr/service/*": ["src/app/services/*.service"]
+      "@plumbr/service/*": ["src/app/services/*.service"],
+      "@plumbr/directive/*": ["src/app/directives/*.directive"]
     }
   },
   "angularCompilerOptions": {

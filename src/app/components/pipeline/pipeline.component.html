@@ -1,4 +1,9 @@
 <div class="pipeline">
   <div class="pipeline-name">{{ data.name }}</div>
-  <ng-content></ng-content>
+  <div class="pipeline-stack"
+  [appStackable]="movable"
+  (onmovestart)="onStackMoveStart()"
+  (onmoveend)="onStackMoveEnd($event)">
+    <ng-content></ng-content>
+  </div>
 </div>

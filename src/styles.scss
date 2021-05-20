@@ -21,7 +21,6 @@ html, body {
 
 .grab { cursor: grab !important; }
 .grabbing { cursor: grabbing !important; }
-.insert { cursor: copy !important; }
 
 input[type="text"] {
   height: rem(30px);
@@ -185,6 +184,9 @@ button {
   transition: color .25s ease-in-out;
 }
 
-app-module-field.erase-mode:hover .field-target span.variable {
-  color: color('gray-lighter');
+app-module-field.erase-mode:hover,
+app-module-field.move-mode:hover {
+  .field-target span.variable {
+    color: color('gray-lighter');
+  }
 }

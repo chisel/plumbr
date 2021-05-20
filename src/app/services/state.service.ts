@@ -125,6 +125,18 @@ export class StateService {
 
   }
 
+  public updateModulePosition(pipelineIndex: number, oldIndex: number, newIndex: number) {
+
+    let newValue = this.data;
+
+    const old = newValue[pipelineIndex].modules[oldIndex];
+    newValue[pipelineIndex].modules[oldIndex] = newValue[pipelineIndex].modules[newIndex];
+    newValue[pipelineIndex].modules[newIndex] = old;
+
+    this._updateData(newValue);
+
+  }
+
   public newField(
     pipelineIndex: number,
     moduleIndex: number,
@@ -144,6 +156,18 @@ export class StateService {
       conditional,
       description
     });
+
+    this._updateData(newValue);
+
+  }
+
+  public updateFieldPosition(pipelineIndex: number, moduleIndex: number, oldIndex: number, newIndex: number) {
+
+    let newValue = this.data;
+
+    const old = newValue[pipelineIndex].modules[moduleIndex].fields[oldIndex];
+    newValue[pipelineIndex].modules[moduleIndex].fields[oldIndex] = newValue[pipelineIndex].modules[moduleIndex].fields[newIndex];
+    newValue[pipelineIndex].modules[moduleIndex].fields[newIndex] = old;
 
     this._updateData(newValue);
 
@@ -279,6 +303,12 @@ export class StateService {
     saveFile(blob, 'plumbr.flow');
 
     this._unsavedChanges = false;
+
+  }
+
+  public refreshState() {
+
+    this._data$.next(this.data);
 
   }
 

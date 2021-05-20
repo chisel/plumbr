@@ -23,6 +23,8 @@ export class CanvasComponent implements OnInit {
   public data: PipelineData[] = [];
   public moduleHovered: boolean = false;
   public moduleFieldHovered: boolean = false;
+  public pipelineStackMoving: boolean = false;
+  public moduleStackMoving: boolean = false;
 
   @HostListener('document:keydown.space', ['$event'])
   onMoveModeEnable() {
@@ -281,6 +283,30 @@ export class CanvasComponent implements OnInit {
   public onModuleFieldMouseLeave() {
 
     this.moduleFieldHovered = false;
+
+  }
+
+  public onPipelineStackMoveStart() {
+
+    this.pipelineStackMoving = true;
+
+  }
+
+  public onPipelineStackMoveEnd() {
+
+    this.pipelineStackMoving = false;
+
+  }
+
+  public onModuleStackMoveStart() {
+
+    this.moduleStackMoving = true;
+
+  }
+
+  public onModuleStackMoveEnd() {
+
+    this.moduleStackMoving = false;
 
   }
 

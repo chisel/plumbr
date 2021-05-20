@@ -4,8 +4,7 @@ class="canvas"
 (click)="onCanvasClick($event)"
 [ngClass]="{
   grab: canvasMoveMode && ! canvasMoving,
-  grabbing: canvasMoveMode && canvasMoving,
-  insert: selectedTool === Tools.Insert && ! canvasMoveMode
+  grabbing: canvasMoveMode && canvasMoving
 }"
 [ngStyle]="{
   top: canvasTop + 'px',
@@ -16,28 +15,38 @@ class="canvas"
   <app-pipeline
   *ngFor="let pipeline of data; let index = index"
   [pipelineData]="pipeline"
+  [pipelineIndex]="index"
+  [pipelineStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && ! moduleFieldHovered"
   (click)="onPipelineClick($event, index)"
+  (onstackmovestart)="onPipelineStackMoveStart()"
+  (onstackmoveend)="onPipelineStackMoveEnd()"
   [ngClass]="{
     grab: canvasMoveMode && ! canvasMoving,
     grabbing: canvasMoveMode && canvasMoving,
-    insert: selectedTool === Tools.Insert && ! canvasMoveMode,
     'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode && ! moduleHovered,
-    'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && ! moduleHovered
+    'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && ! moduleHovered,
+    'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && ! moduleHovered
   }"
   [ngStyle]="{
     left: pipeline.position.left + 'px',
     top: pipeline.position.top + 'px'
   }"
-  [appMovable]="! canvasMoveMode && selectedTool === Tools.Move"
+  [appMovable]="! canvasMoveMode && selectedTool === Tools.Move && ! pipelineStackMoving && ! moduleStackMoving"
   (onmovementstart)="onElementMovementStart()"
   (onmovementend)="onElementMovementEnd($event, index)">
     <app-module
     *ngFor="let module of pipeline.modules; let mindex = index"
     [moduleData]="module"
+    [pipelineIndex]="index"
+    [moduleIndex]="mindex"
+    [moduleStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && moduleFieldHovered"
     [ngClass]="{
       'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode && moduleHovered,
-      'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered
+      'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered,
+      'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered
     }"
+    (onstackmovestart)="onModuleStackMoveStart()"
+    (onstackmoveend)="onModuleStackMoveEnd()"
     (mousemove)="onModuleMouseHover()"
     (mouseleave)="onModuleMouseLeave()"
     (click)="onModuleClick($event, index, mindex)">
@@ -48,7 +57,8 @@ class="canvas"
       (mousemove)="onModuleFieldMouseHover()"
       (mouseleave)="onModuleFieldMouseLeave()"
       [ngClass]="{
-        'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && moduleFieldHovered
+        'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && moduleFieldHovered,
+        'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && moduleFieldHovered
       }">
       </app-module-field>
     </app-module>

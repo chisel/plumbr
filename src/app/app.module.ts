@@ -13,6 +13,7 @@ import { MovableDirective } from './directives/movable.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ModuleFieldComponent } from './components/module-field/module-field.component';
+import { StackableDirective } from './directives/stackable.directive';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ModuleFieldComponent } from './components/module-field/module-field.com
     ModalComponent,
     MovableDirective,
     ToolbarComponent,
-    ModuleFieldComponent
+    ModuleFieldComponent,
+    StackableDirective
   ],
   imports: [
     BrowserModule,

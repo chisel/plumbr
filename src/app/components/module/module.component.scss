@@ -2,6 +2,8 @@
 
 :host {
   width: 100%;
+  margin-top: rem(20px);
+  transition: transform .25s ease-in-out, box-shadow .25s ease-in-out;
 
   &:hover.insert-mode .module {
     border-color: color('accent-green');
@@ -19,6 +21,22 @@
     background-color: color('accent-red');
   }
 
+  &:hover.move-mode .module {
+    border-color: color(accent);
+  }
+
+  &:hover.move-mode .module-header {
+    background-color: color(accent);
+  }
+
+  &.stackable-moving-child {
+    border-radius: rem(5px);
+    transform: translateY(-10px);
+    box-shadow: 0 rem(10px) rem(15px) color(shadow);
+    user-select: none;
+    cursor: grabbing;
+  }
+
 }
 
 .module {
@@ -27,8 +45,7 @@
   flex-direction: column;
   border-radius: rem(5px);
   overflow: hidden;
-  margin-top: rem(20px);
-  border: rem(3px) solid color('gray-medium');
+  border: rem(3px) solid color('gray-medium-darker');
   transition: border-color .25s ease-in-out;
 }
 
@@ -47,4 +64,10 @@
   &.module-type-2 { background-color: color('accent-purple'); }
   &.module-type-3 { background-color: color('accent-orange'); }
 
+}
+
+.module-stack {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }

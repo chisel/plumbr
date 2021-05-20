@@ -1,4 +1,10 @@
 <div class="module">
   <div class="module-header module-type-{{data.type}}">{{ data.name }}</div>
-  <ng-content></ng-content>
+  <div class="module-stack"
+  [appStackable]="movable"
+  (onmovestart)="onStackMoveStart()"
+  (onmoveend)="onStackMoveEnd($event)"
+  (onrefresh)="onStackRefresh()">
+    <ng-content></ng-content>
+  </div>
 </div>
