@@ -16,7 +16,7 @@ class="canvas"
   *ngFor="let pipeline of data; let index = index"
   [pipelineData]="pipeline"
   [pipelineIndex]="index"
-  [pipelineStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && ! moduleFieldHovered"
+  [pipelineStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && ! moduleFieldHovered && ! pipelineMoving"
   (click)="onPipelineClick($event, index)"
   (onstackmovestart)="onPipelineStackMoveStart()"
   (onstackmoveend)="onPipelineStackMoveEnd()"
@@ -39,11 +39,11 @@ class="canvas"
     [moduleData]="module"
     [pipelineIndex]="index"
     [moduleIndex]="mindex"
-    [moduleStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && moduleFieldHovered"
+    [moduleStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && moduleFieldHovered && ! pipelineMoving"
     [ngClass]="{
       'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode && moduleHovered,
       'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered,
-      'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered
+      'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered && ! pipelineMoving
     }"
     (onstackmovestart)="onModuleStackMoveStart()"
     (onstackmoveend)="onModuleStackMoveEnd()"
@@ -58,7 +58,7 @@ class="canvas"
       (mouseleave)="onModuleFieldMouseLeave()"
       [ngClass]="{
         'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && moduleFieldHovered,
-        'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && moduleFieldHovered
+        'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && moduleFieldHovered && ! pipelineMoving
       }">
       </app-module-field>
     </app-module>

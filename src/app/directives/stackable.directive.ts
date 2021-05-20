@@ -51,7 +51,6 @@ export class StackableDirective implements OnInit, OnChanges {
     // Refresh everything
     if ( ! this.stackable && changes.stackable.previousValue && this._currentlyMoving ) {
 
-      this.onMoveEnd.emit({ changed: false, oldIndex: -1, newIndex: -1 });
       this.onRefresh.emit();
 
     }
@@ -76,10 +75,12 @@ export class StackableDirective implements OnInit, OnChanges {
       };
 
       // Drag start
-      child.addEventListener('mousedown', () => {
+      child.addEventListener('mousedown', event => {
 
         // Skip if directive disabled
         if ( ! this.stackable ) return;
+
+        event.stopImmediatePropagation();
 
         // Set as currently moving
         this._currentlyMoving = child;
@@ -113,14 +114,16 @@ export class StackableDirective implements OnInit, OnChanges {
       });
 
       // Drag end
-      child.addEventListener('mouseup', () => this.finalizeMove(child, this._currentPlaceholder, original));
-      child.addEventListener('mouseleave', () => this.finalizeMove(child, this._currentPlaceholder, original));
+      child.addEventListener('mouseup', event => this.finalizeMove(event, child, this._currentPlaceholder, original));
+      child.addEventListener('mouseleave', event => this.finalizeMove(event, child, this._currentPlaceholder, original));
 
       // Drag
       child.addEventListener('mousemove', event => {
 
         // Skip if directive disabled
         if ( ! this.stackable ) return;
+
+        event.stopImmediatePropagation();
 
         // Skip if not currently moving
         if ( this._currentlyMoving !== child ) return;
@@ -195,10 +198,12 @@ export class StackableDirective implements OnInit, OnChanges {
 
   }
 
-  public finalizeMove(child: HTMLElement, placeholder: HTMLElement, original: any) {
+  public finalizeMove(event: MouseEvent, child: HTMLElement, placeholder: HTMLElement, original: any) {
 
     // Skip if directive disabled
-    if ( ! this.stackable ) return;
+    if ( ! this.stackable && ! this._currentlyMoving ) return;
+
+    event.stopImmediatePropagation();
 
     // Skip if not currently moving
     if ( this._currentlyMoving !== child ) return;

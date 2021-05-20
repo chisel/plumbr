@@ -23,6 +23,7 @@ export class CanvasComponent implements OnInit {
   public data: PipelineData[] = [];
   public moduleHovered: boolean = false;
   public moduleFieldHovered: boolean = false;
+  public pipelineMoving: boolean = false;
   public pipelineStackMoving: boolean = false;
   public moduleStackMoving: boolean = false;
 
@@ -132,6 +133,7 @@ export class CanvasComponent implements OnInit {
 
     this._canvas.canvasEnabled = false;
     this._canvas.overlaysEnabled = false;
+    this.pipelineMoving = true;
 
   }
 
@@ -139,6 +141,7 @@ export class CanvasComponent implements OnInit {
 
     this._canvas.canvasEnabled = true;
     this._canvas.overlaysEnabled = true;
+    this.pipelineMoving = false;
 
     // Update pipeline position
     this._state.updatePipelinePosition(
@@ -289,24 +292,32 @@ export class CanvasComponent implements OnInit {
   public onPipelineStackMoveStart() {
 
     this.pipelineStackMoving = true;
+    this._canvas.canvasEnabled = false;
+    this._canvas.overlaysEnabled = false;
 
   }
 
   public onPipelineStackMoveEnd() {
 
     this.pipelineStackMoving = false;
+    this._canvas.canvasEnabled = true;
+    this._canvas.overlaysEnabled = true;
 
   }
 
   public onModuleStackMoveStart() {
 
     this.moduleStackMoving = true;
+    this._canvas.canvasEnabled = false;
+    this._canvas.overlaysEnabled = false;
 
   }
 
   public onModuleStackMoveEnd() {
 
     this.moduleStackMoving = false;
+    this._canvas.canvasEnabled = true;
+    this._canvas.overlaysEnabled = true;
 
   }
 

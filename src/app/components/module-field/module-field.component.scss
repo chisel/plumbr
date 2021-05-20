@@ -35,8 +35,8 @@
   }
 
   &.stackable-moving-child {
-    transform: translateY(-10px);
-    box-shadow: 0 rem(10px) rem(15px) color(shadow);
+    transform: translateY(-5px);
+    box-shadow: 0 rem(5px) rem(15px) color(shadow);
     user-select: none;
     cursor: grabbing;
   }

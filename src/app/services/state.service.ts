@@ -129,9 +129,8 @@ export class StateService {
 
     let newValue = this.data;
 
-    const old = newValue[pipelineIndex].modules[oldIndex];
-    newValue[pipelineIndex].modules[oldIndex] = newValue[pipelineIndex].modules[newIndex];
-    newValue[pipelineIndex].modules[newIndex] = old;
+    const old = newValue[pipelineIndex].modules.splice(oldIndex, 1)[0];
+    newValue[pipelineIndex].modules.splice(newIndex, 0, old);
 
     this._updateData(newValue);
 
@@ -165,9 +164,8 @@ export class StateService {
 
     let newValue = this.data;
 
-    const old = newValue[pipelineIndex].modules[moduleIndex].fields[oldIndex];
-    newValue[pipelineIndex].modules[moduleIndex].fields[oldIndex] = newValue[pipelineIndex].modules[moduleIndex].fields[newIndex];
-    newValue[pipelineIndex].modules[moduleIndex].fields[newIndex] = old;
+    const old = newValue[pipelineIndex].modules[moduleIndex].fields.splice(oldIndex, 1)[0];
+    newValue[pipelineIndex].modules[moduleIndex].fields.splice(newIndex, 0, old);
 
     this._updateData(newValue);
 
