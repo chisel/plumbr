@@ -11,6 +11,7 @@
 
   &:hover.insert-mode .module-header {
     background-color: color('accent-green');
+    border-color: color('accent-green-dark');
   }
 
   &:hover.erase-mode .module {
@@ -19,6 +20,7 @@
 
   &:hover.erase-mode .module-header {
     background-color: color('accent-red');
+    border-color: color('accent-red-dark');
   }
 
   &:hover.move-mode .module,
@@ -29,6 +31,7 @@
   &:hover.move-mode .module-header,
   &.selected .module-header {
     background-color: color(accent);
+    border-color: color('accent-dark');
   }
 
   &.stackable-moving-child {
@@ -60,12 +63,24 @@
   padding: 0 rem(12px);
   color: color('gray-lighter');
   font-weight: bold;
-  transition: background-color .25s ease-in-out;
+  transition: background-color .25s ease-in-out, border-color .25s ease-in-out;
 
-  &.module-type-0 { background-color: color('accent-green'); }
-  &.module-type-1 { background-color: color('accent'); }
-  &.module-type-2 { background-color: color('accent-purple'); }
-  &.module-type-3 { background-color: color('accent-orange'); }
+  &.module-type-0 {
+    background-color: color('accent-green');
+    border-bottom: rem(3px) solid color('accent-green-dark');
+  }
+  &.module-type-1 {
+    background-color: color('accent');
+    border-bottom: rem(3px) solid color('accent-dark');
+  }
+  &.module-type-2 {
+    background-color: color('accent-purple');
+    border-bottom: rem(3px) solid color('accent-purple-dark');
+  }
+  &.module-type-3 {
+    background-color: color('accent-orange');
+    border-bottom: rem(3px) solid color('accent-orange-dark');
+  }
 
   .module-header-text {
     width: 100%;

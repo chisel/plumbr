@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { StateService, PipelineData, ModuleData, ModuleFieldData } from './state.service';
+import { ModalService, ModalType } from './modal.service';
 import { cloneDeep } from 'lodash-es';
 
 @Injectable({
@@ -10,6 +11,8 @@ export class ToolbarService {
 
   public static COPY_PIPELINE_WIDTH_OFFSET: number = 735;
   public static COPY_PIPELINE_HEIGHT_OFFSET: number = 0;
+  public static PIPELINE_WIDTH: number = 690;
+  public static PIPELINE_HEIGHT: number = 66;
 
   private _selectedTool$ = new BehaviorSubject<Tools>(Tools.Select);
   private _selection$ = new BehaviorSubject<Array<SelectedItem>>([]);
@@ -18,7 +21,8 @@ export class ToolbarService {
   private _clipboardType = SelectionType.Empty;
 
   constructor(
-    private _state: StateService
+    private _state: StateService,
+    private _modal: ModalService
   ) {
 
     // On tool change, clear selection
@@ -372,6 +376,80 @@ export class ToolbarService {
     }
 
     this.clearSelection();
+
+  }
+
+  public insertIntoSelected() {
+
+    // Inserting into canvas
+    if ( this._selectionType === SelectionType.Empty ) {
+
+      this._modal.openModal(ModalType.NewPipeline)
+      .then(data => {
+
+        if ( ! data ) return;
+
+        // Calculate center of the canvas
+        const computed = window.getComputedStyle(document.getElementById('canvas'));
+        const canvasLeft = +computed.left.replace('px', '');
+        const canvasTop = +computed.top.replace('px', '');
+        const canvasWidth = +computed.width.replace('px', '');
+        const canvasHeight = +computed.height.replace('px', '');
+        const left = Math.abs(canvasLeft) + ((canvasWidth - Math.abs(canvasLeft)) / 2) - (ToolbarService.PIPELINE_WIDTH / 2);
+        const top = Math.abs(canvasTop) + ((canvasHeight - Math.abs(canvasTop)) / 2) - (ToolbarService.PIPELINE_HEIGHT / 2);
+
+        this._state.newPipeline(
+          data.name,
+          Math.floor(left / 15) * 15,
+          Math.floor(top / 15) * 15,
+          data.description
+        );
+
+      })
+      .catch(console.error);
+
+    }
+    // Inserting into pipeline (single select only)
+    else if ( this._selection$.value.length === 1 && this._selectionType === SelectionType.Pipeline ) {
+
+      this._modal.openModal(ModalType.NewModule)
+      .then(data => {
+
+        if ( ! data ) return;
+
+        this._state.newModule(
+          this._selection$.value[0].pipelineIndex,
+          data.name,
+          data.type,
+          data.description
+        );
+
+      })
+      .catch(console.error);
+
+    }
+    // Inserting into module (single select only)
+    else if ( this._selection$.value.length === 1 && this._selectionType === SelectionType.Module ) {
+
+      this._modal.openModal(ModalType.NewModuleField)
+      .then(data => {
+
+        if ( ! data ) return;
+
+        this._state.newField(
+          this._selection$.value[0].pipelineIndex,
+          this._selection$.value[0].moduleIndex,
+          data.operation,
+          data.target,
+          data.type,
+          data.conditional,
+          data.description
+        );
+
+      })
+      .catch(console.error);
+
+    }
 
   }
 

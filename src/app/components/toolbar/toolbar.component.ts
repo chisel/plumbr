@@ -69,6 +69,7 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.shift.v', () => { this.onPaste(); });
     this._renderer.listen('window', 'keyup.shift.x', () => { this.onCutSelection(); });
     this._renderer.listen('window', 'keyup.shift.d', () => { this.onDuplicate(); });
+    this._renderer.listen('window', 'keyup.shift.a', () => { this.onInsert(); });
 
   }
 
@@ -175,6 +176,15 @@ export class ToolbarComponent implements OnInit {
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.duplicateSelected();
+
+  }
+
+  public onInsert() {
+
+    if ( this._modal.currentModal !== null ) return;
+    if ( this._toolbar.selectedTool !== Tools.Select ) return;
+
+    this._toolbar.insertIntoSelected();
 
   }
 
