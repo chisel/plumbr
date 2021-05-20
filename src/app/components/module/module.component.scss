@@ -57,6 +57,7 @@
   justify-content: center;
   width: 100%;
   height: rem(50px);
+  padding: 0 rem(12px);
   color: color('gray-lighter');
   font-weight: bold;
   transition: background-color .25s ease-in-out;
@@ -65,6 +66,11 @@
   &.module-type-1 { background-color: color('accent'); }
   &.module-type-2 { background-color: color('accent-purple'); }
   &.module-type-3 { background-color: color('accent-orange'); }
+
+  .module-header-text {
+    width: 100%;
+    text-align: center;
+  }
 
 }
 

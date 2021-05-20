@@ -1,5 +1,8 @@
 <div class="pipeline">
-  <div class="pipeline-name">{{ data.name }}</div>
+  <div class="pipeline-name">
+    {{ data.name }}
+    <span *ngIf="data.description" class="indicator-dot always-white info"></span>
+  </div>
   <div class="pipeline-stack"
   [appStackable]="movable"
   (onmovestart)="onStackMoveStart()"

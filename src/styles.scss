@@ -184,6 +184,34 @@ button {
   transition: color .25s ease-in-out;
 }
 
+*:hover.erase-mode,
+*:hover.move-mode,
+*:hover.insert-mode,
+*.selected {
+
+  .indicator-dot,
+  .indicator-dot.conditional.info {
+    background: color('gray-lighter');
+  }
+
+}
+
+.indicator-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  flex-grow: 0;
+  height: rem(14px);
+  width: rem(14px);
+  margin-left: rem(10px);
+  border-radius: 50%;
+  transition: background .25s ease-in-out;
+
+  &.info { background: color(accent); }
+  &.conditional { background: color('accent-orange'); }
+  &.always-white { background: color('gray-lighter'); }
+
+}
+
 app-module-field.erase-mode:hover,
 app-module-field.move-mode:hover,
 app-module-field.selected {

@@ -20,9 +20,13 @@
       border-color: color('gray-lighter');
     }
 
-    fa-icon,
     .field-operation {
       color: color('gray-lighter');
+    }
+
+    .indicator-dot,
+    .indicator-dot.conditional.info {
+      background: color('gray-lighter');
     }
 
   }
@@ -92,13 +96,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
 
-  }
-
-  fa-icon {
-    font-size: rem(14px);
-    color: color('accent-orange');
-    margin-left: rem(10px);
-    transition: color .25s ease-in-out;
   }
 
 }

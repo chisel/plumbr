@@ -6,6 +6,7 @@
   .pipeline-name {
     background-color: color('accent-green');
   }
+
 }
 
 :host:hover.erase-mode .pipeline {
@@ -14,6 +15,7 @@
   .pipeline-name {
     background-color: color('accent-red');
   }
+
 }
 
 :host:hover.move-mode .pipeline,
@@ -23,6 +25,7 @@
   .pipeline-name {
     background-color: color(accent);
   }
+
 }
 
 .pipeline {
@@ -39,7 +42,7 @@
 }
 
 .pipeline-name {
-  padding: rem(5px) rem(10px);
+  padding: rem(5px) rem(15px);
   font-size: rem(20px);
   color: color('gray-lighter');
   font-weight: bold;

@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModuleFieldData, ModuleFieldType, ModuleFieldOperationType } from '@plumbr/service/state';
-import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-module-field',
@@ -14,7 +13,6 @@ export class ModuleFieldComponent implements OnInit {
 
   public ModuleFieldType = ModuleFieldType;
   public ModuleFieldOperationType = ModuleFieldOperationType;
-  public faCircle = faCircle;
 
   constructor() { }
 

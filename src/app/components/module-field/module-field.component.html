@@ -2,5 +2,9 @@
   <div class="field-operation field-operation-type-{{data.operation}}">{{ ModuleFieldOperationType[data.operation] }}</div>
   <div class="field-type">{{ ModuleFieldType[data.type] }}</div>
   <div class="field-target" [innerHTML]="interpolateVariables(data.target)"></div>
-  <fa-icon *ngIf="data.conditional" [icon]="faCircle" size="sm"></fa-icon>
+  <div
+  *ngIf="data.conditional || data.description"
+  class="indicator-dot"
+  [ngClass]="{ conditional: data.conditional, info: data.description }">
+  </div>
 </div>
