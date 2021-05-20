@@ -67,6 +67,7 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.backspace', () => { this.onEraseSelection(); });
     this._renderer.listen('window', 'keyup.shift.c', () => { this.onCopySelection(); });
     this._renderer.listen('window', 'keyup.shift.v', () => { this.onPaste(); });
+    this._renderer.listen('window', 'keyup.shift.x', () => { this.onCutSelection(); });
     this._renderer.listen('window', 'keyup.shift.d', () => { this.onDuplicate(); });
 
   }
@@ -159,12 +160,21 @@ export class ToolbarComponent implements OnInit {
 
   }
 
+  public onCutSelection() {
+
+    if ( this._modal.currentModal !== null ) return;
+    if ( this._toolbar.selectedTool !== Tools.Select ) return;
+
+    this._toolbar.cutSelected();
+
+  }
+
   public onDuplicate() {
 
     if ( this._modal.currentModal !== null ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
-    this._toolbar.duplicateSelection();
+    this._toolbar.duplicateSelected();
 
   }
 

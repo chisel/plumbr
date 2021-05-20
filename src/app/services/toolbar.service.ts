@@ -28,8 +28,6 @@ export class ToolbarService {
 
     });
 
-    this._selection$.subscribe(selection => console.log(SelectionType[this._selectionType], selection));
-
   }
 
   private _getItemType(item: SelectedItem): SelectionType {
@@ -175,7 +173,7 @@ export class ToolbarService {
 
   }
 
-  public copySelected() {
+  public copySelected(autoClear: boolean = true) {
 
     this._clipboardType = this._selectionType;
     this._clipboard = this._selection$.value.map(item => {
@@ -191,7 +189,14 @@ export class ToolbarService {
 
     });
 
-    this.clearSelection();
+    if ( autoClear ) this.clearSelection();
+
+  }
+
+  public cutSelected() {
+
+    this.copySelected(false);
+    this.deleteSelectedItems();
 
   }
 
@@ -321,7 +326,7 @@ export class ToolbarService {
 
   }
 
-  public duplicateSelection() {
+  public duplicateSelected() {
 
     // If empty selection, ignore
     if ( this._selectionType === SelectionType.Empty ) return;
