@@ -185,7 +185,8 @@ button {
 }
 
 app-module-field.erase-mode:hover,
-app-module-field.move-mode:hover {
+app-module-field.move-mode:hover,
+app-module-field.selected {
   .field-target span.variable {
     color: color('gray-lighter');
   }

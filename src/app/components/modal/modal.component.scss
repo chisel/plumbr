@@ -106,7 +106,16 @@ form {
   width: 50%;
 }
 
+.button-group-100 > * {
+  width: 100%;
+}
+
 p {
   margin-top: rem(20px);
   margin-bottom: rem(30px);
+
+  &.modal-no-context-message {
+    color: color('gray-dark');
+  }
+
 }

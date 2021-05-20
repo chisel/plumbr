@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools, SelectedItem } from '@plumbr/service/toolbar';
-import { StateService, PipelineData, ModuleData, ModuleFieldData } from '@plumbr/service/state';
+import { StateService, PipelineData, ModuleData, ModuleFieldData, ModuleFieldOperationType } from '@plumbr/service/state';
 import { ModalService, ModalType } from '@plumbr/service/modal';
 
 @Component({
@@ -230,6 +230,23 @@ export class CanvasComponent implements OnInit {
 
   }
 
+  public onPipelineDoubleClick(event: MouseEvent, index: number) {
+
+    if ( this.canvasMoveMode ) return;
+
+    event.stopImmediatePropagation();
+
+    if ( this._toolbar.selectedTool === Tools.Select ) {
+
+      this._modal.openModal(ModalType.Prompt, {
+        title: `${this.data[index].name} Pipeline`,
+        message: this.data[index].description
+      });
+
+    }
+
+  }
+
   public onModuleClick(event: MouseEvent, index: number, mindex: number) {
 
     if ( this.canvasMoveMode ) return;
@@ -283,6 +300,23 @@ export class CanvasComponent implements OnInit {
 
   }
 
+  public onModuleDoubleClick(event: MouseEvent, index: number, mindex: number) {
+
+    if ( this.canvasMoveMode ) return;
+
+    event.stopImmediatePropagation();
+
+    if ( this._toolbar.selectedTool === Tools.Select ) {
+
+      this._modal.openModal(ModalType.Prompt, {
+        title: `${this.data[index].modules[mindex].name} Module`,
+        message: this.data[index].modules[mindex].description
+      });
+
+    }
+
+  }
+
   public onModuleFieldClick(event: MouseEvent, index: number, mindex: number, findex: number) {
 
     if ( this.canvasMoveMode ) return;
@@ -309,6 +343,23 @@ export class CanvasComponent implements OnInit {
         pipelineIndex: index,
         moduleIndex: mindex,
         fieldIndex: findex
+      });
+
+    }
+
+  }
+
+  public onModuleFieldDoubleClick(event: MouseEvent, index: number, mindex: number, findex: number) {
+
+    if ( this.canvasMoveMode ) return;
+
+    event.stopImmediatePropagation();
+
+    if ( this._toolbar.selectedTool === Tools.Select ) {
+
+      this._modal.openModal(ModalType.Prompt, {
+        title: `${this.data[index].modules[mindex].name} ${ModuleFieldOperationType[this.data[index].modules[mindex].fields[findex].operation]} Details`,
+        message: this.data[index].modules[mindex].fields[findex].description
       });
 
     }

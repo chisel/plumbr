@@ -18,7 +18,7 @@ export class ModalService {
 
   }
 
-  public async openModal(type: ModalType, context?: ConfirmationContext): Promise<any> {
+  public async openModal(type: ModalType, context?: MessageContext): Promise<any> {
 
     if ( this._currentModal !== null ) throw new Error('A modal is already open!');
 
@@ -66,6 +66,7 @@ export enum ModalType {
   NewModule,
   NewModuleField,
   Confirmation,
+  Prompt,
   Help
 
 }
@@ -73,11 +74,11 @@ export enum ModalType {
 export interface OpenModalData {
 
   type: ModalType;
-  context?: ConfirmationContext;
+  context?: MessageContext;
 
 }
 
-export interface ConfirmationContext {
+export interface MessageContext {
 
   title: string;
   message: string;

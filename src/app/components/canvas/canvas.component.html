@@ -18,6 +18,7 @@ class="canvas"
   [pipelineIndex]="index"
   [pipelineStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && ! moduleFieldHovered && ! pipelineMoving"
   (click)="onPipelineClick($event, index)"
+  (dblclick)="onPipelineDoubleClick($event, index)"
   (onstackmovestart)="onPipelineStackMoveStart()"
   (onstackmoveend)="onPipelineStackMoveEnd()"
   [ngClass]="{
@@ -51,11 +52,13 @@ class="canvas"
     (onstackmoveend)="onModuleStackMoveEnd()"
     (mousemove)="onModuleMouseHover()"
     (mouseleave)="onModuleMouseLeave()"
-    (click)="onModuleClick($event, index, mindex)">
+    (click)="onModuleClick($event, index, mindex)"
+    (dblclick)="onModuleDoubleClick($event, index, mindex)">
       <app-module-field
       *ngFor="let field of module.fields; let findex = index"
       [moduleFieldData]="field"
       (click)="onModuleFieldClick($event, index, mindex, findex)"
+      (dblclick)="onModuleFieldDoubleClick($event, index, mindex, findex)"
       (mousemove)="onModuleFieldMouseHover()"
       (mouseleave)="onModuleFieldMouseLeave()"
       [ngClass]="{
