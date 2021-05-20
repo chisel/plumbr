@@ -53,7 +53,7 @@ export class ToolbarComponent implements OnInit {
     this._toolbar.selectedTool$(selected => this.selectedTool = selected);
 
     // Register global event handlers for shortcuts
-    this._renderer.listen('window', 'keyup.p', () => { this.onSelectTool(Tools.Pointer); });
+    this._renderer.listen('window', 'keyup.s', () => { this.onSelectTool(Tools.Select); });
     this._renderer.listen('window', 'keyup.i', () => { this.onSelectTool(Tools.Insert); });
     this._renderer.listen('window', 'keyup.m', () => { this.onSelectTool(Tools.Move); });
     this._renderer.listen('window', 'keyup.l', () => { this.onSelectTool(Tools.Link); });
@@ -63,6 +63,11 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.shift.z', () => { this.onUndo(); });
     this._renderer.listen('window', 'keyup.shift.i', () => { this.onImport(); });
     this._renderer.listen('window', 'keyup.shift.e', () => { this.onExport(); });
+    this._renderer.listen('window', 'keyup.delete', () => { this.onEraseSelection(); });
+    this._renderer.listen('window', 'keyup.backspace', () => { this.onEraseSelection(); });
+    this._renderer.listen('window', 'keyup.shift.c', () => { this.onCopySelection(); });
+    this._renderer.listen('window', 'keyup.shift.v', () => { this.onPaste(); });
+    this._renderer.listen('window', 'keyup.shift.d', () => { this.onDuplicate(); });
 
   }
 
@@ -124,6 +129,42 @@ export class ToolbarComponent implements OnInit {
     if ( this._modal.currentModal !== null ) return;
 
     this._state.export();
+
+  }
+
+  public onEraseSelection() {
+
+    if ( this._modal.currentModal !== null ) return;
+    if ( this._toolbar.selectedTool !== Tools.Select ) return;
+
+    this._toolbar.deleteSelectedItems();
+
+  }
+
+  public onCopySelection() {
+
+    if ( this._modal.currentModal !== null ) return;
+    if ( this._toolbar.selectedTool !== Tools.Select ) return;
+
+    this._toolbar.copySelected();
+
+  }
+
+  public onPaste() {
+
+    if ( this._modal.currentModal !== null ) return;
+    if ( this._toolbar.selectedTool !== Tools.Select ) return;
+
+    this._toolbar.paste();
+
+  }
+
+  public onDuplicate() {
+
+    if ( this._modal.currentModal !== null ) return;
+    if ( this._toolbar.selectedTool !== Tools.Select ) return;
+
+    this._toolbar.duplicateSelection();
 
   }
 

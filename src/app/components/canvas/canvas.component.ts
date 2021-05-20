@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CanvasService } from '@plumbr/service/canvas';
-import { ToolbarService, Tools } from '@plumbr/service/toolbar';
+import { ToolbarService, Tools, SelectedItem } from '@plumbr/service/toolbar';
 import { StateService, PipelineData, ModuleData, ModuleFieldData } from '@plumbr/service/state';
 import { ModalService, ModalType } from '@plumbr/service/modal';
 
@@ -26,6 +26,7 @@ export class CanvasComponent implements OnInit {
   public pipelineMoving: boolean = false;
   public pipelineStackMoving: boolean = false;
   public moduleStackMoving: boolean = false;
+  public selection: SelectedItem[] = [];
 
   @HostListener('document:keydown.space', ['$event'])
   onMoveModeEnable() {
@@ -127,6 +128,9 @@ export class CanvasComponent implements OnInit {
 
     });
 
+    // Update selection
+    this._toolbar.selection$(selection => this.selection = selection);
+
   }
 
   public onElementMovementStart() {
@@ -178,6 +182,12 @@ export class CanvasComponent implements OnInit {
       .catch(console.error);
 
     }
+    // Deselect items
+    else if ( this.selectedTool === Tools.Select ) {
+
+      this._toolbar.clearSelection();
+
+    }
 
   }
 
@@ -207,6 +217,14 @@ export class CanvasComponent implements OnInit {
       this._state.deletePipeline(index);
       this.moduleHovered = false;
       this.moduleFieldHovered = false;
+
+    }
+    else if ( this._toolbar.selectedTool === Tools.Select ) {
+
+      event.stopImmediatePropagation();
+
+      if ( event.shiftKey ) this._toolbar.addToSelection({ pipelineIndex: index });
+      else this._toolbar.setSelection({ pipelineIndex: index });
 
     }
 
@@ -248,6 +266,20 @@ export class CanvasComponent implements OnInit {
       this.moduleFieldHovered = false;
 
     }
+    else if ( this._toolbar.selectedTool === Tools.Select ) {
+
+      event.stopImmediatePropagation();
+
+      if ( event.shiftKey ) this._toolbar.addToSelection({
+        pipelineIndex: index,
+        moduleIndex: mindex
+      });
+      else this._toolbar.setSelection({
+        pipelineIndex: index,
+        moduleIndex: mindex
+      });
+
+    }
 
   }
 
@@ -255,13 +287,31 @@ export class CanvasComponent implements OnInit {
 
     if ( this.canvasMoveMode ) return;
 
-    if ( this._toolbar.selectedTool !== Tools.Erase ) return;
+    if ( this._toolbar.selectedTool === Tools.Erase ) {
 
-    event.stopImmediatePropagation();
+      event.stopImmediatePropagation();
 
-    this._state.deleteModuleField(index, mindex, findex);
-    this.moduleHovered = false;
-    this.moduleFieldHovered = false;
+      this._state.deleteModuleField(index, mindex, findex);
+      this.moduleHovered = false;
+      this.moduleFieldHovered = false;
+
+    }
+    else if ( this._toolbar.selectedTool === Tools.Select ) {
+
+      event.stopImmediatePropagation();
+
+      if ( event.shiftKey ) this._toolbar.addToSelection({
+        pipelineIndex: index,
+        moduleIndex: mindex,
+        fieldIndex: findex
+      });
+      else this._toolbar.setSelection({
+        pipelineIndex: index,
+        moduleIndex: mindex,
+        fieldIndex: findex
+      });
+
+    }
 
   }
 
@@ -318,6 +368,14 @@ export class CanvasComponent implements OnInit {
     this.moduleStackMoving = false;
     this._canvas.canvasEnabled = true;
     this._canvas.overlaysEnabled = true;
+
+  }
+
+  public isSelected(index: number, mindex?: number, findex?: number): boolean {
+
+    return !! this.selection.find(
+      item => item.pipelineIndex === index && item.moduleIndex === mindex && item.fieldIndex === findex
+    );
 
   }
 

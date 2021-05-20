@@ -16,7 +16,8 @@
   }
 }
 
-:host:hover.move-mode .pipeline {
+:host:hover.move-mode .pipeline,
+:host.selected .pipeline {
   border-color: color(accent);
 
   .pipeline-name {

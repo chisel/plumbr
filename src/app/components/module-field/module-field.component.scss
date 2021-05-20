@@ -11,7 +11,8 @@
   }
 
   &:hover.erase-mode .module-field,
-  &:hover.move-mode .module-field {
+  &:hover.move-mode .module-field,
+  &.selected .module-field {
     color: color('gray-lighter');
 
     .field-type {
@@ -30,7 +31,8 @@
     background-color: color('accent-red');
   }
 
-  &:hover.move-mode .module-field {
+  &:hover.move-mode .module-field,
+  &.selected .module-field {
     background-color: color(accent);
   }
 

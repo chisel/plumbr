@@ -3,8 +3,8 @@
   'pointer-events': ! toolbarEnabled ? 'none' : 'all'
 }">
   <div class="toolbar-button"
-  [ngClass]="{ selected: selectedTool === Tools.Pointer }"
-  (click)="onSelectTool(Tools.Pointer)"
+  [ngClass]="{ selected: selectedTool === Tools.Select }"
+  (click)="onSelectTool(Tools.Select)"
   (mouseenter)="onMouseEnter(t0)"
   (mouseleave)="onMouseLeave(t0)">
     <fa-icon [fixedWidth]="true" size="lg" [icon]="faMousePointer"></fa-icon>
@@ -72,7 +72,7 @@
 </div>
 <div class="tooltips">
   <div #t0 class="tooltip">
-    <div class="tooltip-text">Pointer tool <span class="tooltip-text-small">p</span></div>
+    <div class="tooltip-text">Select tool <span class="tooltip-text-small">s</span></div>
   </div>
   <div #t1 class="tooltip">
     <div class="tooltip-text">Insert tool <span class="tooltip-text-small">i</span></div>

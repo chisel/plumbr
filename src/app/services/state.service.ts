@@ -34,22 +34,12 @@ export class StateService {
 
   }
 
-  private _captureHistory() {
-
-    this._history.push(cloneDeep(this._data));
-
-    // Only keep the last 15 moves
-    if ( this._history.length > 15 )
-      this._history = this._history.slice(-15);
-
-  }
-
   private _updateData(newValue: PipelineData[], skipHistory?: boolean) {
 
     this._unsavedChanges = true;
 
     // Add the current state to history
-    if ( ! skipHistory ) this._captureHistory();
+    if ( ! skipHistory ) this.captureHistory();
     // Set the data with the new value
     this._data = newValue;
     // Emit the data change to all subscribers
@@ -60,6 +50,16 @@ export class StateService {
     localStorage.setItem(StateService.LOCALSTORAGE_KEY, compressed);
 
     console.log(`Saved state (original ${uncompressed.length} bytes | compressed ${compressed.length} bytes)`);
+
+  }
+
+  public captureHistory() {
+
+    this._history.push(cloneDeep(this._data));
+
+    // Only keep the last 15 moves
+    if ( this._history.length > 15 )
+      this._history = this._history.slice(-15);
 
   }
 
@@ -79,8 +79,9 @@ export class StateService {
     name: string,
     left: number,
     top: number,
-    description?: string
-  ) {
+    description?: string,
+    skipHistory?: boolean
+  ): number {
 
     let newValue = this.data;
 
@@ -91,7 +92,9 @@ export class StateService {
       position: { left, top }
     });
 
-    this._updateData(newValue);
+    this._updateData(newValue, skipHistory);
+
+    return this._data.length - 1;
 
   }
 
@@ -109,8 +112,9 @@ export class StateService {
     pipelineIndex: number,
     name: string,
     type: ModuleType,
-    description?: string
-  ) {
+    description?: string,
+    skipHistory?: boolean
+  ): number {
 
     let newValue = this.data;
 
@@ -121,7 +125,9 @@ export class StateService {
       fields: []
     });
 
-    this._updateData(newValue);
+    this._updateData(newValue, skipHistory);
+
+    return this._data[pipelineIndex].modules.length - 1;
 
   }
 
@@ -143,8 +149,9 @@ export class StateService {
     target: string,
     type: ModuleFieldType,
     conditional?: true,
-    description?: string
-  ) {
+    description?: string,
+    skipHistory?: boolean
+  ): number {
 
     let newValue = this.data;
 
@@ -156,7 +163,9 @@ export class StateService {
       description
     });
 
-    this._updateData(newValue);
+    this._updateData(newValue, skipHistory);
+
+    return this._data[pipelineIndex].modules[moduleIndex].fields.length - 1;
 
   }
 
@@ -173,7 +182,7 @@ export class StateService {
 
   public deletePipeline(index: number) {
 
-    let newValue = this.data;
+    const newValue = this.data;
 
     newValue.splice(index, 1);
 
@@ -181,9 +190,30 @@ export class StateService {
 
   }
 
+  public bulkDeletePipeline(indices: { pipelineIndex: number }[]) {
+
+    const newValue = this.data;
+
+    for ( let i = 0; i < indices.length; i++ ) {
+
+      const { pipelineIndex: index } = indices[i];
+      // Calculate the index shift based on previously deleted items within the same container
+      const shift = indices
+      .slice(0, i)
+      .filter(indice => indice.pipelineIndex < index)
+      .length;
+
+      newValue.splice(index - shift, 1);
+
+    }
+
+    this._updateData(newValue);
+
+  }
+
   public deleteModule(index: number, mindex: number) {
 
-    let newValue = this.data;
+    const newValue = this.data;
 
     newValue[index].modules.splice(mindex, 1);
 
@@ -191,11 +221,53 @@ export class StateService {
 
   }
 
+  public bulkDeleteModule(indices: { pipelineIndex: number, moduleIndex: number }[]) {
+
+    const newValue = this.data;
+
+    for ( let i = 0; i < indices.length; i++ ) {
+
+      const { pipelineIndex: index, moduleIndex: mindex } = indices[i];
+      // Calculate the index shift based on previously deleted items within the same container
+      const shift = indices
+      .slice(0, i)
+      .filter(indice => indice.pipelineIndex === index && indice.moduleIndex < mindex)
+      .length;
+
+      newValue[index].modules.splice(mindex - shift, 1);
+
+    }
+
+    this._updateData(newValue);
+
+  }
+
   public deleteModuleField(index: number, mindex: number, findex: number) {
 
-    let newValue = this.data;
+    const newValue = this.data;
 
     newValue[index].modules[mindex].fields.splice(findex, 1);
+
+    this._updateData(newValue);
+
+  }
+
+  public bulkDeleteModuleField(indices: { pipelineIndex: number, moduleIndex: number, fieldIndex: number }[]) {
+
+    const newValue = this.data;
+
+    for ( let i = 0; i < indices.length; i++ ) {
+
+      const { pipelineIndex: index, moduleIndex: mindex, fieldIndex: findex } = indices[i];
+      // Calculate the index shift based on previously deleted items within the same container
+      const shift = indices
+      .slice(0, i)
+      .filter(indice => indice.pipelineIndex === index && indice.moduleIndex === mindex && indice.fieldIndex < findex)
+      .length;
+
+      newValue[index].modules[mindex].fields.splice(findex - shift, 1);
+
+    }
 
     this._updateData(newValue);
 

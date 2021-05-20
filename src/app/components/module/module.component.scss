@@ -21,11 +21,13 @@
     background-color: color('accent-red');
   }
 
-  &:hover.move-mode .module {
+  &:hover.move-mode .module,
+  &.selected .module {
     border-color: color(accent);
   }
 
-  &:hover.move-mode .module-header {
+  &:hover.move-mode .module-header,
+  &.selected .module-header {
     background-color: color(accent);
   }
 
