@@ -14,7 +14,7 @@
   background-color: color('gray-lighter-transparent');
   opacity: 0;
   pointer-events: none;
-  transition: opacity .25s ease-in-out;
+  transition: opacity .25s ease-in-out, backdrop-filter .25s ease-in-out;
 
   &.show {
     opacity: 1;
