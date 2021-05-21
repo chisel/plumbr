@@ -70,7 +70,7 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.shift.v', () => { this.onPaste(); });
     this._renderer.listen('window', 'keyup.shift.x', () => { this.onCutSelection(); });
     this._renderer.listen('window', 'keyup.shift.d', () => { this.onDuplicate(); });
-    this._renderer.listen('window', 'keyup.shift.a', () => { this.onInsert(); });
+    this._renderer.listen('window', 'keyup.shift.i', () => { this.onInsert(); });
     this._renderer.listen('window', 'keyup.shift.t', () => { this.onEdit(); });
     this._renderer.listen('window', 'keyup.shift.e', () => { this.onExportAsImage(); });
 
