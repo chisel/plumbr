@@ -8,8 +8,7 @@ import {
   faFileDownload,
   faFileUpload,
   faQuestion,
-  faCrosshairs,
-  faUndoAlt,
+  faFileImage,
   faPencilAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { CanvasService } from '@plumbr/service/canvas';
@@ -32,9 +31,8 @@ export class ToolbarComponent implements OnInit {
   public faEraser = faEraser;
   public faFileDownload = faFileDownload;
   public faFileUpload = faFileUpload;
+  public faFileImage = faFileImage;
   public faQuestion = faQuestion;
-  public faCrosshairs = faCrosshairs;
-  public faUndoAlt = faUndoAlt;
   public faPencilAlt = faPencilAlt;
 
   public toolbarEnabled: boolean;
@@ -64,8 +62,8 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.shift.r', () => { this.onResetCanvasPosition(); });
     this._renderer.listen('window', 'keyup.h', () => { this.onHelp(); });
     this._renderer.listen('window', 'keyup.shift.z', () => { this.onUndo(); });
-    this._renderer.listen('window', 'keyup.shift.i', () => { this.onImport(); });
-    this._renderer.listen('window', 'keyup.shift.e', () => { this.onExport(); });
+    this._renderer.listen('window', 'keyup.shift.o', () => { this.onOpenProject(); });
+    this._renderer.listen('window', 'keyup.shift.s', () => { this.onSaveProject(); });
     this._renderer.listen('window', 'keyup.delete', () => { this.onEraseSelection(); });
     this._renderer.listen('window', 'keyup.backspace', () => { this.onEraseSelection(); });
     this._renderer.listen('window', 'keyup.shift.c', () => { this.onCopySelection(); });
@@ -74,6 +72,7 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.shift.d', () => { this.onDuplicate(); });
     this._renderer.listen('window', 'keyup.shift.a', () => { this.onInsert(); });
     this._renderer.listen('window', 'keyup.shift.t', () => { this.onEdit(); });
+    this._renderer.listen('window', 'keyup.shift.e', () => { this.onExportAsImage(); });
 
   }
 
@@ -122,7 +121,7 @@ export class ToolbarComponent implements OnInit {
 
   }
 
-  public onImport() {
+  public onOpenProject() {
 
     if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
@@ -130,7 +129,7 @@ export class ToolbarComponent implements OnInit {
 
   }
 
-  public onExport() {
+  public onSaveProject() {
 
     if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
@@ -198,6 +197,18 @@ export class ToolbarComponent implements OnInit {
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.editSelected();
+
+  }
+
+  public onExportAsImage() {
+
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+
+    this._modal.openModal(ModalType.Spinner);
+
+    this._toolbar.saveCanvasAsImage(250)
+    .catch(console.error)
+    .finally(() => this._modal.closeModal());
 
   }
 

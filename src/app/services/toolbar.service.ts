@@ -3,6 +3,8 @@ import { BehaviorSubject } from 'rxjs';
 import { StateService, PipelineData, ModuleData, ModuleFieldData } from './state.service';
 import { ModalService, ModalType, PipelineContext, ModuleContext, ModuleFieldContext } from './modal.service';
 import { cloneDeep } from 'lodash-es';
+import { toBlob } from 'html-to-image';
+import { saveAs } from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
@@ -537,6 +539,90 @@ export class ToolbarService {
       .finally(() => this.clearSelection());
 
     }
+
+  }
+
+  public async saveCanvasAsImage(initialDelay: number = 0) {
+
+    // Ignore saving an empty canvas
+    if ( ! this._state.data.length ) return;
+
+    // Introduce delay (used for spinner modal animation)
+    if ( initialDelay )
+      await new Promise(resolve => setTimeout(resolve, initialDelay));
+
+    // Temporarily reposition elements
+    this._state.captureHistory();
+
+    // Find bounding positions from all sides
+    const pipelines = this._state.data;
+    const elements = document.querySelectorAll('app-pipeline');
+    const PIPELINE_HEADER_EXTRA_HEIGHT = +window.getComputedStyle(document.querySelector('.pipeline .pipeline-name')).height.replace('px', '') / 2;
+    const IMAGE_CANVAS_PADDING = 50;
+    const canvas = document.getElementById('canvas');
+    const canvasLeft = canvas.style.left;
+    const canvasTop = canvas.style.top;
+    let mostLeft: number = null, mostRight: number = null, mostTop: number = null, mostBottom: number = null;
+
+    for ( let i = 0; i < elements.length; i++ ) {
+
+      const computed = window.getComputedStyle(elements.item(i));
+      const computedLeft = +computed.left.replace('px', '');
+      const computedTop = +computed.top.replace('px', '');
+      const computedWidth = +computed.width.replace('px', '');
+      const computedHeight = +computed.height.replace('px', '') + PIPELINE_HEADER_EXTRA_HEIGHT;
+
+      if ( mostLeft === null || computedLeft < mostLeft )
+        mostLeft = computedLeft;
+      if ( mostRight === null || computedLeft + computedWidth > mostRight )
+        mostRight = computedLeft + computedWidth;
+      if ( mostTop === null || computedTop < mostTop )
+        mostTop = computedTop;
+      if ( mostBottom === null || computedTop + computedHeight > mostBottom )
+        mostBottom = computedTop + computedHeight;
+
+    }
+
+    // Reposition pipelines
+    for ( let i = 0; i < pipelines.length; i++ ) {
+
+      const pipeline = pipelines[i];
+
+      this._state.updatePipelinePosition(
+        i,
+        pipeline.position.left - mostLeft + IMAGE_CANVAS_PADDING,
+        pipeline.position.top - mostTop + PIPELINE_HEADER_EXTRA_HEIGHT + IMAGE_CANVAS_PADDING,
+        true
+      );
+
+    }
+
+    // Wait for 100ms
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Reposition canvas
+    canvas.style.left = '0px';
+    canvas.style.top = '0px';
+
+    // Render image from canvas
+    const blob = await toBlob(canvas, {
+      height: mostBottom - mostTop + (IMAGE_CANVAS_PADDING * 2),
+      width: mostRight - mostLeft + (IMAGE_CANVAS_PADDING * 2),
+      backgroundColor: 'white',
+      style: {
+        backgroundImage: ''
+      },
+      // Filter out .indicator-dot:not(.conditional)
+      filter: node => ! node.classList || ! node.classList.contains('indicator-dot') || node.classList.contains('conditional')
+    });
+
+    // Restore previous element positions
+    canvas.style.left = canvasLeft;
+    canvas.style.top = canvasTop;
+    this._state.undo();
+
+    // Prompt save image
+    saveAs(blob, 'plumbr.png');
 
   }
 

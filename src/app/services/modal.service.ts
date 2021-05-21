@@ -68,7 +68,8 @@ export enum ModalType {
   ModuleField,
   Confirmation,
   Prompt,
-  Help
+  Help,
+  Spinner
 
 }
 

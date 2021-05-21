@@ -98,13 +98,13 @@ export class StateService {
 
   }
 
-  public updatePipelinePosition(index: number, left: number, top: number) {
+  public updatePipelinePosition(index: number, left: number, top: number, skipHistory?: boolean) {
 
     let newValue = this.data;
 
     newValue[index].position = { left, top };
 
-    this._updateData(newValue);
+    this._updateData(newValue, skipHistory);
 
   }
 

@@ -1,6 +1,7 @@
 <div class="backblur"
 [ngClass]="{ show: showModal }">
-  <div class="modal">
+  <div *ngIf="currentModal?.type === ModalType.Spinner" class="loader"></div>
+  <div *ngIf="currentModal?.type !== ModalType.Spinner" class="modal">
     <fa-icon
     (click)="onClose()"
     class="close-button"
