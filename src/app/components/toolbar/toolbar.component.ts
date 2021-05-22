@@ -54,7 +54,7 @@ export class ToolbarComponent implements OnInit {
 
     // Register global event handlers for shortcuts
     this._renderer.listen('window', 'keyup.s', () => { this.onSelectTool(Tools.Select); });
-    this._renderer.listen('window', 'keyup.i', () => { this.onSelectTool(Tools.Insert); });
+    this._renderer.listen('window', 'keyup.n', () => { this.onSelectTool(Tools.Insert); });
     this._renderer.listen('window', 'keyup.t', () => { this.onSelectTool(Tools.Edit); });
     this._renderer.listen('window', 'keyup.m', () => { this.onSelectTool(Tools.Move); });
     this._renderer.listen('window', 'keyup.l', () => { this.onSelectTool(Tools.Link); });
@@ -70,7 +70,7 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.shift.v', () => { this.onPaste(); });
     this._renderer.listen('window', 'keyup.shift.x', () => { this.onCutSelection(); });
     this._renderer.listen('window', 'keyup.shift.d', () => { this.onDuplicate(); });
-    this._renderer.listen('window', 'keyup.shift.i', () => { this.onInsert(); });
+    this._renderer.listen('window', 'keyup.shift.n', () => { this.onInsert(); });
     this._renderer.listen('window', 'keyup.shift.t', () => { this.onEdit(); });
     this._renderer.listen('window', 'keyup.shift.e', () => { this.onExportAsImage(); });
 
