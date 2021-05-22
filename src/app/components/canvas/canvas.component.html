@@ -49,7 +49,7 @@ class="canvas"
     [moduleData]="module"
     [pipelineIndex]="index"
     [moduleIndex]="mindex"
-    [moduleStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && moduleFieldHovered && ! pipelineMoving"
+    [moduleStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && ! pipelineMoving"
     [currentScale]="currentScale"
     [ngClass]="{
       'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode && moduleHovered,
