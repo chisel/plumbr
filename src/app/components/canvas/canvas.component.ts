@@ -168,8 +168,8 @@ export class CanvasComponent implements OnInit {
     // Update pipeline position
     this._state.updatePipelinePosition(
       index,
-      +element.style.left.substr(0, element.style.left.length - 2),
-      +element.style.top.substr(0, element.style.top.length - 2)
+      +element.style.left.substr(0, element.style.left.length - 2) / this.currentScale,
+      +element.style.top.substr(0, element.style.top.length - 2) / this.currentScale
     );
 
   }

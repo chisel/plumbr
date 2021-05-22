@@ -33,9 +33,10 @@ class="canvas"
     'selected': selectedTool === Tools.Select && ! canvasMoveMode && isSelected(index)
   }"
   [ngStyle]="{
-    left: pipeline.position.left + 'px',
-    top: pipeline.position.top + 'px',
-    transform: 'scale(' + currentScale + ')'
+    left: (((pipeline.position.left * currentScale) / 15) * 15) + 'px',
+    top: (((pipeline.position.top * currentScale) / 15) * 15) + 'px',
+    transform: 'scale(' + currentScale + ')',
+    'transform-origin': 'top left'
   }"
   [appMovable]="! canvasMoveMode && selectedTool === Tools.Move && ! pipelineStackMoving && ! moduleStackMoving"
   (onmovementstart)="onElementMovementStart()"

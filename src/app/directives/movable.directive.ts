@@ -18,6 +18,9 @@ export class MovableDirective implements OnInit, OnChanges {
   @Input('appMovable')
   public movable: boolean;
 
+  @Input('currentScale')
+  public currentScale: number = 1;
+
   @Output('onmovementstart')
   public onMovementStart = new EventEmitter<HTMLElement>();
 
@@ -31,8 +34,8 @@ export class MovableDirective implements OnInit, OnChanges {
   ngOnInit() {
 
     // Read the initial left and top values
-    this._computedLeft = +this._ref.nativeElement.style.left.substr(0, this._ref.nativeElement.style.left.length - 2);
-    this._computedTop = +this._ref.nativeElement.style.top.substr(0, this._ref.nativeElement.style.top.length - 2);
+    this._computedLeft = +this._ref.nativeElement.style.left.substr(0, this._ref.nativeElement.style.left.length - 2) / this.currentScale;
+    this._computedTop = +this._ref.nativeElement.style.top.substr(0, this._ref.nativeElement.style.top.length - 2) / this.currentScale;
 
     // Read the initial z-index
     this._initialZIndex = +this._ref.nativeElement.style.zIndex;
@@ -52,15 +55,18 @@ export class MovableDirective implements OnInit, OnChanges {
 
           // Catch up
           // Calculate computed values
-          this._computedLeft = Math.max(this._computedLeft + (event.clientX - this._lastClientX), 0);
-          this._computedTop = Math.max(this._computedTop + (event.clientY - this._lastClientY), 0);
+          this._computedLeft = Math.max(this._computedLeft + ((event.clientX - this._lastClientX) / this.currentScale), 0);
+          this._computedTop = Math.max(this._computedTop + ((event.clientY - this._lastClientY) / this.currentScale), 0);
 
           // Move the element in grids of 15px
-          this._ref.nativeElement.style.left = (Math.floor(this._computedLeft / 15) * 15) + 'px';
-          this._ref.nativeElement.style.top = (Math.floor(this._computedTop / 15) * 15) + 'px';
+          this._ref.nativeElement.style.left = (Math.floor((this._computedLeft * this.currentScale) / 15) * 15) + 'px';
+          this._ref.nativeElement.style.top = (Math.floor((this._computedTop * this.currentScale) / 15) * 15) + 'px';
 
           this._lastClientX = event.clientX;
           this._lastClientY = event.clientY;
+
+          event.stopImmediatePropagation();
+          event.preventDefault();
 
         }
 
@@ -151,12 +157,12 @@ export class MovableDirective implements OnInit, OnChanges {
     event.stopImmediatePropagation();
 
     // Calculate computed values
-    this._computedLeft = Math.max(this._computedLeft + (event.clientX - lastX), 0);
-    this._computedTop = Math.max(this._computedTop + (event.clientY - lastY), 0);
+    this._computedLeft = Math.max(this._computedLeft + ((event.clientX - lastX) / this.currentScale), 0);
+    this._computedTop = Math.max(this._computedTop + ((event.clientY - lastY) / this.currentScale), 0);
 
     // Move the element in grids of 15px
-    this._ref.nativeElement.style.left = (Math.floor(this._computedLeft / 15) * 15) + 'px';
-    this._ref.nativeElement.style.top = (Math.floor(this._computedTop / 15) * 15) + 'px';
+    this._ref.nativeElement.style.left = (Math.floor((this._computedLeft * this.currentScale) / 15) * 15) + 'px';
+    this._ref.nativeElement.style.top = (Math.floor((this._computedTop * this.currentScale) / 15) * 15) + 'px';
 
   }
 
