@@ -64,9 +64,20 @@ export class StateService {
     // Saved the compressed version of the current state to localstorage
     const uncompressed = JSON.stringify(this._data);
     const compressed = compress(uncompressed);
+
+    // Disable auto-save when compressed data is above 5mb in size
+    if ( ((compressed.length * 2) / (1024 * 1024)) > 5 ) {
+
+      console.log('Auto-save disabled because compressed size is above 5MB!');
+
+      localStorage.removeItem(StateService.LOCALSTORAGE_KEY);
+      return;
+
+    }
+
     localStorage.setItem(StateService.LOCALSTORAGE_KEY, compressed);
 
-    console.log(`Saved state (original ${uncompressed.length} bytes | compressed ${compressed.length} bytes)`);
+    console.log(`Saved state (original ${((uncompressed.length * 2) / 1024).toFixed(2)}kb | compressed ${((compressed.length * 2) / 1024).toFixed(2)}kb)`);
 
   }
 
