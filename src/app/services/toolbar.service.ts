@@ -560,7 +560,7 @@ export class ToolbarService {
     // Temporarily change scale
     const originalScale = this._canvas.currentScale;
 
-    this._canvas.currentScale = 1;
+    this._canvas.currentScale = CanvasService.SCALE_DEFAULT;
 
     // Wait for 100ms
     await new Promise(resolve => setTimeout(resolve, 100));

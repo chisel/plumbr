@@ -229,3 +229,23 @@ app-module-field.selected {
     color: color('gray-lighter');
   }
 }
+
+.toolbar-button {
+  display: flex;
+  min-height: rem(30px);
+  min-width: rem(30px);
+  font-size: rem(18px);
+  justify-content: center;
+  align-items: center;
+  color: color('gray-darker');
+  transition: color .15s ease-in-out;
+  cursor: pointer;
+
+  &.selected {
+    color: color(accent);
+  }
+
+  &:hover:not(.selected) {
+    color: color(accent);
+  }
+}

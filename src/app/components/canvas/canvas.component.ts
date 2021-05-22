@@ -27,7 +27,7 @@ export class CanvasComponent implements OnInit {
   public pipelineStackMoving: boolean = false;
   public moduleStackMoving: boolean = false;
   public selection: SelectedItem[] = [];
-  public currentScale: number = 1;
+  public currentScale: number;
 
   private _lastCanvasX: number = 0;
   private _lastCanvasY: number = 0;

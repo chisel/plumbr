@@ -14,7 +14,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ModuleFieldComponent } from './components/module-field/module-field.component';
 import { StackableDirective } from './directives/stackable.directive';
-import { ScalePercentageComponent } from './components/scale-percentage/scale-percentage.component';
+import { ScalebarComponent } from './components/scalebar/scalebar.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +28,7 @@ import { ScalePercentageComponent } from './components/scale-percentage/scale-pe
     ToolbarComponent,
     ModuleFieldComponent,
     StackableDirective,
-    ScalePercentageComponent
+    ScalebarComponent
   ],
   imports: [
     BrowserModule,

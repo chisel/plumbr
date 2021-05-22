@@ -14,27 +14,6 @@
   margin-left: rem(15px);
 }
 
-.toolbar-button {
-  display: flex;
-  min-height: rem(30px);
-  min-width: rem(30px);
-  font-size: rem(18px);
-  justify-content: center;
-  align-items: center;
-  color: color('gray-darker');
-  transition: color .15s ease-in-out;
-  cursor: pointer;
-  border-radius: rem(5px);
-
-  &.selected {
-    color: color(accent);
-  }
-
-  &:hover:not(.selected) {
-    color: color(accent);
-  }
-}
-
 .toolbar-separator {
   width: calc(100% + #{rem(30px)});
   height: rem(2px);

@@ -6,8 +6,9 @@ import { BehaviorSubject, Subject } from 'rxjs';
 })
 export class CanvasService {
 
-  public static SCALE_MIN: number = 0.5;
-  public static SCALE_MAX: number = 1.5;
+  public static SCALE_MIN: number = 0.4;
+  public static SCALE_MAX: number = 1.4;
+  public static SCALE_DEFAULT: number = 0.9;
   public static GRID_SIZE: number = 15;
 
   private _canvasEnabled$ = new BehaviorSubject<boolean>(true);
@@ -15,7 +16,7 @@ export class CanvasService {
   private _canvasMoving$ = new BehaviorSubject<boolean>(false);
   private _overlaysEnabled$ = new BehaviorSubject<boolean>(true);
   private _onCanvasReset$ = new Subject<void>();
-  private _currentScale$ = new BehaviorSubject<number>(1);
+  private _currentScale$ = new BehaviorSubject<number>(CanvasService.SCALE_DEFAULT);
 
   constructor() { }
 

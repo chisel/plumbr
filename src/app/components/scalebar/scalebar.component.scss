@@ -1,0 +1,48 @@
+@import '../../../util';
+
+.scalebar {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  z-index: 100000;
+  border-radius: rem(5px);
+  box-shadow: 0 0 rem(15px) color('shadow-light');
+  background-color: color('gray-light-transparent');
+  backdrop-filter: blur(20px) saturate(1.5);
+  padding: rem(10px) rem(15px);
+  margin-top: rem(91px);
+  right: rem(15px);
+  font-size: rem(18px);
+  user-select: none;
+
+  span.scale-value {
+    width: rem(45px);
+    text-align: center;
+  }
+
+  & > *:not(:last-child)  {
+    margin-right: rem(20px);
+  }
+
+  .toolbar-button {
+    transition: color .25s ease-in-out,
+                min-width .25s ease-in-out,
+                width .25s ease-in-out,
+                margin .25s ease-in-out,
+                font-size .25s ease-in-out;
+    overflow: hidden;
+  }
+
+  &:not(.expanded) .toolbar-button {
+    width: 0;
+    min-width: 0;
+    margin: 0;
+    font-size: rem(0px);
+    pointer-events: none;
+  }
+
+  &:not(.expanded) span.scale-value {
+    text-align: center;
+  }
+
+}
