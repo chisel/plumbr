@@ -6,6 +6,7 @@ import { Directive, OnInit, ElementRef, HostListener, Input, Output, EventEmitte
 export class MovableDirective implements OnInit, OnChanges {
 
   public static _currentlyMoving: ElementRef<HTMLElement> = null;
+  public static GRID_SIZE: number = 15;
 
   private _computedLeft: number;
   private _computedTop: number;
@@ -26,6 +27,14 @@ export class MovableDirective implements OnInit, OnChanges {
 
   @Output('onmovementend')
   public onMovementEnd = new EventEmitter<HTMLElement>();
+
+  private _gridify(position: number): number {
+
+    const scaledGrid = MovableDirective.GRID_SIZE * this.currentScale;
+
+    return Math.floor(position / scaledGrid) * scaledGrid;
+
+  }
 
   constructor(
     private _ref: ElementRef<HTMLElement>
@@ -59,8 +68,8 @@ export class MovableDirective implements OnInit, OnChanges {
           this._computedTop = Math.max(this._computedTop + ((event.clientY - this._lastClientY) / this.currentScale), 0);
 
           // Move the element in grids of 15px
-          this._ref.nativeElement.style.left = (Math.floor((this._computedLeft * this.currentScale) / 15) * 15) + 'px';
-          this._ref.nativeElement.style.top = (Math.floor((this._computedTop * this.currentScale) / 15) * 15) + 'px';
+          this._ref.nativeElement.style.left = this._gridify(this._computedLeft * this.currentScale) + 'px';
+          this._ref.nativeElement.style.top = this._gridify(this._computedTop * this.currentScale) + 'px';
 
           this._lastClientX = event.clientX;
           this._lastClientY = event.clientY;
@@ -161,8 +170,8 @@ export class MovableDirective implements OnInit, OnChanges {
     this._computedTop = Math.max(this._computedTop + ((event.clientY - lastY) / this.currentScale), 0);
 
     // Move the element in grids of 15px
-    this._ref.nativeElement.style.left = (Math.floor((this._computedLeft * this.currentScale) / 15) * 15) + 'px';
-    this._ref.nativeElement.style.top = (Math.floor((this._computedTop * this.currentScale) / 15) * 15) + 'px';
+    this._ref.nativeElement.style.left = this._gridify(this._computedLeft * this.currentScale) + 'px';
+    this._ref.nativeElement.style.top = this._gridify(this._computedTop * this.currentScale) + 'px';
 
   }
 

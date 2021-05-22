@@ -6,12 +6,15 @@ import { BehaviorSubject, Subject } from 'rxjs';
 })
 export class CanvasService {
 
+  public static SCALE_MIN: number = 0.5;
+  public static SCALE_MAX: number = 1.5;
+
   private _canvasEnabled$ = new BehaviorSubject<boolean>(true);
   private _canvasMoveMode$ = new BehaviorSubject<boolean>(false);
   private _canvasMoving$ = new BehaviorSubject<boolean>(false);
   private _overlaysEnabled$ = new BehaviorSubject<boolean>(true);
   private _onCanvasReset$ = new Subject<void>();
-  private _onScaleChange$ = new BehaviorSubject<number>(1);
+  private _currentScale$ = new BehaviorSubject<number>(1);
 
   constructor() { }
 
@@ -118,15 +121,25 @@ export class CanvasService {
 
   }
 
-  public onScaleChange$(observer: (scale: number) => void) {
+  public get currentScale(): number {
 
-    return this._onScaleChange$.subscribe(observer);
+    return this._currentScale$.value;
 
   }
 
-  public emitScaleChange(newScale: number) {
+  public set currentScale(newScale: number) {
 
-    this._onScaleChange$.next(newScale);
+    const sanitizedScale = Math.min(Math.max(CanvasService.SCALE_MIN, newScale), CanvasService.SCALE_MAX);
+
+    if ( sanitizedScale === this._currentScale$.value ) return;
+
+    this._currentScale$.next(sanitizedScale);
+
+  }
+
+  public currentScale$(observer: (scale: number) => void) {
+
+    return this._currentScale$.subscribe(observer);
 
   }
 

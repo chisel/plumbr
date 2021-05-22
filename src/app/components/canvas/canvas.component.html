@@ -11,7 +11,10 @@ class="canvas"
   top: canvasTop + 'px',
   left: canvasLeft + 'px',
   width: 'calc(100% + ' + canvasWidthAddition + 'px)',
-  height: 'calc(100% + ' + canvasHeightAddition + 'px)'
+  height: 'calc(100% + ' + canvasHeightAddition + 'px)',
+  'background-image': 'radial-gradient(circle, #E7EDEF ' + ((1 * currentScale) / 16) + 'rem, transparent ' + ((1 * currentScale) / 16) + 'rem)',
+  'background-position': 'left ' + ((7.5 * currentScale) / 16) + 'rem top ' + ((7.5 * currentScale) / 16) + 'rem',
+  'background-size': ((15 * currentScale) / 16) + 'rem ' + ((15 * currentScale) / 16) + 'rem'
 }">
   <app-pipeline
   *ngFor="let pipeline of data; let index = index"

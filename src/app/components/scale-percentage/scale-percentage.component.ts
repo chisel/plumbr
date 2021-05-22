@@ -18,7 +18,7 @@ export class ScalePercentageComponent implements OnInit {
   ngOnInit(): void {
 
     // Update currentScale
-    this._canvas.onScaleChange$(newScale => this.currentScale = Math.round(newScale * 100));
+    this._canvas.currentScale$(newScale => this.currentScale = Math.round(newScale * 100));
     // Update overlaysEnabled
     this._canvas.overlaysEnabled$(enabled => this.overlaysEnabled = enabled);
 
@@ -26,7 +26,7 @@ export class ScalePercentageComponent implements OnInit {
 
   public onResetScale() {
 
-    this._canvas.emitScaleChange(1);
+    this._canvas.currentScale = 1;
 
   }
 

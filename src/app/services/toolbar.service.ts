@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { StateService, PipelineData, ModuleData, ModuleFieldData } from './state.service';
 import { ModalService, ModalType, PipelineContext, ModuleContext, ModuleFieldContext } from './modal.service';
+import { CanvasService } from './canvas.service';
 import { cloneDeep } from 'lodash-es';
 import { toBlob } from 'html-to-image';
 import { saveAs } from 'file-saver';
@@ -24,7 +25,8 @@ export class ToolbarService {
 
   constructor(
     private _state: StateService,
-    private _modal: ModalService
+    private _modal: ModalService,
+    private _canvas: CanvasService
   ) {
 
     // On tool change, clear selection
@@ -554,6 +556,14 @@ export class ToolbarService {
     if ( initialDelay )
       await new Promise(resolve => setTimeout(resolve, initialDelay));
 
+    // Temporarily change scale
+    const originalScale = this._canvas.currentScale;
+
+    this._canvas.currentScale = 1;
+
+    // Wait for 100ms
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     // Temporarily reposition elements
     this._state.captureHistory();
 
@@ -618,6 +628,9 @@ export class ToolbarService {
       // Filter out .indicator-dot:not(.conditional)
       filter: node => ! node.classList || ! node.classList.contains('indicator-dot') || node.classList.contains('conditional')
     });
+
+    // Restore original scale
+    this._canvas.currentScale = originalScale;
 
     // Restore previous element positions
     canvas.style.left = canvasLeft;

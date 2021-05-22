@@ -2,7 +2,7 @@
 
 :host {
   width: 100%;
-  margin-top: rem(20px);
+  margin-top: rem(30px);
   transition: transform .25s ease-in-out, box-shadow .25s ease-in-out;
 
   &:hover.insert-mode .module {
@@ -68,10 +68,11 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: rem(50px);
+  height: rem(60px);
   padding: 0 rem(12px);
   color: color('gray-lighter');
   font-weight: bold;
+  font-size: rem(18px);
   transition: background-color .25s ease-in-out, border-color .25s ease-in-out;
 
   &.module-type-0 {
