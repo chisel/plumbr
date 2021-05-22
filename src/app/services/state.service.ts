@@ -34,7 +34,7 @@ export class StateService {
 
   }
 
-  private _updateData(newValue: PipelineData[], skipHistory?: boolean) {
+  private _updateData(newValue: PipelineData[], skipHistory?: boolean, skipSave?: boolean) {
 
     this._unsavedChanges = true;
 
@@ -44,12 +44,8 @@ export class StateService {
     this._data = newValue;
     // Emit the data change to all subscribers
     this._data$.next(cloneDeep(this._data));
-    // Saved the compressed version of the current state to localstorage
-    const uncompressed = JSON.stringify(this._data);
-    const compressed = compress(uncompressed);
-    localStorage.setItem(StateService.LOCALSTORAGE_KEY, compressed);
 
-    console.log(`Saved state (original ${uncompressed.length} bytes | compressed ${compressed.length} bytes)`);
+    if ( ! skipSave ) this.saveDataToLocalstorage();
 
   }
 
@@ -60,6 +56,17 @@ export class StateService {
     // Only keep the last 15 moves
     if ( this._history.length > 15 )
       this._history = this._history.slice(-15);
+
+  }
+
+  public saveDataToLocalstorage() {
+
+    // Saved the compressed version of the current state to localstorage
+    const uncompressed = JSON.stringify(this._data);
+    const compressed = compress(uncompressed);
+    localStorage.setItem(StateService.LOCALSTORAGE_KEY, compressed);
+
+    console.log(`Saved state (original ${uncompressed.length} bytes | compressed ${compressed.length} bytes)`);
 
   }
 
@@ -98,13 +105,13 @@ export class StateService {
 
   }
 
-  public updatePipelinePosition(index: number, left: number, top: number, skipHistory?: boolean) {
+  public updatePipelinePosition(index: number, left: number, top: number, skipHistory?: boolean, skipSave?: boolean) {
 
     let newValue = this.data;
 
     newValue[index].position = { left, top };
 
-    this._updateData(newValue, skipHistory);
+    this._updateData(newValue, skipHistory, skipSave);
 
   }
 
@@ -142,14 +149,14 @@ export class StateService {
 
   }
 
-  public updateModulePosition(pipelineIndex: number, oldIndex: number, newIndex: number) {
+  public updateModulePosition(pipelineIndex: number, oldIndex: number, newIndex: number, skipHistory?: boolean, skipSave?: boolean) {
 
     let newValue = this.data;
 
     const old = newValue[pipelineIndex].modules.splice(oldIndex, 1)[0];
     newValue[pipelineIndex].modules.splice(newIndex, 0, old);
 
-    this._updateData(newValue);
+    this._updateData(newValue, skipHistory, skipSave);
 
   }
 
@@ -192,14 +199,14 @@ export class StateService {
 
   }
 
-  public updateFieldPosition(pipelineIndex: number, moduleIndex: number, oldIndex: number, newIndex: number) {
+  public updateFieldPosition(pipelineIndex: number, moduleIndex: number, oldIndex: number, newIndex: number, skipHistory?: boolean, skipSave?: boolean) {
 
     let newValue = this.data;
 
     const old = newValue[pipelineIndex].modules[moduleIndex].fields.splice(oldIndex, 1)[0];
     newValue[pipelineIndex].modules[moduleIndex].fields.splice(newIndex, 0, old);
 
-    this._updateData(newValue);
+    this._updateData(newValue, skipHistory, skipSave);
 
   }
 

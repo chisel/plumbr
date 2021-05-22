@@ -22,6 +22,7 @@ export class ToolbarService {
   private _selectionType = SelectionType.Empty;
   private _clipboard: Array<PipelineData|ModuleData|ModuleFieldData> = [];
   private _clipboardType = SelectionType.Empty;
+  private _movementSkippedStateCapture: boolean = false;
 
   constructor(
     private _state: StateService,
@@ -639,6 +640,98 @@ export class ToolbarService {
 
     // Prompt save image
     saveAs(blob, 'plumbr.png');
+
+  }
+
+  public moveSelected(axis: 'x'|'y', value: number) {
+
+    // Ignore on empty selection and multi selection
+    if ( this._selectionType === SelectionType.Empty || this._selection$.value.length > 1 ) return;
+
+    // Ignore moving anything but pipelines on the X-axis
+    if ( axis === 'x' && this._selectionType !== SelectionType.Pipeline ) return;
+
+    const selection = this._selection$.value[0];
+    const data = this._state.data;
+
+    // Move pipelines
+    if ( this._selectionType === SelectionType.Pipeline ) {
+
+      const pipeline = data[selection.pipelineIndex];
+
+      // Skip out of bound movements
+      if ( pipeline.position.left + value < 0 || pipeline.position.top + value < 0 ) return;
+
+      this._state.updatePipelinePosition(
+        selection.pipelineIndex,
+        pipeline.position.left + (axis === 'x' ? value * CanvasService.GRID_SIZE : 0),
+        pipeline.position.top + (axis === 'y' ? value * CanvasService.GRID_SIZE : 0),
+        this._movementSkippedStateCapture,
+        true
+      );
+
+    }
+    else if ( this._selectionType === SelectionType.Module ) {
+
+      // Skip out of bound movements
+      if (
+        selection.moduleIndex + value < 0 ||
+        selection.moduleIndex + value >= data[selection.pipelineIndex].modules.length
+      )
+        return;
+
+      this._state.updateModulePosition(
+        selection.pipelineIndex,
+        selection.moduleIndex,
+        selection.moduleIndex + value,
+        this._movementSkippedStateCapture,
+        true
+      );
+
+      // Update current selection
+      this.setSelection({
+        ...selection,
+        moduleIndex: selection.moduleIndex + value
+      });
+
+    }
+    else if ( this._selectionType === SelectionType.Field ) {
+
+      // Skip out of bound movements
+      if (
+        selection.fieldIndex + value < 0 ||
+        selection.fieldIndex + value >= data[selection.pipelineIndex].modules[selection.moduleIndex].fields.length
+      )
+        return;
+
+      this._state.updateFieldPosition(
+        selection.pipelineIndex,
+        selection.moduleIndex,
+        selection.fieldIndex,
+        selection.fieldIndex + value,
+        this._movementSkippedStateCapture,
+        true
+      );
+
+      // Update current selection
+      this.setSelection({
+        ...selection,
+        fieldIndex: selection.fieldIndex + value
+      });
+
+    }
+
+    // Set flag _movementSkippedStateCapture to true so keyup event would capture history and save to localstorage
+    this._movementSkippedStateCapture = true;
+
+  }
+
+  public endSelectedMovement() {
+
+    if ( ! this._movementSkippedStateCapture ) return;
+
+    this._movementSkippedStateCapture = false;
+    this._state.saveDataToLocalstorage();
 
   }
 

@@ -73,6 +73,14 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.shift.n', () => { this.onInsert(); });
     this._renderer.listen('window', 'keyup.shift.t', () => { this.onEdit(); });
     this._renderer.listen('window', 'keyup.shift.e', () => { this.onExportAsImage(); });
+    this._renderer.listen('window', 'keydown.shift.arrowup', () => { this.onMove('y', -1); });
+    this._renderer.listen('window', 'keydown.shift.arrowdown', () => { this.onMove('y', 1); });
+    this._renderer.listen('window', 'keydown.shift.arrowleft', () => { this.onMove('x', -1); });
+    this._renderer.listen('window', 'keydown.shift.arrowright', () => { this.onMove('x', 1); });
+    this._renderer.listen('window', 'keyup.shift.arrowup', () => { this.onMoveEnd(); });
+    this._renderer.listen('window', 'keyup.shift.arrowdown', () => { this.onMoveEnd(); });
+    this._renderer.listen('window', 'keyup.shift.arrowleft', () => { this.onMoveEnd(); });
+    this._renderer.listen('window', 'keyup.shift.arrowright', () => { this.onMoveEnd(); });
 
   }
 
@@ -209,6 +217,21 @@ export class ToolbarComponent implements OnInit {
     this._toolbar.saveCanvasAsImage(250)
     .catch(console.error)
     .finally(() => this._modal.closeModal());
+
+  }
+
+  public onMove(axis: 'x'|'y', value: number) {
+
+    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._toolbar.selectedTool !== Tools.Select ) return;
+
+    this._toolbar.moveSelected(axis, value);
+
+  }
+
+  public onMoveEnd() {
+
+    this._toolbar.endSelectedMovement();
 
   }
 

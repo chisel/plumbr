@@ -8,6 +8,7 @@ export class CanvasService {
 
   public static SCALE_MIN: number = 0.5;
   public static SCALE_MAX: number = 1.5;
+  public static GRID_SIZE: number = 15;
 
   private _canvasEnabled$ = new BehaviorSubject<boolean>(true);
   private _canvasMoveMode$ = new BehaviorSubject<boolean>(false);
