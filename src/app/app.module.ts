@@ -14,6 +14,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ModuleFieldComponent } from './components/module-field/module-field.component';
 import { StackableDirective } from './directives/stackable.directive';
+import { ScalePercentageComponent } from './components/scale-percentage/scale-percentage.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { StackableDirective } from './directives/stackable.directive';
     MovableDirective,
     ToolbarComponent,
     ModuleFieldComponent,
-    StackableDirective
+    StackableDirective,
+    ScalePercentageComponent
   ],
   imports: [
     BrowserModule,

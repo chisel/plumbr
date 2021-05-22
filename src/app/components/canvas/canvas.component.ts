@@ -11,6 +11,9 @@ import { ModalService, ModalType, PipelineContext, ModuleContext, ModuleFieldCon
 })
 export class CanvasComponent implements OnInit {
 
+  public static SCALE_MIN: number = 0.5;
+  public static SCALE_MAX: number = 1.5;
+
   public canvasEnabled: boolean;
   public canvasMoveMode: boolean;
   public canvasMoving: boolean = false;
@@ -27,6 +30,7 @@ export class CanvasComponent implements OnInit {
   public pipelineStackMoving: boolean = false;
   public moduleStackMoving: boolean = false;
   public selection: SelectedItem[] = [];
+  public currentScale: number = 1;
 
   private _lastCanvasX: number = 0;
   private _lastCanvasY: number = 0;
@@ -142,6 +146,9 @@ export class CanvasComponent implements OnInit {
     // Update selection
     this._toolbar.selection$(selection => this.selection = selection);
 
+    // Update currentScale
+    this._canvas.onScaleChange$(newScale => this.currentScale = Math.min(Math.max(CanvasComponent.SCALE_MIN, newScale), CanvasComponent.SCALE_MAX));
+
   }
 
   public onElementMovementStart() {
@@ -199,6 +206,20 @@ export class CanvasComponent implements OnInit {
       this._toolbar.clearSelection();
 
     }
+
+  }
+
+  public onCanvasWheel(event: WheelEvent) {
+
+    if ( ! this.canvasEnabled || this.canvasMoveMode || ! event.shiftKey ) return;
+
+    event.preventDefault();
+
+    const scaleDown = event.deltaY > 0;
+
+    this.currentScale = Math.min(Math.max(CanvasComponent.SCALE_MIN, this.currentScale + (scaleDown ? -.1 : .1)), CanvasComponent.SCALE_MAX);
+
+    this._canvas.emitScaleChange(this.currentScale);
 
   }
 

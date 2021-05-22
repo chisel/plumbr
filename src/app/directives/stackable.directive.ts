@@ -24,6 +24,9 @@ export class StackableDirective implements OnInit, OnChanges {
   @Input('placeholderHeightAdjustment')
   public placeholderHeightAdjustment: string = '0px';
 
+  @Input('currentScale')
+  public currentScale: number = 1;
+
   @Output('onmovestart')
   public onMoveStart = new EventEmitter<HTMLElement>();
 
@@ -133,7 +136,7 @@ export class StackableDirective implements OnInit, OnChanges {
         if ( this._currentlyMoving !== child ) return;
 
         // Move element on Y-axis
-        child.style.top = (+child.style.top.replace('px', '') + (event.clientY - lastY)) + 'px';
+        child.style.top = (+child.style.top.replace('px', '') + ((event.clientY - lastY) / this.currentScale)) + 'px';
 
         // Check if center point has crossed any other siblings
         let children: ChildPosition[] = [];

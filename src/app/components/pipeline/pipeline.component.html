@@ -5,6 +5,7 @@
   </div>
   <div class="pipeline-stack"
   [appStackable]="movable"
+  [currentScale]="currentScale"
   (onmovestart)="onStackMoveStart()"
   (onmoveend)="onStackMoveEnd($event)">
     <ng-content></ng-content>

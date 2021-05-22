@@ -18,6 +18,9 @@ export class PipelineComponent implements OnInit {
   @Input('pipelineStackMovable')
   public movable: boolean;
 
+  @Input('currentScale')
+  public currentScale: number = 1;
+
   @Output('onstackmovestart')
   public onStackMoveStartBridge = new EventEmitter<void>();
 

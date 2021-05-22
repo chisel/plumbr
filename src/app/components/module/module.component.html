@@ -8,6 +8,7 @@
   </div>
   <div class="module-stack"
   [appStackable]="movable"
+  [currentScale]="currentScale"
   (onmovestart)="onStackMoveStart()"
   (onmoveend)="onStackMoveEnd($event)"
   (onrefresh)="onStackRefresh()">

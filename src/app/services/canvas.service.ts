@@ -11,6 +11,7 @@ export class CanvasService {
   private _canvasMoving$ = new BehaviorSubject<boolean>(false);
   private _overlaysEnabled$ = new BehaviorSubject<boolean>(true);
   private _onCanvasReset$ = new Subject<void>();
+  private _onScaleChange$ = new BehaviorSubject<number>(1);
 
   constructor() { }
 
@@ -114,6 +115,18 @@ export class CanvasService {
   public onCanvasReset$(observer: () => void) {
 
     return this._onCanvasReset$.subscribe(observer);
+
+  }
+
+  public onScaleChange$(observer: (scale: number) => void) {
+
+    return this._onScaleChange$.subscribe(observer);
+
+  }
+
+  public emitScaleChange(newScale: number) {
+
+    this._onScaleChange$.next(newScale);
 
   }
 
