@@ -28,6 +28,9 @@ export class CanvasComponent implements OnInit {
   public moduleStackMoving: boolean = false;
   public selection: SelectedItem[] = [];
 
+  private _lastCanvasX: number = 0;
+  private _lastCanvasY: number = 0;
+
   @HostListener('document:keydown.space', ['$event'])
   onMoveModeEnable() {
 
@@ -45,6 +48,14 @@ export class CanvasComponent implements OnInit {
   @HostListener('mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
 
+    // Capture last known mous coordinates
+    const lastX = this._lastCanvasX;
+    const lastY = this._lastCanvasY;
+
+    // Update last known mouse coordinates
+    this._lastCanvasX = event.clientX;
+    this._lastCanvasY = event.clientY;
+
     if ( ! this.canvasMoveMode ) return;
 
     // Ignore if left click button is not held
@@ -59,8 +70,8 @@ export class CanvasComponent implements OnInit {
     event.preventDefault();
 
     // Move the canvas
-    this.canvasLeft = Math.min(this.canvasLeft + event.movementX, 0);
-    this.canvasTop = Math.min(this.canvasTop + event.movementY, 0);
+    this.canvasLeft = Math.min(this.canvasLeft + (event.clientX - lastX), 0);
+    this.canvasTop = Math.min(this.canvasTop + (event.clientY - lastY), 0);
 
     // Extend the canvas to cover the empty spaces
     this.canvasWidthAddition = Math.abs(this.canvasLeft);

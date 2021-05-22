@@ -76,6 +76,14 @@ select {
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
 
+  option {
+    color: color('gray-darker');
+  }
+
+  option:disabled {
+    color: color('gray-medium');
+  }
+
   &:focus {
     border-color: color(accent);
   }
@@ -201,8 +209,8 @@ app-module-field:hover.edit-mode,
   display: inline-block;
   flex-shrink: 0;
   flex-grow: 0;
-  height: rem(14px);
-  width: rem(14px);
+  height: rem(12px);
+  width: rem(12px);
   margin-left: rem(10px);
   border-radius: 50%;
   transition: background .25s ease-in-out;

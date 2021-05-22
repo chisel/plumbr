@@ -547,6 +547,9 @@ export class ToolbarService {
     // Ignore saving an empty canvas
     if ( ! this._state.data.length ) return;
 
+    // Clear selection
+    this.clearSelection();
+
     // Introduce delay (used for spinner modal animation)
     if ( initialDelay )
       await new Promise(resolve => setTimeout(resolve, initialDelay));

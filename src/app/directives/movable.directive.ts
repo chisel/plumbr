@@ -11,8 +11,8 @@ export class MovableDirective implements OnInit, OnChanges {
   private _computedTop: number;
   private _moving: boolean = false;
   private _mouseLeft: boolean = false;
-  private _lastScreenX: number = NaN;
-  private _lastScreenY: number = NaN;
+  private _lastClientX: number = NaN;
+  private _lastClientY: number = NaN;
   private _initialZIndex: number = NaN;
 
   @Input('appMovable')
@@ -46,21 +46,21 @@ export class MovableDirective implements OnInit, OnChanges {
         if (
           this._moving &&
           this._mouseLeft &&
-          ! isNaN(this._lastScreenX) &&
-          ! isNaN(this._lastScreenY)
+          ! isNaN(this._lastClientX) &&
+          ! isNaN(this._lastClientY)
         ) {
 
           // Catch up
           // Calculate computed values
-          this._computedLeft = Math.max(this._computedLeft + (event.screenX - this._lastScreenX), 0);
-          this._computedTop = Math.max(this._computedTop + (event.screenY - this._lastScreenY), 0);
+          this._computedLeft = Math.max(this._computedLeft + (event.clientX - this._lastClientX), 0);
+          this._computedTop = Math.max(this._computedTop + (event.clientY - this._lastClientY), 0);
 
           // Move the element in grids of 15px
           this._ref.nativeElement.style.left = (Math.floor(this._computedLeft / 15) * 15) + 'px';
           this._ref.nativeElement.style.top = (Math.floor(this._computedTop / 15) * 15) + 'px';
 
-          this._lastScreenX = event.screenX;
-          this._lastScreenY = event.screenY;
+          this._lastClientX = event.clientX;
+          this._lastClientY = event.clientY;
 
         }
 
@@ -111,8 +111,8 @@ export class MovableDirective implements OnInit, OnChanges {
 
     this._moving = false;
     this._mouseLeft = false;
-    this._lastScreenX = NaN;
-    this._lastScreenY = NaN;
+    this._lastClientX = NaN;
+    this._lastClientY = NaN;
     this._ref.nativeElement.style.cursor = 'grab';
     this._ref.nativeElement.style.zIndex = this._initialZIndex + '';
     event.preventDefault();
@@ -126,6 +126,11 @@ export class MovableDirective implements OnInit, OnChanges {
 
   @HostListener('mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
+
+    const lastX = this._lastClientX;
+    const lastY = this._lastClientY;
+    this._lastClientX = event.clientX;
+    this._lastClientY = event.clientY;
 
     // Ignore if fired by two overlapping movable elements
     if ( MovableDirective._currentlyMoving && this._ref !== MovableDirective._currentlyMoving ) return;
@@ -142,14 +147,12 @@ export class MovableDirective implements OnInit, OnChanges {
 
     this._moving = true;
     this._mouseLeft = false;
-    this._lastScreenX = event.screenX;
-    this._lastScreenY = event.screenY;
     event.preventDefault();
     event.stopImmediatePropagation();
 
     // Calculate computed values
-    this._computedLeft = Math.max(this._computedLeft + event.movementX, 0);
-    this._computedTop = Math.max(this._computedTop + event.movementY, 0);
+    this._computedLeft = Math.max(this._computedLeft + (event.clientX - lastX), 0);
+    this._computedTop = Math.max(this._computedTop + (event.clientY - lastY), 0);
 
     // Move the element in grids of 15px
     this._ref.nativeElement.style.left = (Math.floor(this._computedLeft / 15) * 15) + 'px';

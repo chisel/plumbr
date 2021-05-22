@@ -38,6 +38,7 @@ export class StackableDirective implements OnInit, OnChanges {
   private _placeholderMoved: boolean = false;
   private _indexBefore: number = -1;
   private _indexAfter: number = -1;
+  private _lastClientY: number = 0;
 
   constructor(
     private _ref: ElementRef<HTMLElement>
@@ -120,6 +121,9 @@ export class StackableDirective implements OnInit, OnChanges {
       // Drag
       child.addEventListener('mousemove', event => {
 
+        const lastY = this._lastClientY;
+        this._lastClientY = event.clientY;
+
         // Skip if directive disabled
         if ( ! this.stackable ) return;
 
@@ -129,7 +133,7 @@ export class StackableDirective implements OnInit, OnChanges {
         if ( this._currentlyMoving !== child ) return;
 
         // Move element on Y-axis
-        child.style.top = (+child.style.top.replace('px', '') + event.movementY) + 'px';
+        child.style.top = (+child.style.top.replace('px', '') + (event.clientY - lastY)) + 'px';
 
         // Check if center point has crossed any other siblings
         let children: ChildPosition[] = [];
