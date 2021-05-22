@@ -17,6 +17,7 @@ export class CanvasService {
   private _overlaysEnabled$ = new BehaviorSubject<boolean>(true);
   private _onCanvasReset$ = new Subject<void>();
   private _currentScale$ = new BehaviorSubject<number>(CanvasService.SCALE_DEFAULT);
+  private _shortcutsDisabled: boolean = false;
 
   constructor() { }
 
@@ -142,6 +143,18 @@ export class CanvasService {
   public currentScale$(observer: (scale: number) => void) {
 
     return this._currentScale$.subscribe(observer);
+
+  }
+
+  public get shortcutsDisabled(): boolean {
+
+    return this._shortcutsDisabled;
+
+  }
+
+  public set shortcutsDisabled(disabled: boolean) {
+
+    this._shortcutsDisabled = disabled;
 
   }
 

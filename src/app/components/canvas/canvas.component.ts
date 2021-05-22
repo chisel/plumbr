@@ -152,6 +152,7 @@ export class CanvasComponent implements OnInit {
 
     this._canvas.canvasEnabled = false;
     this._canvas.overlaysEnabled = false;
+    this._canvas.shortcutsDisabled = true;
     this.pipelineMoving = true;
 
   }
@@ -160,6 +161,7 @@ export class CanvasComponent implements OnInit {
 
     this._canvas.canvasEnabled = true;
     this._canvas.overlaysEnabled = true;
+    this._canvas.shortcutsDisabled = false;
     this.pipelineMoving = false;
 
     // Update pipeline position
@@ -479,6 +481,7 @@ export class CanvasComponent implements OnInit {
 
     this.pipelineStackMoving = true;
     this._canvas.canvasEnabled = false;
+    this._canvas.shortcutsDisabled = true;
     this._canvas.overlaysEnabled = false;
 
   }
@@ -487,6 +490,7 @@ export class CanvasComponent implements OnInit {
 
     this.pipelineStackMoving = false;
     this._canvas.canvasEnabled = true;
+    this._canvas.shortcutsDisabled = false;
     this._canvas.overlaysEnabled = true;
 
   }
@@ -496,6 +500,7 @@ export class CanvasComponent implements OnInit {
     this.moduleStackMoving = true;
     this._canvas.canvasEnabled = false;
     this._canvas.overlaysEnabled = false;
+    this._canvas.shortcutsDisabled = true;
 
   }
 
@@ -504,6 +509,7 @@ export class CanvasComponent implements OnInit {
     this.moduleStackMoving = false;
     this._canvas.canvasEnabled = true;
     this._canvas.overlaysEnabled = true;
+    this._canvas.shortcutsDisabled = false;
 
   }
 

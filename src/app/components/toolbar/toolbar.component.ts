@@ -98,7 +98,7 @@ export class ToolbarComponent implements OnInit {
 
   public onSelectTool(tool: Tools) {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._toolbar.selectedTool = tool;
 
@@ -106,7 +106,7 @@ export class ToolbarComponent implements OnInit {
 
   public onResetCanvasPosition() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._canvas.resetCanvasPosition();
 
@@ -114,7 +114,7 @@ export class ToolbarComponent implements OnInit {
 
   public onHelp() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._modal.openModal(ModalType.Help)
     .catch(console.error);
@@ -123,7 +123,7 @@ export class ToolbarComponent implements OnInit {
 
   public onUndo() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._state.undo();
 
@@ -131,7 +131,7 @@ export class ToolbarComponent implements OnInit {
 
   public onOpenProject() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._state.import();
 
@@ -139,7 +139,7 @@ export class ToolbarComponent implements OnInit {
 
   public onSaveProject() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._state.export();
 
@@ -147,7 +147,7 @@ export class ToolbarComponent implements OnInit {
 
   public onEraseSelection() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.deleteSelectedItems();
@@ -156,7 +156,7 @@ export class ToolbarComponent implements OnInit {
 
   public onCopySelection() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.copySelected();
@@ -165,7 +165,7 @@ export class ToolbarComponent implements OnInit {
 
   public onPaste() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.paste();
@@ -174,7 +174,7 @@ export class ToolbarComponent implements OnInit {
 
   public onCutSelection() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.cutSelected();
@@ -183,7 +183,7 @@ export class ToolbarComponent implements OnInit {
 
   public onDuplicate() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.duplicateSelected();
@@ -192,7 +192,7 @@ export class ToolbarComponent implements OnInit {
 
   public onInsert() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.insertIntoSelected();
@@ -201,7 +201,7 @@ export class ToolbarComponent implements OnInit {
 
   public onEdit() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.editSelected();
@@ -210,7 +210,7 @@ export class ToolbarComponent implements OnInit {
 
   public onExportAsImage() {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
 
     this._modal.openModal(ModalType.Spinner);
 
@@ -222,7 +222,7 @@ export class ToolbarComponent implements OnInit {
 
   public onMove(axis: 'x'|'y', value: number) {
 
-    if ( this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
     if ( this._toolbar.selectedTool !== Tools.Select ) return;
 
     this._toolbar.moveSelected(axis, value);
