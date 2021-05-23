@@ -536,9 +536,12 @@ export class CanvasComponent implements OnInit {
 
   public onLinkClick(index: number) {
 
-    if ( this._toolbar.selectedTool !== Tools.Link || this.canvasMoveMode ) return;
+    if ( this.canvasMoveMode ) return;
 
-    this._toolbar.cycleLinkColor(index);
+    if ( this._toolbar.selectedTool === Tools.Link )
+      this._toolbar.cycleLinkColor(index);
+    else if ( this._toolbar.selectedTool === Tools.Erase )
+      this._toolbar.deleteLink(index);
 
   }
 

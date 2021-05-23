@@ -89,7 +89,10 @@ class="canvas"
   (onlinkclick)="onLinkClick(index)"
   [linkData]="link"
   [linkIndex]="index"
-  [ngClass]="{ 'link-mode': selectedTool === Tools.Link && ! canvasMoveMode }"
+  [ngClass]="{
+    'link-mode': selectedTool === Tools.Link && ! canvasMoveMode,
+    'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode
+  }"
   [ngStyle]="{
     transform: 'scale(' + currentScale + ')',
     'transform-origin': 'top left'

@@ -846,10 +846,18 @@ export class ToolbarService {
 
       const firstNode = this._currentLinkNode;
 
+      // If link will be identical, ignore
+      const links = this._state.links;
+
+      for ( const link of links ) {
+
+        if ( (link.nodes[0] === index && link.nodes[1] === firstNode) || (link.nodes[1] === index && link.nodes[0] === firstNode) )
+          return;
+
+      }
+
       this._currentLinkNode = -1;
       this._currentLinkNode$.next(-1);
-
-
 
       this._state.createLink(
         firstNode,
@@ -857,6 +865,12 @@ export class ToolbarService {
       );
 
     }
+
+  }
+
+  public deleteLink(index: number) {
+
+    this._state.deleteLink(index);
 
   }
 

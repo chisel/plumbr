@@ -4,8 +4,14 @@
   z-index: 200;
 }
 
-:host.link-mode .link-node {
+:host.link-mode .link-node,
+:host.link-mode .link-line {
   cursor: pointer;
+}
+
+:host.erase-mode:hover .link-node,
+:host.erase-mode:hover .link-line {
+  background-color: color('accent-red') !important;
 }
 
 .link-node {
@@ -23,8 +29,8 @@
   transform-origin: top left;
 }
 
-.link-node,
-.link-line {
+:host.erase-mode .link-node,
+:host.erase-mode .link-line {
   transition: background-color .25s ease-in-out;
 }
 

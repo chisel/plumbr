@@ -520,6 +520,20 @@ export class StateService {
 
   }
 
+  public deleteLink(
+    index: number,
+    skipHistory?: boolean,
+    skipSave?: boolean
+  ) {
+
+    const newValue = cloneDeep(this._links);
+
+    newValue.splice(index, 1);
+
+    this._updateLinks(newValue, skipHistory, skipSave);
+
+  }
+
   public updateLinkColor(index: number, color: LinkColor, skipHistory?: boolean, skipSave?: boolean) {
 
     const newValue = this.links;
