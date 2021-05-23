@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 @import 'spinner';
+@import '../node_modules/highlight.js/scss/atom-one-light';
 
 *,
 *::before,
@@ -32,6 +33,7 @@ input[type="text"] {
   font-size: rem(14px);
   color: color('gray-darker');
   font-family: 'Roboto', sans-serif;
+  transition: border-color .25s ease-in-out;
 
   &::placeholder {
     color: color('gray-dark');
@@ -53,7 +55,7 @@ textarea {
   font-size: rem(14px);
   color: color('gray-darker');
   resize: vertical;
-  transition: none !important;
+  transition: border-color .25s ease-in-out;
   font-family: 'Roboto', sans-serif;
 
   &::placeholder {
@@ -77,6 +79,7 @@ select {
   color: color('gray-darker');
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
+  transition: border-color .25s ease-in-out;
 
   option {
     color: color('gray-darker');
@@ -126,6 +129,7 @@ input[type="checkbox"] {
   background-color: color('gray-lighter');
   border: rem(2px) solid color('gray-medium');
   cursor: pointer;
+  transition: border-color .25s ease-in-out;
 
   &:checked::after {
     content: "";
@@ -302,9 +306,13 @@ article.markdown {
   pre {
     font-family: 'Roboto Mono', monospace;
     font-size: rem(14px);
-    padding: rem(15px);
     border-radius: rem(3px);
     background-color: color('gray-light');
+
+    code {
+      padding: rem(15px);
+      border-radius: rem(3px);
+    }
   }
 
   blockquote {

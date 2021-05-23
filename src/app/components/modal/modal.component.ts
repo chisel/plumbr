@@ -4,6 +4,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faMarkdown } from '@fortawesome/free-brands-svg-icons'
 import { sanitize as sanitizeHTML } from 'dompurify';
 import * as marked from 'marked';
+import { highlightAll } from 'highlight.js';
 import { ModalService, OpenModalData, ModalType } from '@plumbr/service/modal';
 import {
   ModuleType,
@@ -33,6 +34,7 @@ export class ModalComponent implements OnInit {
   public ModuleFieldOperationTypeKeys = Object.keys(ModuleFieldOperationType).slice(0, Object.keys(ModuleFieldOperationType).length / 2);
   public currentModal: OpenModalData = null;
   public showModal: boolean = false;
+  public markdownContent: string = '';
 
   constructor(
     private _modal: ModalService
@@ -41,6 +43,14 @@ export class ModalComponent implements OnInit {
   ngOnInit(): void {
 
     this._modal.onModalOpen$(data => {
+
+      // Render Markdown
+      if ( data.type === ModalType.Prompt && data.context.message ) {
+
+        this._markdownToHTML(data.context.message)
+        .then(markdown => this.markdownContent = markdown);
+
+      }
 
       this.currentModal = data;
       this.showModal = true;
@@ -97,11 +107,19 @@ export class ModalComponent implements OnInit {
 
   }
 
-  public markdownToHTML(markdown: string): string {
+  private _markdownToHTML(markdown: string): Promise<string> {
 
-    return sanitizeHTML(marked(markdown, {
-      headerIds: false
-    }));
+    return new Promise(resolve => {
+
+      const html = sanitizeHTML(marked(markdown, {
+        headerIds: false
+      }));
+
+      resolve(html);
+
+      setTimeout(highlightAll, 100);
+
+    });
 
   }
 
