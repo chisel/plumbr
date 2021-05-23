@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ModuleData, StateService } from '@plumbr/service/state';
-import { CanvasService } from '@plumbr/service/canvas';
 import { StackMoveEndEvent } from '@plumbr/directive/stackable';
 
 @Component({
@@ -32,8 +31,7 @@ export class ModuleComponent implements OnInit {
   public onStackMoveEndBridge = new EventEmitter<void>();
 
   constructor(
-    private _state: StateService,
-    private _canvas: CanvasService
+    private _state: StateService
   ) { }
 
   ngOnInit(): void {
@@ -52,14 +50,6 @@ export class ModuleComponent implements OnInit {
     if ( ! event.changed ) return;
 
     this._state.updateFieldPosition(this.pipelineIndex, this.index, event.oldIndex, event.newIndex);
-
-  }
-
-  public onStackRefresh() {
-
-    this._canvas.canvasEnabled = true;
-    this._canvas.overlaysEnabled = true;
-    this._state.refreshState();
 
   }
 

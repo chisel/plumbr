@@ -41,6 +41,9 @@ export class ToolbarService {
 
     });
 
+    // On pipeline link positions outdated (give some time for the view to be updated)
+    this._state.onLinksPositionOutdated(index => setTimeout(() => this.repositionPipelineLinks(index), 50));
+
   }
 
   private _getItemType(item: SelectedItem): SelectionType {

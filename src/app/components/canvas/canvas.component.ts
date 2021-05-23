@@ -1,8 +1,21 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools, SelectedItem } from '@plumbr/service/toolbar';
-import { StateService, PipelineData, ModuleData, ModuleFieldData, ModuleFieldOperationType, PipelineLink } from '@plumbr/service/state';
-import { ModalService, ModalType, PipelineContext, ModuleContext, ModuleFieldContext } from '@plumbr/service/modal';
+import {
+  StateService,
+  PipelineData,
+  ModuleData,
+  ModuleFieldData,
+  ModuleFieldOperationType,
+  PipelineLink
+} from '@plumbr/service/state';
+import {
+  ModalService,
+  ModalType,
+  PipelineContext,
+  ModuleContext,
+  ModuleFieldContext
+} from '@plumbr/service/modal';
 
 @Component({
   selector: 'app-canvas',

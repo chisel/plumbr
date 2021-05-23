@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash-es';
 import { compress, decompress } from 'lz-string';
@@ -19,6 +19,7 @@ export class StateService {
   private _history: HistoryState[] = [];
   /** Flag for export only and not localstorage. */
   private _unsavedChanges: boolean = false;
+  private _onLinksPositionOutdated = new EventEmitter<number>();
 
   constructor(
     private _modal: ModalService
@@ -180,6 +181,9 @@ export class StateService {
 
     this._updateData(newValue, skipHistory);
 
+    // Update links positions
+    this._onLinksPositionOutdated.emit(pipelineIndex);
+
     return this._data[pipelineIndex].modules.length - 1;
 
   }
@@ -229,6 +233,9 @@ export class StateService {
     });
 
     this._updateData(newValue, skipHistory);
+
+    // Update links positions
+    this._onLinksPositionOutdated.emit(pipelineIndex);
 
     return this._data[pipelineIndex].modules[moduleIndex].fields.length - 1;
 
@@ -324,11 +331,15 @@ export class StateService {
 
     this._updateData(newValue);
 
+    // Update links positions
+    this._onLinksPositionOutdated.emit(index);
+
   }
 
   public bulkDeleteModule(indices: { pipelineIndex: number, moduleIndex: number }[]) {
 
     const newValue = this.data;
+    const pipelinesAffected: number[] = [];
 
     for ( let i = 0; i < indices.length; i++ ) {
 
@@ -340,10 +351,18 @@ export class StateService {
       .length;
 
       newValue[index].modules.splice(mindex - shift, 1);
+      pipelinesAffected.push(index);
 
     }
 
     this._updateData(newValue);
+
+    // Update links positions
+    for ( let i = 0; i < pipelinesAffected.length; i++ ) {
+
+      this._onLinksPositionOutdated.emit(pipelinesAffected[i]);
+
+    }
 
   }
 
@@ -355,11 +374,15 @@ export class StateService {
 
     this._updateData(newValue);
 
+    // Update links positions
+    this._onLinksPositionOutdated.emit(index);
+
   }
 
   public bulkDeleteModuleField(indices: { pipelineIndex: number, moduleIndex: number, fieldIndex: number }[]) {
 
     const newValue = this.data;
+    const pipelinesAffected: number[] = [];
 
     for ( let i = 0; i < indices.length; i++ ) {
 
@@ -371,10 +394,18 @@ export class StateService {
       .length;
 
       newValue[index].modules[mindex].fields.splice(findex - shift, 1);
+      pipelinesAffected.push(index);
 
     }
 
     this._updateData(newValue);
+
+    // Update links positions
+    for ( let i = 0; i < pipelinesAffected.length; i++ ) {
+
+      this._onLinksPositionOutdated.emit(pipelinesAffected[i]);
+
+    }
 
   }
 
@@ -387,6 +418,15 @@ export class StateService {
     this._updateData(newValue.data, true, true);
     this._updateLinks(newValue.links, true, true);
     this.saveDataToLocalstorage();
+
+    // Reposition all pipeline links
+    const count = this._data.length;
+
+    for ( let i = 0; i < count; i++ ) {
+
+      this._onLinksPositionOutdated.emit(i);
+
+    }
 
   }
 
@@ -541,6 +581,12 @@ export class StateService {
     newValue[index].color = color;
 
     this._updateLinks(newValue, skipHistory, skipSave);
+
+  }
+
+  public onLinksPositionOutdated(observer: (pipelineIndex: number) => void) {
+
+    return this._onLinksPositionOutdated.subscribe(observer);
 
   }
 

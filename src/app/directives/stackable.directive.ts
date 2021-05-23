@@ -43,9 +43,6 @@ export class StackableDirective implements OnInit {
   @Output('onmoveend')
   public onMoveEnd = new EventEmitter<StackMoveEndEvent>();
 
-  @Output('onrefresh')
-  public onRefresh = new EventEmitter<void>();
-
   private _currentlyMoving: HTMLElement;
   private _currentPlaceholder: HTMLElement;
   private _placeholderMoved: boolean = false;
