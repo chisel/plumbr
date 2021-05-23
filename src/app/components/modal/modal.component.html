@@ -1,7 +1,10 @@
 <div class="backblur"
 [ngClass]="{ show: showModal }">
   <div *ngIf="currentModal?.type === ModalType.Spinner" class="loader"></div>
-  <div *ngIf="currentModal?.type !== ModalType.Spinner" class="modal">
+  <div
+  *ngIf="currentModal?.type !== ModalType.Spinner"
+  class="modal"
+  [ngClass]="{ 'modal-wide': currentModal?.type === ModalType.Prompt && currentModal.context.message }">
     <fa-icon
     (click)="onClose()"
     class="close-button"
@@ -20,7 +23,11 @@
       </div>
       <form #pipelineForm="ngForm" (ngSubmit)="onFormSubmit(pipelineForm)">
         <input name="name" type="text" placeholder="Name" required [ngModel]="currentModal?.context?.name ?? ''">
-        <textarea name="description" placeholder="Description" [ngModel]="currentModal?.context?.description ?? ''"></textarea>
+        <textarea class="with-descriptor" name="description" placeholder="Description" [ngModel]="currentModal?.context?.description ?? ''"></textarea>
+        <div class="textarea-descriptor">
+          <fa-icon size="lg" [icon]="faMarkdown"></fa-icon>
+          <span>Styling with Markdown is enabled</span>
+        </div>
         <div class="button-group button-group-50">
           <button class="button-secondary" type="button" (click)="onClose()">Cancel</button>
           <button class="button-primary" type="submit">{{ currentModal.context ? 'Update' : 'Create' }}</button>
@@ -37,7 +44,11 @@
           <option value="" disabled selected>Type</option>
           <option *ngFor="let moduleTypeKey of ModuleTypeKeys; let index = index" [value]="moduleTypeKey">{{ ModuleTypeValues[index] }}</option>
         </select>
-        <textarea name="description" placeholder="Description" [ngModel]="currentModal?.context?.description ?? ''"></textarea>
+        <textarea class="with-descriptor" name="description" placeholder="Description" [ngModel]="currentModal?.context?.description ?? ''"></textarea>
+        <div class="textarea-descriptor">
+          <fa-icon size="lg" [icon]="faMarkdown"></fa-icon>
+          <span>Styling with Markdown is enabled</span>
+        </div>
         <div class="button-group button-group-50">
           <button class="button-secondary" type="button" (click)="onClose()">Cancel</button>
           <button class="button-primary" type="submit">{{ currentModal.context ? 'Update' : 'Create' }}</button>
@@ -62,7 +73,11 @@
           <input name="conditional" type="checkbox" [ngModel]="currentModal?.context?.conditional ?? false">
           Conditional
         </label>
-        <textarea name="description" placeholder="Description" [ngModel]="currentModal?.context?.description ?? ''"></textarea>
+        <textarea class="with-descriptor" name="description" placeholder="Description" [ngModel]="currentModal?.context?.description ?? ''"></textarea>
+        <div class="textarea-descriptor">
+          <fa-icon size="lg" [icon]="faMarkdown"></fa-icon>
+          <span>Styling with Markdown is enabled</span>
+        </div>
         <div class="button-group button-group-50">
           <button class="button-secondary" type="button" (click)="onClose()">Cancel</button>
           <button class="button-primary" type="submit">{{ currentModal.context ? 'Update' : 'Add' }}</button>
@@ -83,12 +98,14 @@
       <div class="modal-title">
         <div class="modal-title-text">{{ currentModal.context.title }}</div>
       </div>
-      <p [ngClass]="{ 'modal-no-context-message': ! currentModal.context.message }">
-        {{ currentModal.context.message ?? 'No description provided.' }}
+      <p *ngIf="! currentModal.context.message" class="modal-no-context-message">
+        No description provided!
       </p>
-      <div class="button-group button-group-100">
-        <button class="button-secondary" type="button" (click)="onClose()">Close</button>
-      </div>
+      <article
+      *ngIf="currentModal.context.message"
+      class="markdown"
+      [innerHTML]="markdownToHTML(currentModal.context.message)">
+      </article>
     </ng-template>
   </div>
 </div>

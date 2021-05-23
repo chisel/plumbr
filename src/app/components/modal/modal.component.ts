@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faMarkdown } from '@fortawesome/free-brands-svg-icons'
+import { sanitize as sanitizeHTML } from 'dompurify';
+import * as marked from 'marked';
 import { ModalService, OpenModalData, ModalType } from '@plumbr/service/modal';
 import {
   ModuleType,
@@ -19,6 +22,8 @@ import {
 export class ModalComponent implements OnInit {
 
   public faTimes = faTimes;
+  public faMarkdown = faMarkdown;
+
   public ModalType = ModalType;
   public ModuleTypeValues = Object.values(ModuleType).slice(0, Object.values(ModuleType).length / 2);
   public ModuleTypeKeys = Object.keys(ModuleType).slice(0, Object.keys(ModuleType).length / 2);
@@ -89,6 +94,14 @@ export class ModalComponent implements OnInit {
       delete form.value.description;
 
     this._modal.closeModal(form.value);
+
+  }
+
+  public markdownToHTML(markdown: string): string {
+
+    return sanitizeHTML(marked(markdown, {
+      headerIds: false
+    }));
 
   }
 

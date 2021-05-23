@@ -44,14 +44,16 @@ input[type="text"] {
 }
 
 textarea {
-  min-height: rem(90px);
+  min-height: rem(100px);
+  max-height: rem(200px);
   padding: rem(5px);
   outline: none;
   border-radius: rem(3px);
   border: rem(2px) solid color('gray-medium');
   font-size: rem(14px);
   color: color('gray-darker');
-  resize: none;
+  resize: vertical;
+  transition: none !important;
   font-family: 'Roboto', sans-serif;
 
   &::placeholder {
@@ -248,4 +250,104 @@ app-module-field.selected {
   &:hover:not(.selected) {
     color: color(accent);
   }
+}
+
+article.markdown {
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  & > :first-child { margin-top: 0; }
+  & > :last-child { margin-bottom: 0; }
+
+  a,
+  a:visited,
+  a:active {
+    color: color('accent');
+    text-decoration: none;
+  }
+
+  a:hover { text-decoration: underline; }
+
+  h1 { font-size: rem(24px); }
+  h2 { font-size: rem(22px); }
+  h3 { font-size: rem(20px); }
+  h4 { font-size: rem(18px); }
+  h5 { font-size: rem(16px); }
+  h6 {
+    font-size: rem(14px);
+    color: color('gray-dark');
+  }
+
+  h1, h2 {
+    padding-bottom: rem(5px);
+    border-bottom: rem(2px) solid color('gray-light');
+  }
+
+  hr {
+    border: none;
+    height: rem(2px);
+    background-color: color('gray-light');
+  }
+
+  ul, ol { padding-inline-start: rem(30px); }
+
+  :not(pre) code {
+    font-family: 'Roboto Mono', monospace;
+    font-size: rem(14px);
+    padding: rem(1px) rem(5px);
+    border-radius: rem(3px);
+    background-color: color('gray-light');
+  }
+
+  pre {
+    font-family: 'Roboto Mono', monospace;
+    font-size: rem(14px);
+    padding: rem(15px);
+    border-radius: rem(3px);
+    background-color: color('gray-light');
+  }
+
+  blockquote {
+    margin: 0;
+    padding: rem(15px);
+    padding-left: rem(25px);
+    background-color: color('gray-light');
+    border-radius: rem(3px);
+    border-left: rem(5px) solid color('accent');
+
+    & > p { margin: 0; }
+  }
+
+  table {
+    width: 100%;
+    border-spacing: 0;
+
+    tbody tr:nth-child(even) {
+      background-color: color('gray-light');
+
+      :not(pre) code {
+        background-color: color('gray-lighter');
+      }
+    }
+
+    td, th {
+      padding: rem(10px);
+    }
+
+    th {
+      font-weight: bold;
+      border-bottom: rem(2px) solid color('gray-light');
+    }
+
+    td:first-child {
+      border-top-left-radius: rem(3px);
+      border-bottom-left-radius: rem(3px);
+    }
+
+    td:last-child {
+      border-top-right-radius: rem(3px);
+      border-bottom-right-radius: rem(3px);
+    }
+  }
+
 }

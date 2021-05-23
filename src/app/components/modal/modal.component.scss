@@ -29,6 +29,7 @@
 .modal {
   display: flex;
   width: rem(600px);
+  max-height: calc(100vh - #{rem(30px)});
   flex-direction: column;
   border-radius: rem(5px);
   box-shadow: 0 0 rem(15px) color('shadow-light');
@@ -41,6 +42,9 @@
     transition: all .25s ease-in-out;
   }
 
+  &.modal-wide {
+    width: rem(800px);
+  }
 }
 
 .close-button {
@@ -110,12 +114,36 @@ form {
   width: 100%;
 }
 
-p {
+p.modal-no-context-message,
+article.markdown {
   margin-top: rem(20px);
-  margin-bottom: rem(30px);
+  margin-bottom: rem(10px);
+}
 
-  &.modal-no-context-message {
-    color: color('gray-dark');
+p.modal-no-context-message {
+  color: color('gray-dark');
+}
+
+textarea.with-descriptor {
+  margin-bottom: 0 !important;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.textarea-descriptor {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: rem(5px) rem(10px);
+  font-size: rem(12px);
+  font-weight: bold;
+  color: color('gray-darker');
+  background-color: color('gray-medium');
+  border-bottom-left-radius: rem(3px);
+  border-bottom-right-radius: rem(3px);
+  user-select: none;
+
+  span {
+    margin-left: rem(7px);
   }
-
 }
