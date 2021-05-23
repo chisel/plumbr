@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools, SelectedItem } from '@plumbr/service/toolbar';
-import { StateService, PipelineData, ModuleData, ModuleFieldData, ModuleFieldOperationType } from '@plumbr/service/state';
+import { StateService, PipelineData, ModuleData, ModuleFieldData, ModuleFieldOperationType, PipelineLink } from '@plumbr/service/state';
 import { ModalService, ModalType, PipelineContext, ModuleContext, ModuleFieldContext } from '@plumbr/service/modal';
 
 @Component({
@@ -28,6 +28,8 @@ export class CanvasComponent implements OnInit {
   public moduleStackMoving: boolean = false;
   public selection: SelectedItem[] = [];
   public currentScale: number;
+  public currentLinkNode: number = -1;
+  public links: PipelineLink[] = [];
 
   private _lastCanvasX: number = 0;
   private _lastCanvasY: number = 0;
@@ -145,6 +147,12 @@ export class CanvasComponent implements OnInit {
 
     // Update currentScale
     this._canvas.currentScale$(newScale => this.currentScale = newScale);
+
+    // Update currentLinkNode
+    this._toolbar.currentLinkNode$(index => this.currentLinkNode = index);
+
+    // Update links
+    this._state.links$(links => this.links = links);
 
   }
 
@@ -274,6 +282,13 @@ export class CanvasComponent implements OnInit {
       .catch(console.error);
 
     }
+    else if ( this._toolbar.selectedTool === Tools.Link ) {
+
+      event.stopImmediatePropagation();
+
+      this._toolbar.addLinkNode(index);
+
+    }
 
   }
 
@@ -291,6 +306,12 @@ export class CanvasComponent implements OnInit {
       });
 
     }
+
+  }
+
+  public onPipelineMovement(index: number) {
+
+    this._toolbar.repositionPipelineLinks(index);
 
   }
 
@@ -510,6 +531,14 @@ export class CanvasComponent implements OnInit {
     this._canvas.canvasEnabled = true;
     this._canvas.overlaysEnabled = true;
     this._canvas.shortcutsDisabled = false;
+
+  }
+
+  public onLinkClick(index: number) {
+
+    if ( this._toolbar.selectedTool !== Tools.Link || this.canvasMoveMode ) return;
+
+    this._toolbar.cycleLinkColor(index);
 
   }
 

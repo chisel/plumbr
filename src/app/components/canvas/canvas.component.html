@@ -18,6 +18,7 @@ class="canvas"
 }">
   <app-pipeline
   *ngFor="let pipeline of data; let index = index"
+  id="pipeline{{index}}"
   [pipelineData]="pipeline"
   [pipelineIndex]="index"
   [pipelineStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && ! moduleFieldHovered && ! pipelineMoving"
@@ -26,6 +27,7 @@ class="canvas"
   (dblclick)="onPipelineDoubleClick($event, index)"
   (onstackmovestart)="onPipelineStackMoveStart()"
   (onstackmoveend)="onPipelineStackMoveEnd()"
+  (onmovement)="onPipelineMovement(index)"
   [ngClass]="{
     grab: canvasMoveMode && ! canvasMoving,
     grabbing: canvasMoveMode && canvasMoving,
@@ -33,7 +35,8 @@ class="canvas"
     'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && ! moduleHovered,
     'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && ! moduleHovered && ! moduleFieldHovered,
     'edit-mode': selectedTool === Tools.Edit && ! canvasMoveMode && ! moduleHovered,
-    'selected': selectedTool === Tools.Select && ! canvasMoveMode && isSelected(index)
+    'link-mode': selectedTool === Tools.Link && ! canvasMoveMode,
+    'selected': (selectedTool === Tools.Select && ! canvasMoveMode && isSelected(index)) || currentLinkNode === index
   }"
   [ngStyle]="{
     left: (((pipeline.position.left * currentScale) / 15) * 15) + 'px',
@@ -55,8 +58,9 @@ class="canvas"
       'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode && moduleHovered,
       'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered,
       'edit-mode': selectedTool === Tools.Edit && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered,
-      'move-mode': (selectedTool === Tools.Move && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered && ! pipelineMoving),
-      'selected': (selectedTool === Tools.Select && ! canvasMoveMode && isSelected(index, mindex))
+      'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered && ! pipelineMoving,
+      'link-mode': selectedTool === Tools.Link && ! canvasMoveMode,
+      'selected': selectedTool === Tools.Select && ! canvasMoveMode && isSelected(index, mindex)
     }"
     (onstackmovestart)="onModuleStackMoveStart()"
     (onstackmoveend)="onModuleStackMoveEnd()"
@@ -80,4 +84,15 @@ class="canvas"
       </app-module-field>
     </app-module>
   </app-pipeline>
+  <app-link
+  *ngFor="let link of links; let index = index"
+  (onlinkclick)="onLinkClick(index)"
+  [linkData]="link"
+  [linkIndex]="index"
+  [ngClass]="{ 'link-mode': selectedTool === Tools.Link && ! canvasMoveMode }"
+  [ngStyle]="{
+    transform: 'scale(' + currentScale + ')',
+    'transform-origin': 'top left'
+  }">
+  </app-link>
 </div>

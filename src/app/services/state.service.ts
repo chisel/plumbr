@@ -14,7 +14,9 @@ export class StateService {
 
   private _data: PipelineData[] = [];
   private _data$ = new BehaviorSubject<PipelineData[]>([]);
-  private _history: PipelineData[][] = [];
+  private _links: PipelineLink[] = [];
+  private _links$ = new BehaviorSubject<PipelineLink[]>([]);
+  private _history: HistoryState[] = [];
   /** Flag for export only and not localstorage. */
   private _unsavedChanges: boolean = false;
 
@@ -27,8 +29,12 @@ export class StateService {
 
     if ( ! stored ) return;
 
-    this._data = JSON.parse(decompress(stored));
-    this._data$.next(this._data);
+    const state: HistoryState = JSON.parse(decompress(stored));
+
+    this._data = state.data;
+    this._data$.next(cloneDeep(this._data));
+    this._links = state.links;
+    this._links$.next(cloneDeep(this._links))
 
     console.log('State loaded from localstorage');
 
@@ -49,9 +55,27 @@ export class StateService {
 
   }
 
+  private _updateLinks(newValue: PipelineLink[], skipHistory?: boolean, skipSave?: boolean) {
+
+    this._unsavedChanges = true;
+
+    // Add the current state to history
+    if ( ! skipHistory ) this.captureHistory();
+    // Set the data with the new value
+    this._links = newValue;
+    // Emit the data change to all subscribers
+    this._links$.next(cloneDeep(this._links));
+
+    if ( ! skipSave ) this.saveDataToLocalstorage();
+
+  }
+
   public captureHistory() {
 
-    this._history.push(cloneDeep(this._data));
+    this._history.push({
+      data: cloneDeep(this._data),
+      links: cloneDeep(this._links)
+    });
 
     // Only keep the last 15 moves
     if ( this._history.length > 15 )
@@ -62,7 +86,7 @@ export class StateService {
   public saveDataToLocalstorage() {
 
     // Saved the compressed version of the current state to localstorage
-    const uncompressed = JSON.stringify(this._data);
+    const uncompressed = JSON.stringify({ data: this._data, links: this._links });
     const compressed = compress(uncompressed);
 
     // Disable auto-save when compressed data is above 5mb in size
@@ -246,11 +270,28 @@ export class StateService {
 
   public deletePipeline(index: number) {
 
-    const newValue = this.data;
+    const newData = this.data;
+    const newLinks = this.links;
+    let originalLinksSize = newLinks.length;
 
-    newValue.splice(index, 1);
+    newData.splice(index, 1);
 
-    this._updateData(newValue);
+    // Delete links to this pipeline
+    for ( let i = 0; i < newLinks.length; i++ ) {
+
+      if ( newLinks[i].nodes[0] === index || newLinks[i].nodes[1] === index ) {
+
+        newLinks.splice(i, 1);
+        i--;
+
+      }
+
+    }
+
+    this.captureHistory();
+    this._updateData(newData, true, true);
+    if ( originalLinksSize !== newLinks.length ) this._updateLinks(newLinks, true, true);
+    this.saveDataToLocalstorage();
 
   }
 
@@ -341,9 +382,11 @@ export class StateService {
 
     if ( ! this._history.length ) return;
 
-    let newValue = this._history.pop() || this.data;
+    const newValue = this._history.pop();
 
-    this._updateData(newValue, true);
+    this._updateData(newValue.data, true, true);
+    this._updateLinks(newValue.links, true, true);
+    this.saveDataToLocalstorage();
 
   }
 
@@ -366,6 +409,7 @@ export class StateService {
 
     // Set properties of element
     input.setAttribute('type', 'file');
+    input.setAttribute('accept', '.flow');
     input.style.display = 'none';
 
     // Attach event handler
@@ -446,6 +490,46 @@ export class StateService {
 
   }
 
+  public get links() {
+
+    return cloneDeep(this._links);
+
+  }
+
+  public links$(observer: (links: PipelineLink[]) => void) {
+
+    return this._links$.subscribe(observer);
+
+  }
+
+  public createLink(
+    index1: number,
+    index2: number,
+    skipHistory?: boolean,
+    skipSave?: boolean
+  ) {
+
+    const newValue = cloneDeep(this._links);
+
+    newValue.push({
+      color: LinkColor.Default,
+      nodes: [ index1, index2 ]
+    });
+
+    this._updateLinks(newValue, skipHistory, skipSave);
+
+  }
+
+  public updateLinkColor(index: number, color: LinkColor, skipHistory?: boolean, skipSave?: boolean) {
+
+    const newValue = this.links;
+
+    newValue[index].color = color;
+
+    this._updateLinks(newValue, skipHistory, skipSave);
+
+  }
+
 }
 
 export interface PipelineData {
@@ -508,5 +592,30 @@ export enum ModuleFieldOperationType {
   Append,
   Delete,
   Clean
+
+}
+
+export interface HistoryState {
+
+  data: PipelineData[];
+  links: PipelineLink[];
+
+}
+
+export interface PipelineLink {
+
+  nodes: [number, number];
+  color: LinkColor;
+
+}
+
+export enum LinkColor {
+
+  Blue,
+  Green,
+  Orange,
+  Red,
+  Purple,
+  Default = LinkColor.Blue
 
 }

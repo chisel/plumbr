@@ -28,6 +28,9 @@ export class MovableDirective implements OnInit, OnChanges {
   @Output('onmovementend')
   public onMovementEnd = new EventEmitter<HTMLElement>();
 
+  @Output('onmovement')
+  public onMovement = new EventEmitter<HTMLElement>();
+
   private _gridify(position: number): number {
 
     const scaledGrid = MovableDirective.GRID_SIZE * this.currentScale;
@@ -67,6 +70,10 @@ export class MovableDirective implements OnInit, OnChanges {
           this._computedLeft = Math.max(this._computedLeft + ((event.clientX - this._lastClientX) / this.currentScale), 0);
           this._computedTop = Math.max(this._computedTop + ((event.clientY - this._lastClientY) / this.currentScale), 0);
 
+          // Keep old position
+          const oldLeft = this._ref.nativeElement.style.left;
+          const oldTop = this._ref.nativeElement.style.top;
+
           // Move the element in grids of 15px
           this._ref.nativeElement.style.left = this._gridify(this._computedLeft * this.currentScale) + 'px';
           this._ref.nativeElement.style.top = this._gridify(this._computedTop * this.currentScale) + 'px';
@@ -76,6 +83,10 @@ export class MovableDirective implements OnInit, OnChanges {
 
           event.stopImmediatePropagation();
           event.preventDefault();
+
+          // Emit onmovement if element was moved in grids
+          if ( this._ref.nativeElement.style.left !== oldLeft || this._ref.nativeElement.style.top !== oldTop )
+            this.onMovement.emit(this._ref.nativeElement);
 
         }
 
@@ -92,7 +103,6 @@ export class MovableDirective implements OnInit, OnChanges {
 
     // Update CSS properties
     this._ref.nativeElement.style.cursor = this.movable ? 'grab' + (this._moving ? 'bing' : '') : 'default';
-    // this._ref.nativeElement.style.pointerEvents = this.movable ? 'all' : 'none';
 
   }
 
@@ -169,9 +179,17 @@ export class MovableDirective implements OnInit, OnChanges {
     this._computedLeft = Math.max(this._computedLeft + ((event.clientX - lastX) / this.currentScale), 0);
     this._computedTop = Math.max(this._computedTop + ((event.clientY - lastY) / this.currentScale), 0);
 
+    // Keep old position
+    const oldLeft = this._ref.nativeElement.style.left;
+    const oldTop = this._ref.nativeElement.style.top;
+
     // Move the element in grids of 15px
     this._ref.nativeElement.style.left = this._gridify(this._computedLeft * this.currentScale) + 'px';
     this._ref.nativeElement.style.top = this._gridify(this._computedTop * this.currentScale) + 'px';
+
+    // Emit onmovement if element was moved in grids
+    if ( this._ref.nativeElement.style.left !== oldLeft || this._ref.nativeElement.style.top !== oldTop )
+      this.onMovement.emit(this._ref.nativeElement);
 
   }
 

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { StateService, PipelineData, ModuleData, ModuleFieldData } from './state.service';
+import { Injectable, EventEmitter } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { StateService, PipelineData, ModuleData, ModuleFieldData, LinkColor } from './state.service';
 import { ModalService, ModalType, PipelineContext, ModuleContext, ModuleFieldContext } from './modal.service';
 import { CanvasService } from './canvas.service';
 import { cloneDeep } from 'lodash-es';
@@ -16,6 +16,7 @@ export class ToolbarService {
   public static COPY_PIPELINE_HEIGHT_OFFSET: number = 0;
   public static PIPELINE_WIDTH: number = 690;
   public static PIPELINE_HEIGHT: number = 66;
+  public static PIPELINE_LINK_TOP_SHIFT = 18;
 
   private _selectedTool$ = new BehaviorSubject<Tools>(Tools.Select);
   private _selection$ = new BehaviorSubject<Array<SelectedItem>>([]);
@@ -23,6 +24,9 @@ export class ToolbarService {
   private _clipboard: Array<PipelineData|ModuleData|ModuleFieldData> = [];
   private _clipboardType = SelectionType.Empty;
   private _movementSkippedStateCapture: boolean = false;
+  private _currentLinkNode: number = -1;
+  private _currentLinkNode$ = new Subject<number>();
+  private _onLinkNodesReposition = new EventEmitter<LinkNodesRepositionEvent>();
 
   constructor(
     private _state: StateService,
@@ -151,6 +155,12 @@ export class ToolbarService {
       }
 
     }
+
+  }
+
+  private _getPixelsValue(px: string): number {
+
+    return +px.replace('px', '');
 
   }
 
@@ -726,12 +736,169 @@ export class ToolbarService {
 
   }
 
+  public get currentLinkNode() {
+
+    return this._currentLinkNode;
+
+  }
+
+  public currentLinkNode$(observer: (index: number) => void) {
+
+    return this._currentLinkNode$.subscribe(observer);
+
+  }
+
   public endSelectedMovement() {
 
     if ( ! this._movementSkippedStateCapture ) return;
 
     this._movementSkippedStateCapture = false;
     this._state.saveDataToLocalstorage();
+
+  }
+
+  public findClosestPoints(element1: HTMLElement, element2: HTMLElement): ClosestPoints {
+
+    // Get computed values
+    const computed1 = window.getComputedStyle(element1);
+    const computed2 = window.getComputedStyle(element2);
+
+    // Calculate bounding boxes while taking scaling into account
+    const box1 = {
+      left: this._getPixelsValue(computed1.left) / this._canvas.currentScale,
+      top: this._getPixelsValue(computed1.top) / this._canvas.currentScale,
+      width: this._getPixelsValue(computed1.width),
+      height: this._getPixelsValue(computed1.height)
+    };
+    const box2 = {
+      left: this._getPixelsValue(computed2.left) / this._canvas.currentScale,
+      top: this._getPixelsValue(computed2.top) / this._canvas.currentScale,
+      width: this._getPixelsValue(computed2.width),
+      height: this._getPixelsValue(computed2.height)
+    };
+
+    // Calculate center points on all sides
+    const points1: PointMap = {
+      left: { x: box1.left, y: box1.top + (box1.height / 2) },
+      top: { x: box1.left + (box1.width / 2), y: box1.top - ToolbarService.PIPELINE_LINK_TOP_SHIFT },
+      right: { x: box1.left + box1.width, y: box1.top + (box1.height / 2) },
+      bottom: { x: box1.left + (box1.width / 2), y: box1.top + box1.height }
+    };
+    const points2: PointMap = {
+      left: { x: box2.left, y: box2.top + (box2.height / 2) },
+      top: { x: box2.left + (box2.width / 2), y: box2.top - ToolbarService.PIPELINE_LINK_TOP_SHIFT },
+      right: { x: box2.left + box2.width, y: box2.top + (box2.height / 2) },
+      bottom: { x: box2.left + (box2.width / 2), y: box2.top + box2.height }
+    };
+
+    // Find two points that are closest to each other
+    const closest: ClosestPoints = {
+      points: [null, null],
+      distance: Infinity
+    };
+
+    for ( const side1 in points1 ) {
+
+      for ( const side2 in points2 ) {
+
+        const p1 = points1[side1];
+        const p2 = points2[side2];
+        const a = Math.abs(p1.x - p2.x);
+        const b = Math.abs(p1.y - p2.y);
+        const c = Math.sqrt(a**2 + b**2);
+
+        if ( c < closest.distance ) {
+
+          closest.points = [p1, p2];
+          closest.distance = c;
+
+        }
+
+      }
+
+    }
+
+    return closest;
+
+  }
+
+  public addLinkNode(index: number) {
+
+    // First node
+    if ( this._currentLinkNode === -1 ) {
+
+      this._currentLinkNode = index;
+      this._currentLinkNode$.next(this._currentLinkNode);
+
+    }
+    // Second node (creating a link)
+    else {
+
+      // If current node is being added again, delete node (deselect)
+      if ( index === this._currentLinkNode ) {
+
+        this._currentLinkNode = -1;
+        this._currentLinkNode$.next(-1);
+
+        return;
+
+      }
+
+      const firstNode = this._currentLinkNode;
+
+      this._currentLinkNode = -1;
+      this._currentLinkNode$.next(-1);
+
+
+
+      this._state.createLink(
+        firstNode,
+        index
+      );
+
+    }
+
+  }
+
+  public cycleLinkColor(index: number) {
+
+    const maxColorValue = (Object.keys(LinkColor).length / 2) - 1;
+    const nextColor = this._state.links[index].color + 1;
+
+    this._state.updateLinkColor(index, nextColor > maxColorValue ? 0 : nextColor);
+
+  }
+
+  public repositionPipelineLinks(pipelineIndex: number) {
+
+    // Find all links related to pipeline
+    const links = this._state.links;
+
+    for ( let i = 0; i < links.length; i++ ) {
+
+      const link = links[i];
+
+      if ( link.nodes[0] !== pipelineIndex && link.nodes[1] !== pipelineIndex )
+        continue;
+
+      const closest = this.findClosestPoints(
+        document.getElementById(`pipeline${link.nodes[0]}`),
+        document.getElementById(`pipeline${link.nodes[1]}`)
+      );
+
+      this._onLinkNodesReposition.emit({
+        index: i,
+        newPoints: closest.points,
+        distance: closest.distance
+      });
+
+    }
+
+  }
+
+  public onLinkNodesReposition(observer: (event: LinkNodesRepositionEvent) => void) {
+
+    return this._onLinkNodesReposition.subscribe(observer);
 
   }
 
@@ -758,5 +925,33 @@ export enum SelectionType {
   Pipeline,
   Module,
   Field
+
+}
+
+export interface Point {
+
+  x: number;
+  y: number;
+
+}
+
+interface PointMap {
+
+  [key: string]: Point;
+
+}
+
+export interface LinkNodesRepositionEvent {
+
+  index: number;
+  newPoints: [Point, Point];
+  distance: number;
+
+}
+
+export interface ClosestPoints {
+
+  points: [Point, Point];
+  distance: number;
 
 }

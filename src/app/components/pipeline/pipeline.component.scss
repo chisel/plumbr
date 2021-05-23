@@ -28,7 +28,8 @@
 }
 
 :host:hover.move-mode .pipeline,
-:host.selected .pipeline {
+:host.selected .pipeline,
+:host.link-mode:hover .pipeline {
   border-color: color(accent);
 
   .pipeline-name {

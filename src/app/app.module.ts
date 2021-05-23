@@ -15,6 +15,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ModuleFieldComponent } from './components/module-field/module-field.component';
 import { StackableDirective } from './directives/stackable.directive';
 import { ScalebarComponent } from './components/scalebar/scalebar.component';
+import { LinkComponent } from './components/link/link.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ScalebarComponent } from './components/scalebar/scalebar.component';
     ToolbarComponent,
     ModuleFieldComponent,
     StackableDirective,
-    ScalebarComponent
+    ScalebarComponent,
+    LinkComponent
   ],
   imports: [
     BrowserModule,

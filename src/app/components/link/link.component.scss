@@ -1,0 +1,35 @@
+@import '../../../util';
+
+:host {
+  z-index: 200;
+}
+
+:host.link-mode .link-node {
+  cursor: pointer;
+}
+
+.link-node {
+  position: absolute;
+  width: rem(15px);
+  height: rem(15px);
+  margin-left: rem(-15px/2);
+  margin-top: rem(-15px/2);
+  border-radius: 50%;
+}
+
+.link-line {
+  position: absolute;
+  height: rem(5px);
+  transform-origin: top left;
+}
+
+.link-node,
+.link-line {
+  transition: background-color .25s ease-in-out;
+}
+
+.link-color-0 { background-color: color('accent'); }
+.link-color-1 { background-color: color('accent-green'); }
+.link-color-2 { background-color: color('accent-orange'); }
+.link-color-3 { background-color: color('accent-red'); }
+.link-color-4 { background-color: color('accent-purple'); }

@@ -1,0 +1,28 @@
+<div
+class="link-node link-color-{{link.color}}"
+(click)="onClick()"
+[ngStyle]="{
+  left: nodes[0].x + 'px',
+  top: nodes[0].y + 'px'
+}">
+</div>
+<div
+class="link-node link-color-{{link.color}}"
+(click)="onClick()"
+[ngStyle]="{
+  left: nodes[1].x + 'px',
+  top: nodes[1].y + 'px'
+}">
+</div>
+<div
+class="link-line link-color-{{link.color}}"
+(click)="onClick()"
+[ngStyle]="{
+  width: distance + 'px',
+  left: nodes[0].x + 'px',
+  top: nodes[0].y + 'px',
+  transform: 'rotate(' + rotation + 'deg)',
+  'margin-left': (leftShiftMultiplier * (2.5)) + 'px',
+  'margin-top': (topShiftMultiplier * (2.5)) + 'px'
+}">
+</div>

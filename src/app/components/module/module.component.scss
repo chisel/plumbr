@@ -37,6 +37,10 @@
     border-color: color(accent);
   }
 
+  &.link-mode {
+    pointer-events: none !important;
+  }
+
   &:hover.move-mode .module-header,
   &.selected .module-header {
     background-color: color(accent);
