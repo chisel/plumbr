@@ -29,6 +29,7 @@
 .modal {
   display: flex;
   width: rem(600px);
+  max-width: calc(100vw - #{rem(30px)});
   max-height: calc(100vh - #{rem(30px)});
   flex-direction: column;
   border-radius: rem(5px);
