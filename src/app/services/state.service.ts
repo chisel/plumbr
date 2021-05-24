@@ -278,8 +278,8 @@ export class StateService {
   public deletePipeline(index: number) {
 
     const newData = this.data;
-    const newLinks = this.links;
-    let originalLinksSize = newLinks.length;
+    let newLinks = this.links;
+    const originalLinksSize = newLinks.length;
 
     newData.splice(index, 1);
 
@@ -295,6 +295,16 @@ export class StateService {
 
     }
 
+    // Shift links indices
+    newLinks = newLinks.map(link => {
+
+      if ( index < link.nodes[0] ) link.nodes[0]--;
+      if ( index < link.nodes[1] ) link.nodes[1]--;
+
+      return link;
+
+    });
+
     this.captureHistory();
     this._updateData(newData, true, true);
     if ( originalLinksSize !== newLinks.length ) this._updateLinks(newLinks, true, true);
@@ -304,7 +314,10 @@ export class StateService {
 
   public bulkDeletePipeline(indices: { pipelineIndex: number }[]) {
 
-    const newValue = this.data;
+    const newData = this.data;
+    let newLinks = this.links;
+    const originalLinksSize = newLinks.length;
+    const deletedPipelines: number[] = [];
 
     for ( let i = 0; i < indices.length; i++ ) {
 
@@ -315,11 +328,37 @@ export class StateService {
       .filter(indice => indice.pipelineIndex < index)
       .length;
 
-      newValue.splice(index - shift, 1);
+      newData.splice(index - shift, 1);
+      deletedPipelines.push(index);
 
     }
 
-    this._updateData(newValue);
+    // Delete links to the deleted pipelines
+    for ( let i = 0; i < newLinks.length; i++ ) {
+
+      if ( deletedPipelines.includes(newLinks[i].nodes[0]) || deletedPipelines.includes(newLinks[i].nodes[1]) ) {
+
+        newLinks.splice(i, 1);
+        i--;
+
+      }
+
+    }
+
+    // Shift links indices
+    newLinks = newLinks.map(link => {
+
+      link.nodes[0] -= deletedPipelines.filter(index => index < link.nodes[0]).length;
+      link.nodes[1] -= deletedPipelines.filter(index => index < link.nodes[1]).length;
+
+      return link;
+
+    });
+
+    this.captureHistory();
+    this._updateData(newData, true, true);
+    if ( originalLinksSize !== newLinks.length ) this._updateLinks(newLinks, true, true);
+    this.saveDataToLocalstorage();
 
   }
 
@@ -468,16 +507,21 @@ export class StateService {
 
         // Decompress the content
         const loadedRawData = <string>event.target.result;
-        const loadedData = JSON.parse(decompress(loadedRawData));
+        const loadedData: HistoryState = JSON.parse(loadedRawData);
 
         // Invalid data
         if ( loadedData === null ) throw new Error('Invalid import data!');
 
         // Load the data in app (skip setting history)
-        this._updateData(loadedData, true);
+        this._updateData(loadedData.data, true, true);
+        this._updateLinks(loadedData.links, true, true);
 
         // Reset history
         this._history = [];
+        this._unsavedChanges = false;
+
+        // Save data into localstorage
+        this.saveDataToLocalstorage();
 
       };
 
@@ -513,7 +557,10 @@ export class StateService {
   public export() {
 
     const blob = new Blob([
-      compress(JSON.stringify(this.data))
+      JSON.stringify({
+        data: this.data,
+        links: this.links
+      })
     ], {
       type: 'text/plain;charset=utf-8'
     });
