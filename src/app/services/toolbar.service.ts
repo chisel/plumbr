@@ -413,8 +413,8 @@ export class ToolbarService {
         const canvasTop = +computed.top.replace('px', '');
         const canvasWidth = +computed.width.replace('px', '');
         const canvasHeight = +computed.height.replace('px', '');
-        const left = Math.abs(canvasLeft) + ((canvasWidth - Math.abs(canvasLeft)) / 2) - (ToolbarService.PIPELINE_WIDTH / 2);
-        const top = Math.abs(canvasTop) + ((canvasHeight - Math.abs(canvasTop)) / 2) - (ToolbarService.PIPELINE_HEIGHT / 2);
+        const left = (Math.abs(canvasLeft) + ((canvasWidth - Math.abs(canvasLeft)) / 2) - ((ToolbarService.PIPELINE_WIDTH * this._canvas.currentScale) / 2)) / this._canvas.currentScale;
+        const top = (Math.abs(canvasTop) + ((canvasHeight - Math.abs(canvasTop)) / 2) - ((ToolbarService.PIPELINE_HEIGHT * this._canvas.currentScale) / 2)) / this._canvas.currentScale;
 
         this._state.newPipeline(
           data.name,

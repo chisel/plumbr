@@ -201,8 +201,8 @@ export class CanvasComponent implements OnInit {
     // Insert a new pipeline
     if ( this.selectedTool === Tools.Insert ) {
 
-      const left = event.clientX + Math.abs(this.canvasLeft) - 345;
-      const top = event.clientY + Math.abs(this.canvasTop);
+      const left = (event.clientX / this.currentScale) + Math.abs(this.canvasLeft) - 345;
+      const top = (event.clientY / this.currentScale) + Math.abs(this.canvasTop);
 
       this._modal.openModal(ModalType.Pipeline)
       .then(data => {

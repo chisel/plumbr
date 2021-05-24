@@ -5,7 +5,8 @@ class="canvas"
 (wheel)="onCanvasWheel($event)"
 [ngClass]="{
   grab: canvasMoveMode && ! canvasMoving,
-  grabbing: canvasMoveMode && canvasMoving
+  grabbing: canvasMoveMode && canvasMoving,
+  'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode
 }"
 [ngStyle]="{
   top: canvasTop + 'px',
