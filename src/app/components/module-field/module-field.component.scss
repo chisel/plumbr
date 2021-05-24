@@ -34,10 +34,12 @@
 
   &:hover.erase-mode .module-field {
     background-color: color('accent-red');
+    cursor: pointer;
   }
 
   &:hover.edit-mode .module-field {
     background-color: color('accent-orange');
+    cursor: pointer;
   }
 
   &:hover.move-mode .module-field,

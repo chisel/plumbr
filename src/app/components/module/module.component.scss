@@ -7,6 +7,7 @@
 
   &:hover.insert-mode .module {
     border-color: color('accent-green');
+    cursor: pointer;
   }
 
   &:hover.insert-mode .module-header {
@@ -16,6 +17,7 @@
 
   &:hover.edit-mode .module {
     border-color: color('accent-orange');
+    cursor: pointer;
   }
 
   &:hover.edit-mode .module-header {
@@ -25,6 +27,7 @@
 
   &:hover.erase-mode .module {
     border-color: color('accent-red');
+    cursor: pointer;
   }
 
   &:hover.erase-mode .module-header {

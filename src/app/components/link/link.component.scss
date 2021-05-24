@@ -11,6 +11,7 @@
 
 :host.erase-mode:hover .link-node,
 :host.erase-mode:hover .link-line {
+  cursor: pointer;
   background-color: color('accent-red') !important;
 }
 
@@ -27,11 +28,6 @@
   position: absolute;
   height: rem(5px);
   transform-origin: top left;
-}
-
-:host.erase-mode .link-node,
-:host.erase-mode .link-line {
-  transition: background-color .25s ease-in-out;
 }
 
 .link-color-0 { background-color: color('accent'); }
