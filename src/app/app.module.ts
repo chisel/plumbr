@@ -17,6 +17,8 @@ import { ModuleFieldComponent } from './components/module-field/module-field.com
 import { StackableDirective } from './directives/stackable.directive';
 import { ScalebarComponent } from './components/scalebar/scalebar.component';
 import { LinkComponent } from './components/link/link.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,13 @@ import { LinkComponent } from './components/link/link.component';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the app is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

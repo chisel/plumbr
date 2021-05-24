@@ -61,13 +61,15 @@
               "src/mstile-310x150.png",
               "src/mstile-310x310.png",
               "src/browserconfig.xml",
-              "src/site.webmanifest",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -141,8 +143,8 @@
               "src/mstile-310x150.png",
               "src/mstile-310x310.png",
               "src/browserconfig.xml",
-              "src/site.webmanifest",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/styles.scss"
