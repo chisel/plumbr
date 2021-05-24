@@ -1,3 +1,4 @@
+/// <reference path="../../../../node_modules/highlight.js/types/index.d.ts" />
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -5,7 +6,17 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faMarkdown } from '@fortawesome/free-brands-svg-icons'
 import { sanitize as sanitizeHTML } from 'dompurify';
 import * as marked from 'marked';
-import { highlightAll } from 'highlight.js';
+import * as hljs from 'highlight.js/lib/core';
+import langjavascript from 'highlight.js/lib/languages/javascript';
+import langjson from 'highlight.js/lib/languages/json';
+import langtypescript from 'highlight.js/lib/languages/typescript';
+import langbash from 'highlight.js/lib/languages/bash';
+import langcss from 'highlight.js/lib/languages/css';
+import langscss from 'highlight.js/lib/languages/scss';
+import langsql from 'highlight.js/lib/languages/sql';
+import langmarkdown from 'highlight.js/lib/languages/markdown';
+import langhttp from 'highlight.js/lib/languages/http';
+import langhtmlbars from 'highlight.js/lib/languages/htmlbars';
 import { ModalService, OpenModalData, ModalType } from '@plumbr/service/modal';
 import {
   ModuleType,
@@ -15,6 +26,18 @@ import {
   ModuleData,
   ModuleFieldData
 } from '@plumbr/service/state';
+
+// Register languages
+hljs.registerLanguage('javascript', langjavascript);
+hljs.registerLanguage('typescript', langtypescript);
+hljs.registerLanguage('json', langjson);
+hljs.registerLanguage('bash', langbash);
+hljs.registerLanguage('css', langcss);
+hljs.registerLanguage('scss', langscss);
+hljs.registerLanguage('markdown', langmarkdown);
+hljs.registerLanguage('sql', langsql);
+hljs.registerLanguage('http', langhttp);
+hljs.registerLanguage('htmlbars', langhtmlbars);
 
 @Component({
   selector: 'app-modal',
@@ -129,7 +152,7 @@ export class ModalComponent implements OnInit {
 
       resolve(html);
 
-      if ( ! noHighlighting ) setTimeout(highlightAll, 100);
+      if ( ! noHighlighting ) setTimeout(hljs.highlightAll, 100);
 
     });
 
