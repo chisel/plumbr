@@ -11,6 +11,7 @@ import {
   faFileImage,
   faPencilAlt
 } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { CanvasService } from '@plumbr/service/canvas';
 import { ToolbarService, Tools } from '@plumbr/service/toolbar';
 import { ModalService, ModalType } from '@plumbr/service/modal';
@@ -34,6 +35,7 @@ export class ToolbarComponent implements OnInit {
   public faFileImage = faFileImage;
   public faQuestion = faQuestion;
   public faPencilAlt = faPencilAlt;
+  public faGithub = faGithub;
 
   public toolbarEnabled: boolean;
   public selectedTool: Tools;
@@ -60,7 +62,7 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.l', () => { this.onSelectTool(Tools.Link); });
     this._renderer.listen('window', 'keyup.e', () => { this.onSelectTool(Tools.Erase); });
     this._renderer.listen('window', 'keyup.shift.r', () => { this.onResetCanvasPosition(); });
-    this._renderer.listen('window', 'keyup.h', () => { this.onHelp(); });
+    this._renderer.listen('window', 'keyup.shift.h', () => { this.onHelp(); });
     this._renderer.listen('window', 'keyup.shift.z', () => { this.onUndo(); });
     this._renderer.listen('window', 'keyup.shift.o', () => { this.onOpenProject(); });
     this._renderer.listen('window', 'keyup.shift.s', () => { this.onSaveProject(); });
@@ -81,6 +83,9 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.shift.arrowdown', () => { this.onMoveEnd(); });
     this._renderer.listen('window', 'keyup.shift.arrowleft', () => { this.onMoveEnd(); });
     this._renderer.listen('window', 'keyup.shift.arrowright', () => { this.onMoveEnd(); });
+    this._renderer.listen('window', 'keyup.shift.+', () => { this.onScaleUp(); });
+    this._renderer.listen('window', 'keyup.shift._', () => { this.onScaleDown(); });
+    this._renderer.listen('window', 'keyup.shift.)', () => { this.onScaleReset(); });
 
   }
 
@@ -232,6 +237,36 @@ export class ToolbarComponent implements OnInit {
   public onMoveEnd() {
 
     this._toolbar.endSelectedMovement();
+
+  }
+
+  public onScaleUp() {
+
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+
+    this._canvas.currentScale += CanvasService.SCALE_POWER;
+
+  }
+
+  public onScaleDown() {
+
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+
+    this._canvas.currentScale -= CanvasService.SCALE_POWER;
+
+  }
+
+  public onScaleReset() {
+
+    if ( this._canvas.shortcutsDisabled || this._modal.currentModal !== null || this._canvas.canvasMoveMode ) return;
+
+    this._canvas.currentScale = CanvasService.SCALE_DEFAULT;
+
+  }
+
+  public onViewSource() {
+
+    window.open('https://github.com/chisel/plumbr', '_blank');
 
   }
 

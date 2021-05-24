@@ -409,7 +409,7 @@ export class StateService {
 
   }
 
-  public undo() {
+  public undo(skipSave?: boolean) {
 
     if ( ! this._history.length ) return;
 
@@ -417,7 +417,7 @@ export class StateService {
 
     this._updateData(newValue.data, true, true);
     this._updateLinks(newValue.links, true, true);
-    this.saveDataToLocalstorage();
+    if ( ! skipSave ) this.saveDataToLocalstorage();
 
     // Reposition all pipeline links
     const count = this._data.length;

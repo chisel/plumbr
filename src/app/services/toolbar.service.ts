@@ -563,6 +563,12 @@ export class ToolbarService {
     // Ignore saving an empty canvas
     if ( ! this._state.data.length ) return;
 
+    const canvas = document.getElementById('canvas');
+
+    // Hide canvas
+    canvas.style.transition = 'opacity .25s ease-in-out';
+    canvas.style.opacity = '0';
+
     // Clear selection
     this.clearSelection();
 
@@ -586,7 +592,6 @@ export class ToolbarService {
     const elements = document.querySelectorAll('app-pipeline');
     const PIPELINE_HEADER_EXTRA_HEIGHT = +window.getComputedStyle(document.querySelector('.pipeline .pipeline-name')).height.replace('px', '') / 2;
     const IMAGE_CANVAS_PADDING = 50;
-    const canvas = document.getElementById('canvas');
     const canvasLeft = canvas.style.left;
     const canvasTop = canvas.style.top;
     let mostLeft: number = null, mostRight: number = null, mostTop: number = null, mostBottom: number = null;
@@ -619,8 +624,19 @@ export class ToolbarService {
         i,
         pipeline.position.left - mostLeft + IMAGE_CANVAS_PADDING,
         pipeline.position.top - mostTop + PIPELINE_HEADER_EXTRA_HEIGHT + IMAGE_CANVAS_PADDING,
+        true,
         true
       );
+
+    }
+
+    // Wait for 100ms
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Reposition links
+    for ( let i = 0; i < pipelines.length; i++ ) {
+
+      this.repositionPipelineLinks(i);
 
     }
 
@@ -637,6 +653,7 @@ export class ToolbarService {
       width: mostRight - mostLeft + (IMAGE_CANVAS_PADDING * 2),
       backgroundColor: 'white',
       style: {
+        opacity: '1',
         backgroundImage: ''
       },
       // Filter out .indicator-dot:not(.conditional)
@@ -649,7 +666,9 @@ export class ToolbarService {
     // Restore previous element positions
     canvas.style.left = canvasLeft;
     canvas.style.top = canvasTop;
-    this._state.undo();
+    canvas.style.transition = '';
+    canvas.style.opacity = '1';
+    this._state.undo(true);
 
     // Prompt save image
     saveAs(blob, 'plumbr.png');
@@ -682,6 +701,9 @@ export class ToolbarService {
         this._movementSkippedStateCapture,
         true
       );
+
+      // Reposition pipeline links (while giving the view some time to refresh)
+      setTimeout(() => this.repositionPipelineLinks(selection.pipelineIndex), 50);
 
     }
     else if ( this._selectionType === SelectionType.Module ) {

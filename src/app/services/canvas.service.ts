@@ -6,6 +6,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 })
 export class CanvasService {
 
+  public static SCALE_POWER: number = .1;
   public static SCALE_MIN: number = 0.4;
   public static SCALE_MAX: number = 1.4;
   public static SCALE_DEFAULT: number = 0.9;

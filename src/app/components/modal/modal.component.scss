@@ -116,9 +116,10 @@ form {
 }
 
 p.modal-no-context-message,
-article.markdown {
+article {
   margin-top: rem(20px);
   margin-bottom: rem(10px);
+  line-height: rem(24px);
 }
 
 p.modal-no-context-message {

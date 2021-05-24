@@ -256,7 +256,7 @@ app-module-field.selected {
   }
 }
 
-article.markdown {
+article {
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -294,6 +294,8 @@ article.markdown {
   }
 
   ul, ol { padding-inline-start: rem(30px); }
+
+  li { line-height: rem(28px); }
 
   :not(pre) code {
     font-family: 'Roboto Mono', monospace;

@@ -13,8 +13,6 @@ import {
 })
 export class ScalebarComponent implements OnInit {
 
-  public static SCALE_POWER: number = .1;
-
   public faSearchPlus = faSearchPlus;
   public faSearchMinus = faSearchMinus;
   public faSyncAlt = faSyncAlt;
@@ -38,13 +36,13 @@ export class ScalebarComponent implements OnInit {
 
   public onScaleUp() {
 
-    this._canvas.currentScale += ScalebarComponent.SCALE_POWER;
+    this._canvas.currentScale += CanvasService.SCALE_POWER;
 
   }
 
   public onScaleDown() {
 
-    this._canvas.currentScale -= ScalebarComponent.SCALE_POWER;
+    this._canvas.currentScale -= CanvasService.SCALE_POWER;
 
   }
 

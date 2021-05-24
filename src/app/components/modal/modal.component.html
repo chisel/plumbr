@@ -4,7 +4,7 @@
   <div
   *ngIf="currentModal?.type !== ModalType.Spinner"
   class="modal"
-  [ngClass]="{ 'modal-wide': currentModal?.type === ModalType.Prompt && currentModal.context.message }">
+  [ngClass]="{ 'modal-wide': (currentModal?.type === ModalType.Prompt && currentModal.context.message) || currentModal?.type === ModalType.Help }">
     <fa-icon
     (click)="onClose()"
     class="close-button"
@@ -16,6 +16,8 @@
       <div class="modal-title">
         <div class="modal-title-text">Help</div>
       </div>
+      <article [innerHTML]="markdownContent">
+      </article>
     </ng-template>
     <ng-template [ngIf]="currentModal?.type === ModalType.Pipeline">
       <div class="modal-title">
@@ -103,7 +105,6 @@
       </p>
       <article
       *ngIf="currentModal.context.message"
-      class="markdown"
       [innerHTML]="markdownContent">
       </article>
     </ng-template>

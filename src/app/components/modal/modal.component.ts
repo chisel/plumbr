@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faMarkdown } from '@fortawesome/free-brands-svg-icons'
 import { sanitize as sanitizeHTML } from 'dompurify';
@@ -37,6 +38,7 @@ export class ModalComponent implements OnInit {
   public markdownContent: string = '';
 
   constructor(
+    private _http: HttpClient,
     private _modal: ModalService
   ) { }
 
@@ -49,6 +51,16 @@ export class ModalComponent implements OnInit {
 
         this._markdownToHTML(data.context.message)
         .then(markdown => this.markdownContent = markdown);
+
+      }
+      // Load help markdown file
+      else if ( data.type === ModalType.Help ) {
+
+        this._http.get('assets/help.md', { responseType: 'text' })
+        .toPromise()
+        .then(data => this._markdownToHTML(data, true))
+        .then(markdown => this.markdownContent = markdown)
+        .catch(console.error);
 
       }
 
@@ -107,7 +119,7 @@ export class ModalComponent implements OnInit {
 
   }
 
-  private _markdownToHTML(markdown: string): Promise<string> {
+  private _markdownToHTML(markdown: string, noHighlighting?: boolean): Promise<string> {
 
     return new Promise(resolve => {
 
@@ -117,7 +129,7 @@ export class ModalComponent implements OnInit {
 
       resolve(html);
 
-      setTimeout(highlightAll, 100);
+      if ( ! noHighlighting ) setTimeout(highlightAll, 100);
 
     });
 
