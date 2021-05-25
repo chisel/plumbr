@@ -36,6 +36,23 @@
         </div>
       </form>
     </ng-template>
+    <ng-template [ngIf]="currentModal?.type === ModalType.Note">
+      <div class="modal-title">
+        <div class="modal-title-text">{{ currentModal.context ? 'Update' : 'New' }} Note</div>
+      </div>
+      <form #noteForm="ngForm" (ngSubmit)="onFormSubmit(noteForm)">
+        <input name="name" type="text" placeholder="Name" required [ngModel]="currentModal?.context?.name ?? ''">
+        <textarea class="with-descriptor" name="description" placeholder="Description" required [ngModel]="currentModal?.context?.description ?? ''"></textarea>
+        <div class="textarea-descriptor">
+          <fa-icon size="lg" [icon]="faMarkdown"></fa-icon>
+          <span>Styling with Markdown is enabled</span>
+        </div>
+        <div class="button-group button-group-50">
+          <button class="button-secondary" type="button" (click)="onClose()">Cancel</button>
+          <button class="button-primary" type="submit">{{ currentModal.context ? 'Update' : 'Create' }}</button>
+        </div>
+      </form>
+    </ng-template>
     <ng-template [ngIf]="currentModal?.type === ModalType.Module">
       <div class="modal-title">
         <div class="modal-title-text">{{ currentModal.context ? 'Update' : 'New' }} Module</div>

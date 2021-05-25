@@ -16,6 +16,8 @@ export class StateService {
   private _data$ = new BehaviorSubject<PipelineData[]>([]);
   private _links: PipelineLink[] = [];
   private _links$ = new BehaviorSubject<PipelineLink[]>([]);
+  private _notes: NoteData[] = [];
+  private _notes$ = new BehaviorSubject<NoteData[]>([]);
   private _history: HistoryState[] = [];
   /** Flag for export only and not localstorage. */
   private _unsavedChanges: boolean = false;
@@ -35,7 +37,9 @@ export class StateService {
     this._data = state.data;
     this._data$.next(cloneDeep(this._data));
     this._links = state.links;
-    this._links$.next(cloneDeep(this._links))
+    this._links$.next(cloneDeep(this._links));
+    this._notes = state.notes;
+    this._notes$.next(cloneDeep(this._notes));
 
     console.log('State loaded from localstorage');
 
@@ -71,11 +75,27 @@ export class StateService {
 
   }
 
+  private _updateNotes(newValue: NoteData[], skipHistory?: boolean, skipSave?: boolean) {
+
+    this._unsavedChanges = true;
+
+    // Add the current state to history
+    if ( ! skipHistory ) this.captureHistory();
+    // Set the data with the new value
+    this._notes = newValue;
+    // Emit the data change to all subscribers
+    this._notes$.next(cloneDeep(this._notes));
+
+    if ( ! skipSave ) this.saveDataToLocalstorage();
+
+  }
+
   public captureHistory() {
 
     this._history.push({
       data: cloneDeep(this._data),
-      links: cloneDeep(this._links)
+      links: cloneDeep(this._links),
+      notes: cloneDeep(this._notes)
     });
 
     // Only keep the last 15 moves
@@ -87,7 +107,11 @@ export class StateService {
   public saveDataToLocalstorage() {
 
     // Saved the compressed version of the current state to localstorage
-    const uncompressed = JSON.stringify({ data: this._data, links: this._links });
+    const uncompressed = JSON.stringify({
+      data: this._data,
+      links: this._links,
+      notes: this._notes
+    });
     const compressed = compress(uncompressed);
 
     // Disable auto-save when compressed data is above 5mb in size
@@ -456,6 +480,7 @@ export class StateService {
 
     this._updateData(newValue.data, true, true);
     this._updateLinks(newValue.links, true, true);
+    this._updateNotes(newValue.notes, true, true);
     if ( ! skipSave ) this.saveDataToLocalstorage();
 
     // Reposition all pipeline links
@@ -515,6 +540,7 @@ export class StateService {
         // Load the data in app (skip setting history)
         this._updateData(loadedData.data, true, true);
         this._updateLinks(loadedData.links, true, true);
+        this._updateNotes(loadedData.notes, true, true);
 
         // Reset history
         this._history = [];
@@ -559,7 +585,8 @@ export class StateService {
     const blob = new Blob([
       JSON.stringify({
         data: this.data,
-        links: this.links
+        links: this.links,
+        notes: this.notes
       })
     ], {
       type: 'text/plain;charset=utf-8'
@@ -574,6 +601,8 @@ export class StateService {
   public refreshState() {
 
     this._data$.next(this.data);
+    this._links$.next(this.links);
+    this._notes$.next(this.notes);
 
   }
 
@@ -594,16 +623,18 @@ export class StateService {
     index2: number,
     skipHistory?: boolean,
     skipSave?: boolean
-  ) {
+  ): number {
 
     const newValue = cloneDeep(this._links);
 
     newValue.push({
-      color: LinkColor.Default,
+      color: Color.Default,
       nodes: [ index1, index2 ]
     });
 
     this._updateLinks(newValue, skipHistory, skipSave);
+
+    return this._links.length - 1;
 
   }
 
@@ -621,7 +652,7 @@ export class StateService {
 
   }
 
-  public updateLinkColor(index: number, color: LinkColor, skipHistory?: boolean, skipSave?: boolean) {
+  public updateLinkColor(index: number, color: Color, skipHistory?: boolean, skipSave?: boolean) {
 
     const newValue = this.links;
 
@@ -637,6 +668,104 @@ export class StateService {
 
   }
 
+  public get notes() {
+
+    return cloneDeep(this._notes);
+
+  }
+
+  public notes$(observer: (notes: NoteData[]) => void) {
+
+    return this._notes$.subscribe(observer);
+
+  }
+
+  public newNote(name: string, description: string, left: number, top: number, skipHistory?: boolean, skipSave?: boolean): number {
+
+    const newValue = this.notes;
+
+    newValue.push({
+      name,
+      description,
+      color: Color.Default,
+      position: {
+        left,
+        top
+      }
+    });
+
+    this._updateNotes(newValue, skipHistory, skipSave);
+
+    return this._notes.length - 1;
+
+  }
+
+  public updateNote(index: number, name: string, description: string, skipHistory?: boolean, skipSave?: boolean) {
+
+    const newValue = this.notes;
+
+    newValue[index].name = name;
+    newValue[index].description = description;
+
+    this._updateNotes(newValue, skipHistory, skipSave);
+
+  }
+
+  public updateNoteColor(index: number, color: Color, skipHistory?: boolean, skipSave?: boolean) {
+
+    const newValue = this.notes;
+
+    newValue[index].color = color;
+
+    this._updateNotes(newValue, skipHistory, skipSave);
+
+  }
+
+  public updateNotePosition(index: number, left: number, top: number, skipHistory?: boolean, skipSave?: boolean) {
+
+    const newValue = this.notes;
+
+    newValue[index].position = { left, top };
+
+    this._updateNotes(newValue, skipHistory, skipSave);
+
+  }
+
+  public deleteNote(index: number, skipHistory?: boolean, skipSave?: boolean) {
+
+    const newValue = this.notes;
+
+    newValue.splice(index, 1);
+
+    this._updateNotes(newValue, skipHistory, skipSave);
+
+  }
+
+  public bulkDeleteNote(indices: { noteIndex: number }[]) {
+
+    const newNotes = this.notes;
+    const deletedNotes: number[] = [];
+
+    for ( let i = 0; i < indices.length; i++ ) {
+
+      const { noteIndex: index } = indices[i];
+      // Calculate the index shift based on previously deleted items within the same container
+      const shift = indices
+      .slice(0, i)
+      .filter(indice => indice.noteIndex < index)
+      .length;
+
+      newNotes.splice(index - shift, 1);
+      deletedNotes.push(index);
+
+    }
+
+    this.captureHistory();
+    this._updateNotes(newNotes, true, true);
+    this.saveDataToLocalstorage();
+
+  }
+
 }
 
 export interface PipelineData {
@@ -644,10 +773,7 @@ export interface PipelineData {
   name: string;
   description?: string;
   modules: ModuleData[];
-  position: {
-    left: number;
-    top: number;
-  };
+  position: Position;
 
 }
 
@@ -706,23 +832,40 @@ export interface HistoryState {
 
   data: PipelineData[];
   links: PipelineLink[];
+  notes: NoteData[];
 
 }
 
 export interface PipelineLink {
 
   nodes: [number, number];
-  color: LinkColor;
+  color: Color;
 
 }
 
-export enum LinkColor {
+export enum Color {
 
   Blue,
   Green,
   Orange,
   Red,
   Purple,
-  Default = LinkColor.Blue
+  Default = Color.Blue
+
+}
+
+export interface NoteData {
+
+  name: string;
+  description: string;
+  color: Color;
+  position: Position;
+
+}
+
+export interface Position {
+
+  left: number;
+  top: number;
 
 }

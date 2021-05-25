@@ -19,6 +19,7 @@ The following tools are available in the top section of the toolbar:
   - **Move tool**: Allows moving components when dragged.
   - **Link tool**: Allows linking pipelines and changing links color.
   - **Erase tool**: Allows deleting components and links when clicked.
+  - **Note tool**: Allows inserting notes on the canvas.
 
 The following functions are available in the mid section of the toolbar:
   - **Open project**: Opens a Plumbr project (`.flow` files).
@@ -42,6 +43,7 @@ The following shortcuts are available globally regardless of the equipped tool:
   - `m`: Equips the move tool.
   - `l`: Equips the link tool.
   - `e`: Equips the erase tool.
+  - `o`: Equips the note tool.
   - `shift+o`: Opens a Plumbr project (`.flow` files).
   - `shift+s`: Saves the current project on disk as a `.flow` file.
   - `shift+e`: Exports the current project as a `.png` image.

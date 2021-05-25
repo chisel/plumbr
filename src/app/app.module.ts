@@ -19,6 +19,7 @@ import { ScalebarComponent } from './components/scalebar/scalebar.component';
 import { LinkComponent } from './components/link/link.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { NoteComponent } from './components/note/note.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { environment } from '../environments/environment';
     ModuleFieldComponent,
     StackableDirective,
     ScalebarComponent,
-    LinkComponent
+    LinkComponent,
+    NoteComponent
   ],
   imports: [
     BrowserModule,

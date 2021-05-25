@@ -6,7 +6,7 @@ class="canvas"
 [ngClass]="{
   grab: canvasMoveMode && ! canvasMoving,
   grabbing: canvasMoveMode && canvasMoving,
-  'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode
+  'insert-mode': (selectedTool === Tools.Insert || selectedTool === Tools.Note) && ! canvasMoveMode
 }"
 [ngStyle]="{
   top: canvasTop + 'px',
@@ -17,12 +17,35 @@ class="canvas"
   'background-position': 'left ' + ((7.5 * currentScale) / 16) + 'rem top ' + ((7.5 * currentScale) / 16) + 'rem',
   'background-size': ((15 * currentScale) / 16) + 'rem ' + ((15 * currentScale) / 16) + 'rem'
 }">
+  <app-note
+  *ngFor="let note of notes; let index = index"
+  id="note{{index}}"
+  [noteData]="note"
+  (click)="onNoteClick($event, index)"
+  (dblclick)="onNoteDoubleClick($event, index)"
+  [ngStyle]="{
+    left: (((note.position.left * currentScale) / 15) * 15) + 'px',
+    top: (((note.position.top * currentScale) / 15) * 15) + 'px',
+    transform: 'scale(' + currentScale + ')',
+    'transform-origin': 'top left'
+  }"
+  [ngClass]="{
+    'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode,
+    'move-mode': selectedTool === Tools.Move && ! canvasMoveMode,
+    'edit-mode': selectedTool === Tools.Edit && ! canvasMoveMode,
+    'selected': selectedTool === Tools.Select && ! canvasMoveMode && isNoteSelected(index)
+  }"
+  [appMovable]="! canvasMoveMode && selectedTool === Tools.Move && ! pipelineStackMoving && ! moduleStackMoving && ! pipelineMoving"
+  (onmovementstart)="onElementMovementStart('note')"
+  (onmovementend)="onElementMovementEnd($event, 'note', index)"
+  [currentScale]="currentScale">
+  </app-note>
   <app-pipeline
   *ngFor="let pipeline of data; let index = index"
   id="pipeline{{index}}"
   [pipelineData]="pipeline"
   [pipelineIndex]="index"
-  [pipelineStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && ! moduleFieldHovered && ! pipelineMoving"
+  [pipelineStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && ! moduleFieldHovered && ! pipelineMoving && ! noteMoving"
   [currentScale]="currentScale"
   (click)="onPipelineClick($event, index)"
   (dblclick)="onPipelineDoubleClick($event, index)"
@@ -34,7 +57,7 @@ class="canvas"
     grabbing: canvasMoveMode && canvasMoving,
     'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode && ! moduleHovered,
     'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && ! moduleHovered,
-    'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && ! moduleHovered && ! moduleFieldHovered,
+    'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && ! moduleHovered && ! moduleFieldHovered && ! noteMoving,
     'edit-mode': selectedTool === Tools.Edit && ! canvasMoveMode && ! moduleHovered,
     'link-mode': selectedTool === Tools.Link && ! canvasMoveMode,
     'selected': (selectedTool === Tools.Select && ! canvasMoveMode && isSelected(index)) || currentLinkNode === index
@@ -45,21 +68,21 @@ class="canvas"
     transform: 'scale(' + currentScale + ')',
     'transform-origin': 'top left'
   }"
-  [appMovable]="! canvasMoveMode && selectedTool === Tools.Move && ! pipelineStackMoving && ! moduleStackMoving"
-  (onmovementstart)="onElementMovementStart()"
-  (onmovementend)="onElementMovementEnd($event, index)">
+  [appMovable]="! canvasMoveMode && selectedTool === Tools.Move && ! pipelineStackMoving && ! moduleStackMoving && ! noteMoving"
+  (onmovementstart)="onElementMovementStart('pipeline')"
+  (onmovementend)="onElementMovementEnd($event, 'pipeline', index)">
     <app-module
     *ngFor="let module of pipeline.modules; let mindex = index"
     [moduleData]="module"
     [pipelineIndex]="index"
     [moduleIndex]="mindex"
-    [moduleStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && ! pipelineMoving"
+    [moduleStackMovable]="selectedTool === Tools.Move && ! canvasMoveMode && ! pipelineMoving && ! noteMoving"
     [currentScale]="currentScale"
     [ngClass]="{
       'insert-mode': selectedTool === Tools.Insert && ! canvasMoveMode && moduleHovered,
       'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered,
       'edit-mode': selectedTool === Tools.Edit && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered,
-      'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered && ! pipelineMoving,
+      'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && moduleHovered && ! moduleFieldHovered && ! pipelineMoving && ! noteMoving,
       'link-mode': selectedTool === Tools.Link && ! canvasMoveMode,
       'selected': selectedTool === Tools.Select && ! canvasMoveMode && isSelected(index, mindex)
     }"
@@ -79,7 +102,7 @@ class="canvas"
       [ngClass]="{
         'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode && moduleFieldHovered,
         'edit-mode': selectedTool === Tools.Edit && ! canvasMoveMode && moduleFieldHovered,
-        'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && moduleFieldHovered && ! pipelineMoving,
+        'move-mode': selectedTool === Tools.Move && ! canvasMoveMode && moduleFieldHovered && ! pipelineMoving && ! noteMoving,
         'selected': selectedTool === Tools.Select && ! canvasMoveMode && isSelected(index, mindex, findex)
       }">
       </app-module-field>
@@ -87,7 +110,7 @@ class="canvas"
   </app-pipeline>
   <app-link
   *ngFor="let link of links; let index = index"
-  (onlinkclick)="onLinkClick(index)"
+  (onlinkclick)="onLinkClick($event, index)"
   [linkData]="link"
   [linkIndex]="index"
   [ngClass]="{
@@ -96,7 +119,8 @@ class="canvas"
   }"
   [ngStyle]="{
     transform: 'scale(' + currentScale + ')',
-    'transform-origin': 'top left'
+    'transform-origin': 'top left',
+    cursor: selectedTool === Tools.Note && ! canvasMoveMode ? 'default' : 'unset'
   }">
   </app-link>
 </div>

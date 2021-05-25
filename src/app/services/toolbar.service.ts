@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { StateService, PipelineData, ModuleData, ModuleFieldData, LinkColor } from './state.service';
-import { ModalService, ModalType, PipelineContext, ModuleContext, ModuleFieldContext } from './modal.service';
+import { StateService, PipelineData, ModuleData, ModuleFieldData, NoteData, Color, Position } from './state.service';
+import { ModalService, ModalType, PipelineContext, ModuleContext, ModuleFieldContext, NoteContext } from './modal.service';
 import { CanvasService } from './canvas.service';
 import { cloneDeep } from 'lodash-es';
 import { toBlob } from 'html-to-image';
@@ -14,6 +14,8 @@ export class ToolbarService {
 
   public static COPY_PIPELINE_WIDTH_OFFSET: number = 735;
   public static COPY_PIPELINE_HEIGHT_OFFSET: number = 0;
+  public static COPY_NOTE_HEIGHT_OFFSET: number = 60;
+  public static NOTE_HEIGHT: number = 45;
   public static PIPELINE_WIDTH: number = 690;
   public static PIPELINE_HEIGHT: number = 66;
   public static PIPELINE_LINK_TOP_SHIFT = 18;
@@ -21,7 +23,7 @@ export class ToolbarService {
   private _selectedTool$ = new BehaviorSubject<Tools>(Tools.Select);
   private _selection$ = new BehaviorSubject<Array<SelectedItem>>([]);
   private _selectionType = SelectionType.Empty;
-  private _clipboard: Array<PipelineData|ModuleData|ModuleFieldData> = [];
+  private _clipboard: Array<PipelineData|ModuleData|ModuleFieldData|NoteData> = [];
   private _clipboardType = SelectionType.Empty;
   private _movementSkippedStateCapture: boolean = false;
   private _currentLinkNode: number = -1;
@@ -52,12 +54,14 @@ export class ToolbarService {
       return SelectionType.Field;
     else if ( typeof item.moduleIndex === 'number' )
       return SelectionType.Module;
-    else
+    else if ( typeof item.pipelineIndex === 'number' )
       return SelectionType.Pipeline;
+    else
+      return SelectionType.Note;
 
   }
 
-  private _createFieldClone(pipelineIndex: number, moduleIndex: number, ...targets: ModuleFieldData[]) {
+  private _createFieldClone(pipelineIndex: number, moduleIndex: number, targets: ModuleFieldData[]) {
 
     this._state.captureHistory();
 
@@ -78,7 +82,7 @@ export class ToolbarService {
 
   }
 
-  private _createModuleClone(pipelineIndex: number, ...targets: ModuleData[]) {
+  private _createModuleClone(pipelineIndex: number, targets: ModuleData[]) {
 
     this._state.captureHistory();
 
@@ -113,17 +117,21 @@ export class ToolbarService {
 
   }
 
-  private _createPipelineClone(...targets: PipelineData[]) {
+  private _createPipelineClone(targets: PipelineData[], position?: Position, spaceBetween?: Position) {
 
     this._state.captureHistory();
 
+    let count = 0;
+
     for ( const target of targets ) {
+
+      count++;
 
       // Create a new pipeline
       const pipelineIndex = this._state.newPipeline(
         target.name,
-        target.position.left + ToolbarService.COPY_PIPELINE_WIDTH_OFFSET,
-        target.position.top + ToolbarService.COPY_PIPELINE_HEIGHT_OFFSET,
+        position ? position.left + ((count > 1 ? spaceBetween?.left ?? 0 : 0) * (count - 1)) : target.position.left + ToolbarService.COPY_PIPELINE_WIDTH_OFFSET,
+        position ? position.top + ((count > 1 ? spaceBetween?.top ?? 0 : 0) * (count) - 1) : target.position.top + ToolbarService.COPY_PIPELINE_HEIGHT_OFFSET,
         target.description,
         true
       );
@@ -161,9 +169,50 @@ export class ToolbarService {
 
   }
 
+  private _createNoteClone(targets: NoteData[], position?: Position, spaceBetween?: Position) {
+
+    this._state.captureHistory();
+
+    let count = 0;
+
+    for ( const target of targets ) {
+
+      count++;
+
+      // Create new note
+      const noteIndex = this._state.newNote(
+        target.name,
+        target.description,
+        position ? position.left + ((count > 1 ? spaceBetween?.left ?? 0 : 0) * (count - 1)) : target.position.left,
+        position ? position.top + ((count > 1 ? spaceBetween?.top ?? 0 : 0) * (count - 1)) : target.position.top + ToolbarService.COPY_NOTE_HEIGHT_OFFSET,
+        true,
+        true
+      );
+
+      // Set color
+      this._state.updateNoteColor(noteIndex, target.color, true);
+
+    }
+
+  }
+
   private _getPixelsValue(px: string): number {
 
     return +px.replace('px', '');
+
+  }
+
+  private _getCenterOfCanvas(offsetLeft: number = 0, offsetTop: number = 0): Position {
+
+    const computed = window.getComputedStyle(document.getElementById('canvas'));
+    const canvasLeft = this._getPixelsValue(computed.left);
+    const canvasTop = this._getPixelsValue(computed.top);
+    const canvasWidth = this._getPixelsValue(computed.width);
+    const canvasHeight = this._getPixelsValue(computed.height);
+    const left = (Math.abs(canvasLeft) + ((canvasWidth - Math.abs(canvasLeft)) / 2) - (offsetLeft * this._canvas.currentScale)) / this._canvas.currentScale;
+    const top = (Math.abs(canvasTop) + ((canvasHeight - Math.abs(canvasTop)) / 2) - (offsetTop * this._canvas.currentScale)) / this._canvas.currentScale;
+
+    return { top, left };
 
   }
 
@@ -206,8 +255,10 @@ export class ToolbarService {
         return this._state.data[item.pipelineIndex];
       else if ( itemType === SelectionType.Module )
         return this._state.data[item.pipelineIndex].modules[item.moduleIndex];
-      else
+      else if ( itemType === SelectionType.Field )
         return this._state.data[item.pipelineIndex].modules[item.moduleIndex].fields[item.fieldIndex];
+      else
+        return this._state.notes[item.noteIndex];
 
     });
 
@@ -261,7 +312,8 @@ export class ToolbarService {
 
         return item.pipelineIndex === newItem.pipelineIndex &&
         item.moduleIndex === newItem.moduleIndex &&
-        item.fieldIndex === newItem.fieldIndex;
+        item.fieldIndex === newItem.fieldIndex &&
+        item.noteIndex === newItem.noteIndex;
 
       });
 
@@ -299,8 +351,10 @@ export class ToolbarService {
       this._state.bulkDeleteModuleField(<any>this._selection$.value)
     else if ( this._selectionType === SelectionType.Module )
       this._state.bulkDeleteModule(<any>this._selection$.value)
-    else
-      this._state.bulkDeletePipeline(this._selection$.value);
+    else if ( this._selectionType === SelectionType.Pipeline )
+      this._state.bulkDeletePipeline(<any>this._selection$.value);
+    else if ( this._selectionType === SelectionType.Note )
+      this._state.bulkDeleteNote(<any>this._selection$.value);
 
     this.clearSelection();
 
@@ -317,7 +371,7 @@ export class ToolbarService {
       // For each selected module
       for ( const dest of this._selection$.value ) {
 
-        this._createFieldClone(dest.pipelineIndex, dest.moduleIndex, ...<ModuleFieldData[]>this._clipboard);
+        this._createFieldClone(dest.pipelineIndex, dest.moduleIndex, <ModuleFieldData[]>this._clipboard);
 
       }
 
@@ -330,7 +384,7 @@ export class ToolbarService {
       // For each selected pipeline
       for ( const dest of this._selection$.value ) {
 
-        this._createModuleClone(dest.pipelineIndex, ...<ModuleData[]>this._clipboard);
+        this._createModuleClone(dest.pipelineIndex, <ModuleData[]>this._clipboard);
 
       }
 
@@ -340,7 +394,34 @@ export class ToolbarService {
     // Pasting pipelines into canvas
     else if ( this._clipboardType === SelectionType.Pipeline && this._selectionType === SelectionType.Empty ) {
 
-      this._createPipelineClone(...<PipelineData[]>this._clipboard);
+      const center = this._getCenterOfCanvas(
+        ((ToolbarService.PIPELINE_WIDTH * this._clipboard.length) + ((ToolbarService.COPY_PIPELINE_WIDTH_OFFSET - ToolbarService.PIPELINE_WIDTH) * (this._clipboard.length - 1))) / 2,
+        ToolbarService.PIPELINE_HEIGHT / 2
+      );
+
+      this._createPipelineClone(<PipelineData[]>this._clipboard, {
+        left: Math.floor(center.left / 15) * 15,
+        top: Math.floor(center.top / 15) * 15
+      }, {
+        left: ToolbarService.COPY_PIPELINE_WIDTH_OFFSET,
+        top: 0
+      });
+
+      this.clearSelection();
+
+    }
+    // Pasting notes into canvas
+    else if ( this._clipboardType === SelectionType.Note && this._selectionType === SelectionType.Empty ) {
+
+      const center = this._getCenterOfCanvas(0, ((ToolbarService.NOTE_HEIGHT * this._clipboard.length) + ((this._clipboard.length - 1) * (ToolbarService.COPY_NOTE_HEIGHT_OFFSET - ToolbarService.NOTE_HEIGHT))) / 2);
+
+      this._createNoteClone(<NoteData[]>this._clipboard, {
+        left: Math.floor(center.left / 15) * 15,
+        top: Math.floor(center.top / 15) * 15
+      }, {
+        left: 0,
+        top: ToolbarService.COPY_NOTE_HEIGHT_OFFSET
+      });
 
       this.clearSelection();
 
@@ -361,7 +442,7 @@ export class ToolbarService {
         this._createFieldClone(
           item.pipelineIndex,
           item.moduleIndex,
-          this._state.data[item.pipelineIndex].modules[item.moduleIndex].fields[item.fieldIndex]
+          [this._state.data[item.pipelineIndex].modules[item.moduleIndex].fields[item.fieldIndex]]
         );
 
       }
@@ -374,7 +455,7 @@ export class ToolbarService {
 
         this._createModuleClone(
           item.pipelineIndex,
-          this._state.data[item.pipelineIndex].modules[item.moduleIndex]
+          [this._state.data[item.pipelineIndex].modules[item.moduleIndex]]
         );
 
       }
@@ -386,7 +467,19 @@ export class ToolbarService {
       for ( const item of this._selection$.value ) {
 
         this._createPipelineClone(
-          this._state.data[item.pipelineIndex]
+          [this._state.data[item.pipelineIndex]]
+        );
+
+      }
+
+    }
+    // Duplicate notes
+    else if ( this._selectionType === SelectionType.Note ) {
+
+      for ( const item of this._selection$.value ) {
+
+        this._createNoteClone(
+          [this._state.notes[item.noteIndex]]
         );
 
       }
@@ -407,19 +500,12 @@ export class ToolbarService {
 
         if ( ! data ) return;
 
-        // Calculate center of the canvas
-        const computed = window.getComputedStyle(document.getElementById('canvas'));
-        const canvasLeft = +computed.left.replace('px', '');
-        const canvasTop = +computed.top.replace('px', '');
-        const canvasWidth = +computed.width.replace('px', '');
-        const canvasHeight = +computed.height.replace('px', '');
-        const left = (Math.abs(canvasLeft) + ((canvasWidth - Math.abs(canvasLeft)) / 2) - ((ToolbarService.PIPELINE_WIDTH * this._canvas.currentScale) / 2)) / this._canvas.currentScale;
-        const top = (Math.abs(canvasTop) + ((canvasHeight - Math.abs(canvasTop)) / 2) - ((ToolbarService.PIPELINE_HEIGHT * this._canvas.currentScale) / 2)) / this._canvas.currentScale;
+        const center = this._getCenterOfCanvas(ToolbarService.PIPELINE_WIDTH / 2, ToolbarService.PIPELINE_HEIGHT);
 
         this._state.newPipeline(
           data.name,
-          Math.floor(left / 15) * 15,
-          Math.floor(top / 15) * 15,
+          Math.floor(center.left / 15) * 15,
+          Math.floor(center.top / 15) * 15,
           data.description
         );
 
@@ -555,6 +641,31 @@ export class ToolbarService {
       .finally(() => this.clearSelection());
 
     }
+    // Editting note
+    else if ( this._selectionType === SelectionType.Note ) {
+
+      const index = this._selection$.value[0].noteIndex;
+      const note = this._state.notes[index];
+
+      this._modal.openModal<NoteContext>(ModalType.Note, {
+        name: note.name,
+        description: note.description
+      })
+      .then((data: NoteData) => {
+
+        if ( ! data ) return;
+
+        this._state.updateNote(
+          index,
+          data.name,
+          data.description
+        );
+
+      })
+      .catch(console.error)
+      .finally(() => this.clearSelection());
+
+    }
 
   }
 
@@ -647,6 +758,17 @@ export class ToolbarService {
     canvas.style.left = '0px';
     canvas.style.top = '0px';
 
+    // Hide notes
+    const notesCount = this._state.notes.length;
+
+    for ( let i = 0; i < notesCount; i++ ) {
+
+      const element = document.getElementById(`note${i}`);
+
+      element.style.opacity = '0';
+
+    }
+
     // Render image from canvas
     const blob = await toBlob(canvas, {
       height: mostBottom - mostTop + (IMAGE_CANVAS_PADDING * 2),
@@ -670,6 +792,15 @@ export class ToolbarService {
     canvas.style.opacity = '1';
     this._state.undo(true);
 
+    // Reveal notes
+    for ( let i = 0; i < notesCount; i++ ) {
+
+      const element = document.getElementById(`note${i}`);
+
+      element.style.opacity = '1';
+
+    }
+
     // Prompt save image
     saveAs(blob, 'plumbr.png');
 
@@ -680,8 +811,8 @@ export class ToolbarService {
     // Ignore on empty selection and multi selection
     if ( this._selectionType === SelectionType.Empty || this._selection$.value.length > 1 ) return;
 
-    // Ignore moving anything but pipelines on the X-axis
-    if ( axis === 'x' && this._selectionType !== SelectionType.Pipeline ) return;
+    // Ignore moving anything but pipelines and notes on the X-axis
+    if ( axis === 'x' && this._selectionType !== SelectionType.Pipeline && this._selectionType !== SelectionType.Note ) return;
 
     const selection = this._selection$.value[0];
     const data = this._state.data;
@@ -753,6 +884,22 @@ export class ToolbarService {
         ...selection,
         fieldIndex: selection.fieldIndex + value
       });
+
+    }
+    else if ( this._selectionType === SelectionType.Note ) {
+
+      const note = this._state.notes[selection.noteIndex];
+
+      // Skip out of bound movements
+      if ( note.position.left + value < 0 || note.position.top + value < 0 ) return;
+
+      this._state.updateNotePosition(
+        selection.noteIndex,
+        note.position.left + (axis === 'x' ? value * CanvasService.GRID_SIZE : 0),
+        note.position.top + (axis === 'y' ? value * CanvasService.GRID_SIZE : 0),
+        this._movementSkippedStateCapture,
+        true
+      );
 
     }
 
@@ -901,10 +1048,19 @@ export class ToolbarService {
 
   public cycleLinkColor(index: number) {
 
-    const maxColorValue = (Object.keys(LinkColor).length / 2) - 1;
+    const maxColorValue = (Object.keys(Color).length / 2) - 1;
     const nextColor = this._state.links[index].color + 1;
 
     this._state.updateLinkColor(index, nextColor > maxColorValue ? 0 : nextColor);
+
+  }
+
+  public cycleNoteColor(index: number) {
+
+    const maxColorValue = (Object.keys(Color).length / 2) - 1;
+    const nextColor = this._state.notes[index].color + 1;
+
+    this._state.updateNoteColor(index, nextColor > maxColorValue ? 0 : nextColor);
 
   }
 
@@ -949,13 +1105,15 @@ export enum Tools {
   Edit,
   Move,
   Link,
-  Erase
+  Erase,
+  Note
 }
 
 export interface SelectedItem {
-  pipelineIndex: number;
+  pipelineIndex?: number;
   moduleIndex?: number;
   fieldIndex?: number;
+  noteIndex?: number;
 }
 
 export enum SelectionType {
@@ -963,7 +1121,8 @@ export enum SelectionType {
   Empty,
   Pipeline,
   Module,
-  Field
+  Field,
+  Note
 
 }
 

@@ -7,14 +7,16 @@ import {
   ModuleData,
   ModuleFieldData,
   ModuleFieldOperationType,
-  PipelineLink
+  PipelineLink,
+  NoteData
 } from '@plumbr/service/state';
 import {
   ModalService,
   ModalType,
   PipelineContext,
   ModuleContext,
-  ModuleFieldContext
+  ModuleFieldContext,
+  NoteContext
 } from '@plumbr/service/modal';
 
 @Component({
@@ -36,6 +38,7 @@ export class CanvasComponent implements OnInit {
   public data: PipelineData[] = [];
   public moduleHovered: boolean = false;
   public moduleFieldHovered: boolean = false;
+  public noteMoving: boolean = false;
   public pipelineMoving: boolean = false;
   public pipelineStackMoving: boolean = false;
   public moduleStackMoving: boolean = false;
@@ -43,6 +46,7 @@ export class CanvasComponent implements OnInit {
   public currentScale: number;
   public currentLinkNode: number = -1;
   public links: PipelineLink[] = [];
+  public notes: NoteData[] = [];
 
   private _lastCanvasX: number = 0;
   private _lastCanvasY: number = 0;
@@ -167,30 +171,52 @@ export class CanvasComponent implements OnInit {
     // Update links
     this._state.links$(links => this.links = links);
 
+    // Update notes
+    this._state.notes$(notes => this.notes = notes);
+
   }
 
-  public onElementMovementStart() {
+  public onElementMovementStart(item: 'pipeline'|'note') {
 
     this._canvas.canvasEnabled = false;
     this._canvas.overlaysEnabled = false;
     this._canvas.shortcutsDisabled = true;
-    this.pipelineMoving = true;
+
+    if ( item === 'pipeline' ) this.pipelineMoving = true;
+    else if ( item === 'note' ) this.noteMoving = true;
 
   }
 
-  public onElementMovementEnd(element: HTMLElement, index: number) {
+  public onElementMovementEnd(element: HTMLElement, item: 'pipeline'|'note', index: number) {
 
     this._canvas.canvasEnabled = true;
     this._canvas.overlaysEnabled = true;
     this._canvas.shortcutsDisabled = false;
-    this.pipelineMoving = false;
 
-    // Update pipeline position
-    this._state.updatePipelinePosition(
-      index,
-      +element.style.left.substr(0, element.style.left.length - 2) / this.currentScale,
-      +element.style.top.substr(0, element.style.top.length - 2) / this.currentScale
-    );
+    if ( item === 'pipeline' ) {
+
+      this.pipelineMoving = false;
+
+      // Update pipeline position
+      this._state.updatePipelinePosition(
+        index,
+        +element.style.left.substr(0, element.style.left.length - 2) / this.currentScale,
+        +element.style.top.substr(0, element.style.top.length - 2) / this.currentScale
+      );
+
+    }
+    else if ( item === 'note' ) {
+
+      this.noteMoving = false;
+
+      // Update note position
+      this._state.updateNotePosition(
+        index,
+        +element.style.left.substr(0, element.style.left.length - 2) / this.currentScale,
+        +element.style.top.substr(0, element.style.top.length - 2) / this.currentScale
+      );
+
+    }
 
   }
 
@@ -220,6 +246,28 @@ export class CanvasComponent implements OnInit {
       .catch(console.error);
 
     }
+    // Inser a new note
+    else if ( this.selectedTool === Tools.Note ) {
+
+      const left = (event.clientX / this.currentScale) + Math.abs(this.canvasLeft);
+      const top = (event.clientY / this.currentScale) + Math.abs(this.canvasTop) - (45 / 2);
+
+      this._modal.openModal(ModalType.Note)
+      .then(data => {
+
+        if ( ! data ) return;
+
+        this._state.newNote(
+          data.name,
+          data.description,
+          Math.floor(left / 15) * 15,
+          Math.floor(top / 15) * 15
+        );
+
+      })
+      .catch(console.error);
+
+    }
     // Deselect items
     else if ( this.selectedTool === Tools.Select ) {
 
@@ -238,6 +286,70 @@ export class CanvasComponent implements OnInit {
     const scaleDown = event.deltaY > 0;
 
     this._canvas.currentScale = this._canvas.currentScale + (scaleDown ? -.1 : .1);
+
+  }
+
+  public onNoteClick(event: MouseEvent, index: number) {
+
+    if ( this.canvasMoveMode ) return;
+
+    if ( this._toolbar.selectedTool === Tools.Note ) {
+
+      event.stopImmediatePropagation();
+
+      this._toolbar.cycleNoteColor(index);
+
+    }
+    else if ( this._toolbar.selectedTool === Tools.Erase ) {
+
+      event.stopImmediatePropagation();
+
+      this._state.deleteNote(index);
+
+    }
+    else if ( this._toolbar.selectedTool === Tools.Edit ) {
+
+      event.stopImmediatePropagation();
+
+      this._modal.openModal<NoteContext>(ModalType.Note, {
+        name: this.notes[index].name,
+        description: this.notes[index].description
+      })
+      .then((data: NoteData) => {
+
+        if ( ! data ) return;
+
+        this._state.updateNote(index, data.name, data.description);
+
+      })
+      .catch(console.error);
+
+    }
+    else if ( this._toolbar.selectedTool === Tools.Select ) {
+
+      event.stopImmediatePropagation();
+
+      if ( event.shiftKey ) this._toolbar.addToSelection({ noteIndex: index });
+      else this._toolbar.setSelection({ noteIndex: index });
+
+    }
+
+  }
+
+  public onNoteDoubleClick(event: MouseEvent, index: number) {
+
+    if ( this.canvasMoveMode ) return;
+
+    event.stopImmediatePropagation();
+
+    if ( this._toolbar.selectedTool === Tools.Select ) {
+
+      this._modal.openModal(ModalType.Prompt, {
+        title: `${this.notes[index].name} Note`,
+        message: this.notes[index].description
+      });
+
+    }
 
   }
 
@@ -300,6 +412,11 @@ export class CanvasComponent implements OnInit {
       event.stopImmediatePropagation();
 
       this._toolbar.addLinkNode(index);
+
+    }
+    else if ( this._toolbar.selectedTool === Tools.Note ) {
+
+      event.stopImmediatePropagation();
 
     }
 
@@ -547,7 +664,7 @@ export class CanvasComponent implements OnInit {
 
   }
 
-  public onLinkClick(index: number) {
+  public onLinkClick(event: MouseEvent, index: number) {
 
     if ( this.canvasMoveMode ) return;
 
@@ -555,6 +672,8 @@ export class CanvasComponent implements OnInit {
       this._toolbar.cycleLinkColor(index);
     else if ( this._toolbar.selectedTool === Tools.Erase )
       this._toolbar.deleteLink(index);
+    else if ( this._toolbar.selectedTool === Tools.Note )
+      event.stopImmediatePropagation();
 
   }
 
@@ -563,6 +682,12 @@ export class CanvasComponent implements OnInit {
     return !! this.selection.find(
       item => item.pipelineIndex === index && item.moduleIndex === mindex && item.fieldIndex === findex
     );
+
+  }
+
+  public isNoteSelected(index: number): boolean {
+
+    return !! this.selection.find(item => item.noteIndex === index);
 
   }
 

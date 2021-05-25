@@ -1,0 +1,12 @@
+<div class="note note-color-{{ data.color }}">
+  <span class="note-name">{{ data.name }}</span>
+</div>
+<div class="note-side">
+  <svg class="note-folded" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" xmlns:v="https://vecta.io/nano">
+    <path d="M0 13.3V0l1.9 1.9L18 18l2 2H6.7A6.7 6.7 0 0 1 0 13.3z" opacity=".1"/>
+  </svg>
+  <svg class="note-folded-back note-color-{{ data.color }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" xmlns:v="https://vecta.io/nano">
+    <path d="M20 20H0V0l1.9 1.9 16.2 16.2z"/>
+  </svg>
+  <div class="note-fill note-color-{{ data.color }}"></div>
+</div>

@@ -66,6 +66,7 @@ export enum ModalType {
   Pipeline,
   Module,
   ModuleField,
+  Note,
   Confirmation,
   Prompt,
   Help,
@@ -109,5 +110,12 @@ export interface ModuleFieldContext {
   type: ModuleFieldType | '';
   conditional?: true;
   description?: string;
+
+}
+
+export interface NoteContext {
+
+  name: string;
+  description: string;
 
 }

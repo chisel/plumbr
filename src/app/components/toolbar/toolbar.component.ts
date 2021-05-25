@@ -5,6 +5,7 @@ import {
   faArrowsAlt,
   faLink,
   faEraser,
+  faStickyNote,
   faFileDownload,
   faFileUpload,
   faQuestion,
@@ -30,6 +31,7 @@ export class ToolbarComponent implements OnInit {
   public faArrowsAlt = faArrowsAlt;
   public faLink = faLink;
   public faEraser = faEraser;
+  public faStickyNote = faStickyNote;
   public faFileDownload = faFileDownload;
   public faFileUpload = faFileUpload;
   public faFileImage = faFileImage;
@@ -61,6 +63,7 @@ export class ToolbarComponent implements OnInit {
     this._renderer.listen('window', 'keyup.m', () => { this.onSelectTool(Tools.Move); });
     this._renderer.listen('window', 'keyup.l', () => { this.onSelectTool(Tools.Link); });
     this._renderer.listen('window', 'keyup.e', () => { this.onSelectTool(Tools.Erase); });
+    this._renderer.listen('window', 'keyup.o', () => { this.onSelectTool(Tools.Note); });
     this._renderer.listen('window', 'keyup.shift.r', () => { this.onResetCanvasPosition(); });
     this._renderer.listen('window', 'keyup.shift.h', () => { this.onHelp(); });
     this._renderer.listen('window', 'keyup.shift.z', () => { this.onUndo(); });

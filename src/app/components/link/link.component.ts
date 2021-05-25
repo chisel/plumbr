@@ -17,13 +17,14 @@ export class LinkComponent implements OnInit, OnDestroy {
   public linkIndex: number;
 
   @Output('onlinkclick')
-  public onLinkClick = new EventEmitter();
+  public onLinkClick = new EventEmitter<MouseEvent>();
 
   public nodes: [Point, Point];
   public distance: number;
   public rotation: number;
   public leftShiftMultiplier: number;
   public topShiftMultiplier: number;
+  public applyTransition: boolean = false;
 
   constructor(
     private _toolbar: ToolbarService
@@ -51,6 +52,8 @@ export class LinkComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    setTimeout(() => this.applyTransition = true, 10);
 
     const closest = this._toolbar.findClosestPoints(
       document.getElementById(`pipeline${this.link.nodes[0]}`),
@@ -83,9 +86,9 @@ export class LinkComponent implements OnInit, OnDestroy {
 
   }
 
-  public onClick() {
+  public onClick(event: MouseEvent) {
 
-    this.onLinkClick.emit();
+    this.onLinkClick.emit(event);
 
   }
 

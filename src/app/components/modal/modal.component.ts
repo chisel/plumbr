@@ -142,7 +142,10 @@ export class ModalComponent implements OnInit {
     }
 
     // Delete empty descriptions (to reduce size)
-    if ( (<PipelineData|ModuleData|ModuleFieldData>form.value).description === '' )
+    if (
+      this.currentModal.type !== ModalType.Note &&
+      (<PipelineData|ModuleData|ModuleFieldData>form.value).description === ''
+    )
       delete form.value.description;
 
     this._modal.closeModal(form.value);
