@@ -33,6 +33,7 @@ class="canvas"
     'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode,
     'move-mode': selectedTool === Tools.Move && ! canvasMoveMode,
     'edit-mode': selectedTool === Tools.Edit && ! canvasMoveMode,
+    'note-mode': selectedTool === Tools.Note && ! canvasMoveMode,
     'selected': selectedTool === Tools.Select && ! canvasMoveMode && isNoteSelected(index)
   }"
   [appMovable]="! canvasMoveMode && selectedTool === Tools.Move && ! pipelineStackMoving && ! moduleStackMoving && ! pipelineMoving"

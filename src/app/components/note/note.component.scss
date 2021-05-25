@@ -71,7 +71,8 @@ div.note-color-4 { background-color: color('accent-purple'); }
 }
 
 :host.erase-mode,
-:host.edit-mode { cursor: pointer !important; }
+:host.edit-mode,
+:host.note-mode { cursor: pointer !important; }
 
 :host.erase-mode:hover {
   .note,
