@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faMarkdown } from '@fortawesome/free-brands-svg-icons'
 import { sanitize as sanitizeHTML } from 'dompurify';
-import * as marked from 'marked';
+import marked from 'marked';
 import * as hljs from 'highlight.js/lib/core';
 import langjavascript from 'highlight.js/lib/languages/javascript';
 import langjson from 'highlight.js/lib/languages/json';
@@ -26,6 +26,7 @@ import {
   ModuleData,
   ModuleFieldData
 } from '@plumbr/service/state';
+import packageJson from '../../../../package.json';
 
 // Register languages
 hljs.registerLanguage('javascript', langjavascript);
@@ -59,6 +60,7 @@ export class ModalComponent implements OnInit {
   public currentModal: OpenModalData = null;
   public showModal: boolean = false;
   public markdownContent: string = '';
+  public appVersion: string = packageJson.version;
 
   constructor(
     private _http: HttpClient,

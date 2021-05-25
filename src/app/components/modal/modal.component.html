@@ -14,7 +14,7 @@
     </fa-icon>
     <ng-template [ngIf]="currentModal?.type === ModalType.Help">
       <div class="modal-title">
-        <div class="modal-title-text">Help</div>
+        <div class="modal-title-text">Plumbr <span class="modal-subtitle-text">{{ appVersion }}</span></div>
       </div>
       <article [innerHTML]="markdownContent">
       </article>
