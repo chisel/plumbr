@@ -97,7 +97,12 @@ export class ModalComponent implements OnInit {
       this.showModal = false;
 
       // Wait for the modal animation to end
-      setTimeout(() => { this.currentModal = null; }, 250);
+      setTimeout(() => {
+
+        this.markdownContent = '';
+        this.currentModal = null;
+
+      }, 250);
 
     });
 
