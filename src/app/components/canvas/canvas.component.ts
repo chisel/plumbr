@@ -333,6 +333,11 @@ export class CanvasComponent implements OnInit {
       else this._toolbar.setSelection({ noteIndex: index });
 
     }
+    else if ( this._toolbar.selectedTool === Tools.Insert ) {
+
+      event.stopImmediatePropagation();
+
+    }
 
   }
 
