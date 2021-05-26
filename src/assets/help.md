@@ -56,6 +56,14 @@ The following shortcuts are available globally regardless of the equipped tool:
   - `shift+plus`: Zooms in on the canvas.
   - `shift+0`: Resets zoom to 100%.
 
+## Markdown Support
+
+All descriptions of pipelines, modules, module fields, and notes support Github-flavored Markdown.
+
+## Text Highlighting
+
+The names of module fields support text highlighting using the mustache syntax (e.g. `{{text}}` where `text` is a highlighted text). This simply changes the style of the text inside the curly brackets, making it highlighted.
+
 ## Auto-save
 
 All work will be automatically saved into the browser to avoid losing unsaved changes when the browser is closed for any reason. Though, it is good practice to always save your work on disk when a lot has changed since the last manual save.
