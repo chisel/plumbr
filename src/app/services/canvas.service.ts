@@ -11,6 +11,7 @@ export class CanvasService {
   public static SCALE_MAX: number = 1.4;
   public static SCALE_DEFAULT: number = 0.9;
   public static GRID_SIZE: number = 15;
+  public static CANVAS_PADDING_TOP: number = 61;
 
   private _canvasEnabled$ = new BehaviorSubject<boolean>(true);
   private _canvasMoveMode$ = new BehaviorSubject<boolean>(false);

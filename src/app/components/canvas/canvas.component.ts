@@ -227,8 +227,8 @@ export class CanvasComponent implements OnInit {
     // Insert a new pipeline
     if ( this.selectedTool === Tools.Insert ) {
 
-      const left = (event.clientX / this.currentScale) + Math.abs(this.canvasLeft) - 345;
-      const top = (event.clientY / this.currentScale) + Math.abs(this.canvasTop);
+      const left = ((event.clientX + Math.abs(this.canvasLeft)) / this.currentScale) - (ToolbarService.PIPELINE_WIDTH / 2);
+      const top = ((event.clientY + Math.abs(this.canvasTop)) / this.currentScale) - (CanvasService.CANVAS_PADDING_TOP / this.currentScale) - (ToolbarService.PIPELINE_HEIGHT / 2);
 
       this._modal.openModal(ModalType.Pipeline)
       .then(data => {
@@ -246,11 +246,11 @@ export class CanvasComponent implements OnInit {
       .catch(console.error);
 
     }
-    // Inser a new note
+    // Insert a new note
     else if ( this.selectedTool === Tools.Note ) {
 
-      const left = (event.clientX / this.currentScale) + Math.abs(this.canvasLeft);
-      const top = (event.clientY / this.currentScale) + Math.abs(this.canvasTop) - (45 / 2);
+      const left = (event.clientX + Math.abs(this.canvasLeft)) / this.currentScale;
+      const top = ((event.clientY + Math.abs(this.canvasTop)) / this.currentScale) - (CanvasService.CANVAS_PADDING_TOP / this.currentScale) - (ToolbarService.NOTE_HEIGHT / 2);
 
       this._modal.openModal(ModalType.Note)
       .then(data => {
