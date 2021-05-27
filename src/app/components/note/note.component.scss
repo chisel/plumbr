@@ -79,14 +79,20 @@ div.note-color-4 { background-color: color('accent-purple'); }
   .note-fill { background-color: color('accent-red'); }
   .note-folded-back { fill: color('accent-red'); }
 }
+
 :host.edit-mode:hover {
   .note,
   .note-fill { background-color: color('accent-orange'); }
   .note-folded-back { fill: color('accent-orange'); }
 }
+
 :host.selected,
 :host.move-mode:hover {
   .note,
   .note-fill { background-color: color('accent'); }
   .note-folded-back { fill: color('accent'); }
+}
+
+:host.selected .note-name {
+  text-decoration: underline;
 }

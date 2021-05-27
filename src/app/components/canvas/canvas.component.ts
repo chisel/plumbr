@@ -174,6 +174,22 @@ export class CanvasComponent implements OnInit {
     // Update notes
     this._state.notes$(notes => this.notes = notes);
 
+    // On scale change (reposition canvas to the center)
+    this._canvas.onScaleChanged(change => {
+
+      const computed = window.getComputedStyle(document.body);
+      const focusX = ((+computed.width.replace('px', '') / 2) + Math.abs(this.canvasLeft)) / (this.currentScale - change);
+      const focusY = ((+computed.height.replace('px', '') / 2) + Math.abs(this.canvasTop)) / (this.currentScale - change);
+
+      this.canvasLeft = Math.min(this.canvasLeft - (change * focusX), 0);
+      this.canvasTop = Math.min(this.canvasTop - (change * focusY), 0);
+
+      // Extend the canvas to cover the empty spaces
+      this.canvasWidthAddition = Math.abs(this.canvasLeft);
+      this.canvasHeightAddition = Math.abs(this.canvasTop);
+
+    });
+
   }
 
   public onElementMovementStart(item: 'pipeline'|'note') {
@@ -285,7 +301,7 @@ export class CanvasComponent implements OnInit {
 
     const scaleDown = event.deltaY > 0;
 
-    this._canvas.currentScale = this._canvas.currentScale + (scaleDown ? -.1 : .1);
+    this._canvas.currentScale = this._canvas.currentScale + (scaleDown ? -CanvasService.SCALE_POWER : CanvasService.SCALE_POWER);
 
   }
 

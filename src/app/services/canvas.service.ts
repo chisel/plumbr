@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
@@ -20,6 +20,7 @@ export class CanvasService {
   private _onCanvasReset$ = new Subject<void>();
   private _currentScale$ = new BehaviorSubject<number>(CanvasService.SCALE_DEFAULT);
   private _shortcutsDisabled: boolean = false;
+  private _onScaleChanged = new EventEmitter<number>();
 
   constructor() { }
 
@@ -135,10 +136,12 @@ export class CanvasService {
   public set currentScale(newScale: number) {
 
     const sanitizedScale = Math.min(Math.max(CanvasService.SCALE_MIN, newScale), CanvasService.SCALE_MAX);
+    const oldScale = this.currentScale;
 
     if ( sanitizedScale === this._currentScale$.value ) return;
 
     this._currentScale$.next(sanitizedScale);
+    this._onScaleChanged.emit(+(sanitizedScale - oldScale).toFixed(2));
 
   }
 
@@ -175,6 +178,12 @@ export class CanvasService {
       this._canvasEnabled$.next(true);
 
     }, 250);
+
+  }
+
+  public onScaleChanged(observer: (change: number) => void) {
+
+    return this._onScaleChanged.subscribe(observer);
 
   }
 
