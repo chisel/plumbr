@@ -70,4 +70,4 @@ All work will be automatically saved into the browser to avoid losing unsaved ch
 
 # Updating App Version
 
-Using the command `npm run update-version -- VERSION` (where `VERSION` is the new version) will update `ngsw-config.json` and run `npm version` at the same time. This is important since the service worker config must be updated in order for the app to show update notifications.
+Using the command `npm run update-version -- VERSION` followed by `npm version VERSION` (where `VERSION` is the new version) will update `appData` in `ngsw-config.json` and the `package.json` files. This is important since the service worker config must be updated in order for the app to show update notifications.
