@@ -23,6 +23,9 @@ export class AppComponent implements OnInit {
 
     });
 
+    // Check for updates every minute
+    setTimeout(() => this._sw.checkForUpdate(), 60000);
+
   }
 
 }
