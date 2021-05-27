@@ -1,6 +1,6 @@
 {
   "name": "plumbr",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Data flow visualizer for Chisel",
   "author": "Ramtin Soltani <ramtin@chiselpowered.com>",
   "scripts": {
