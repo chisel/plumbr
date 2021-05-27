@@ -1,6 +1,4 @@
-## What is Plumbr?
-
-![Plumbr](./plumbr.png)
+# What is Plumbr?
 
 Plumbr is used for visualizing the data flow within data pipelines when working with [Chisel data integration framework](https://chiselpowered.com).
 
@@ -21,6 +19,7 @@ The following tools are available in the top section of the toolbar:
   - **Move tool**: Allows moving components when dragged.
   - **Link tool**: Allows linking pipelines and changing links color.
   - **Erase tool**: Allows deleting components and links when clicked.
+  - **Note tool**: Allows inserting notes on the canvas.
 
 The following functions are available in the mid section of the toolbar:
   - **Open project**: Opens a Plumbr project (`.flow` files).
@@ -44,6 +43,7 @@ The following shortcuts are available globally regardless of the equipped tool:
   - `m`: Equips the move tool.
   - `l`: Equips the link tool.
   - `e`: Equips the erase tool.
+  - `o`: Equips the note tool.
   - `shift+o`: Opens a Plumbr project (`.flow` files).
   - `shift+s`: Saves the current project on disk as a `.flow` file.
   - `shift+e`: Exports the current project as a `.png` image.
@@ -56,6 +56,18 @@ The following shortcuts are available globally regardless of the equipped tool:
   - `shift+plus`: Zooms in on the canvas.
   - `shift+0`: Resets zoom to 100%.
 
+## Markdown Support
+
+All descriptions of pipelines, modules, module fields, and notes support Github-flavored Markdown.
+
+## Text Highlighting
+
+The names of module fields support text highlighting using the mustache syntax (e.g. `{{text}}` where `text` is a highlighted text). This simply changes the style of the text inside the curly brackets, making it highlighted.
+
 ## Auto-save
 
 All work will be automatically saved into the browser to avoid losing unsaved changes when the browser is closed for any reason. Though, it is good practice to always save your work on disk when a lot has changed since the last manual save.
+
+# Updating App Version
+
+Using the command `npm run update-version -- VERSION` (where `VERSION` is the new version) will update `ngsw-config.json` and run `npm version` at the same time. This is important since the service worker config must be updated in order for the app to show update notifications.

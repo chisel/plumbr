@@ -1,5 +1,6 @@
 <app-header></app-header>
 <app-toolbar></app-toolbar>
 <app-scalebar></app-scalebar>
+<app-updatebar *ngIf="!! newUpdate" [version]="newUpdate"></app-updatebar>
 <app-canvas></app-canvas>
 <app-modal></app-modal>

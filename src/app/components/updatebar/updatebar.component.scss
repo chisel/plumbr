@@ -1,0 +1,44 @@
+@import '../../../util';
+
+:host {
+  position: absolute;
+  bottom: rem(30px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+}
+
+.updatebar {
+  display: flex;
+  height: rem(60px);
+  align-items: center;
+  z-index: 100000;
+  border-radius: rem(5px);
+  box-shadow: 0 0 rem(15px) color('shadow-light');
+  background-color: color('gray-light-transparent');
+  backdrop-filter: blur(20px) saturate(1.5);
+  padding: rem(10px) rem(15px);
+  user-select: none;
+  font-weight: bold;
+}
+
+.refresh,
+.version {
+  margin-left: rem(5px);
+  margin-right: rem(5px);
+}
+
+.refresh {
+  cursor: pointer;
+  color: color('accent');
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.version {
+  color: color('accent-purple');
+  margin-right: 0;
+}

@@ -20,6 +20,7 @@ import { LinkComponent } from './components/link/link.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { NoteComponent } from './components/note/note.component';
+import { UpdatebarComponent } from './components/updatebar/updatebar.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { NoteComponent } from './components/note/note.component';
     StackableDirective,
     ScalebarComponent,
     LinkComponent,
-    NoteComponent
+    NoteComponent,
+    UpdatebarComponent
   ],
   imports: [
     BrowserModule,

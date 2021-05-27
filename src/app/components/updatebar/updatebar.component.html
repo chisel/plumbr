@@ -1,0 +1,8 @@
+<div
+class="updatebar"
+[ngStyle]="{ 'pointer-events': overlaysEnabled ? 'all' : 'none' }">
+  An update is available!
+  <span class="refresh" (click)="onRefresh()">Refresh</span>
+  the window to update to
+  <span class="version">v{{version}}</span>.
+</div>
