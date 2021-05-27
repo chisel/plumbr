@@ -164,6 +164,20 @@ export class ModalComponent implements OnInit {
 
       if ( ! noHighlighting ) setTimeout(hljs.highlightAll, 100);
 
+      // Set target="_blank" on all links
+      setTimeout(() => {
+
+        const links = document.links;
+
+        for ( let i = 0; i < links.length; i++ ) {
+
+          if ( links[i].hostname !== window.location.hostname )
+            links[i].target = '_blank';
+
+        }
+
+      }, 100);
+
     });
 
   }
