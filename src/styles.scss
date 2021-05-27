@@ -19,6 +19,8 @@ html, body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overscroll-behavior-y: none;
+  overscroll-behavior-x: none;
 }
 
 .grab { cursor: grab !important; }
