@@ -1,4 +1,14 @@
-import { Directive, OnInit, ElementRef, HostListener, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Directive,
+  OnInit,
+  ElementRef,
+  HostListener,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 
 @Directive({
   selector: '[appMovable]'
@@ -15,6 +25,7 @@ export class MovableDirective implements OnInit, OnChanges {
   private _lastClientX: number = NaN;
   private _lastClientY: number = NaN;
   private _initialZIndex: number = NaN;
+  private _parentHandler: (event: MouseEvent) => void;
 
   @Input('appMovable')
   public movable: boolean;
@@ -52,10 +63,38 @@ export class MovableDirective implements OnInit, OnChanges {
     // Read the initial z-index
     this._initialZIndex = +this._ref.nativeElement.style.zIndex;
 
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+
+    // If change is not related to appMovable value, ignore
+    if ( ! changes.movable ) return;
+
+    // Update CSS properties
+    this._ref.nativeElement.style.cursor = this.movable ? 'grab' + (this._moving ? 'bing' : '') : 'default';
+
+  }
+
+  @HostListener('mousedown', ['$event'])
+  onMouseDown(event: MouseEvent) {
+
+    // Ignore if fired by two overlapping movable elements
+    if ( MovableDirective._currentlyMoving && this._ref !== MovableDirective._currentlyMoving ) return;
+
+    if ( ! this.movable || event.buttons !== 1 ) return;
+
+    this._moving = true;
+    this._ref.nativeElement.style.cursor = 'grabbing';
+    this._ref.nativeElement.style.zIndex = '99999';
+    event.preventDefault();
+    event.stopPropagation();
+
+    MovableDirective._currentlyMoving = this._ref;
+
     // Attach event listener to parent for handling fast movements
     if ( this._ref.nativeElement.parentElement !== null ) {
 
-      this._ref.nativeElement.parentElement.addEventListener('mousemove', event => {
+      this._parentHandler = event => {
 
         // If mouse left the movable element while moving
         if (
@@ -90,37 +129,11 @@ export class MovableDirective implements OnInit, OnChanges {
 
         }
 
-      });
+      };
+
+      this._ref.nativeElement.parentElement.addEventListener('mousemove', this._parentHandler);
 
     }
-
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-
-    // If change is not related to appMovable value, ignore
-    if ( ! changes.movable ) return;
-
-    // Update CSS properties
-    this._ref.nativeElement.style.cursor = this.movable ? 'grab' + (this._moving ? 'bing' : '') : 'default';
-
-  }
-
-  @HostListener('mousedown', ['$event'])
-  onMouseDown(event: MouseEvent) {
-
-    // Ignore if fired by two overlapping movable elements
-    if ( MovableDirective._currentlyMoving && this._ref !== MovableDirective._currentlyMoving ) return;
-
-    if ( ! this.movable || event.buttons !== 1 ) return;
-
-    this._moving = true;
-    this._ref.nativeElement.style.cursor = 'grabbing';
-    this._ref.nativeElement.style.zIndex = '99999';
-    event.preventDefault();
-    event.stopPropagation();
-
-    MovableDirective._currentlyMoving = this._ref;
 
     this.onMovementStart.next(this._ref.nativeElement);
 
@@ -142,6 +155,13 @@ export class MovableDirective implements OnInit, OnChanges {
     this._ref.nativeElement.style.zIndex = this._initialZIndex + '';
     event.preventDefault();
     event.stopPropagation();
+
+    // Remove parent event handler
+    if ( this._parentHandler ) {
+
+      this._ref.nativeElement.parentElement.removeEventListener('mousemove', this._parentHandler);
+
+    }
 
     MovableDirective._currentlyMoving = null;
 
