@@ -15,19 +15,39 @@
   background-color: color('accent-red') !important;
 }
 
+:host.erase-mode:hover .link-node-arrow {
+  cursor: pointer;
+  color: color('accent-red') !important;
+}
+
 .link-node {
   position: absolute;
+  border-radius: 50%;
+}
+
+.link-node-dot {
   width: rem(15px);
   height: rem(15px);
   margin-left: rem(-15px/2);
   margin-top: rem(-15px/2);
-  border-radius: 50%;
+}
+
+.link-node-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: rem(21px);
+  width: rem(10px);
+  height: rem(10px);
+  margin-left: rem(-10px/2);
+  margin-top: rem(-10px/2);
 }
 
 .link-line {
   position: absolute;
   height: rem(5px);
   transform-origin: top left;
+  border-radius: rem(5px);
 }
 
 .link-color-0 { background-color: color('accent'); }
@@ -35,3 +55,9 @@
 .link-color-2 { background-color: color('accent-orange'); }
 .link-color-3 { background-color: color('accent-red'); }
 .link-color-4 { background-color: color('accent-purple'); }
+
+.link-node-arrow.link-color-0 { color: color('accent'); }
+.link-node-arrow.link-color-1 { color: color('accent-green'); }
+.link-node-arrow.link-color-2 { color: color('accent-orange'); }
+.link-node-arrow.link-color-3 { color: color('accent-red'); }
+.link-node-arrow.link-color-4 { color: color('accent-purple'); }

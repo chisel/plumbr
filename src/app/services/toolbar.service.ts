@@ -40,6 +40,8 @@ export class ToolbarService {
     this._selectedTool$.subscribe(() => {
 
       this.clearSelection();
+      this._currentLinkNode = -1;
+      this._currentLinkNode$.next(-1);
 
     });
 

@@ -1,5 +1,5 @@
 <div
-class="link-node link-color-{{link.color}}"
+class="link-node link-node-dot link-color-{{link.color}}"
 (click)="onClick($event)"
 [ngStyle]="{
   left: nodes[0].x + 'px',
@@ -8,13 +8,15 @@ class="link-node link-color-{{link.color}}"
 }">
 </div>
 <div
-class="link-node link-color-{{link.color}}"
+class="link-node link-node-arrow link-color-{{link.color}}"
 (click)="onClick($event)"
 [ngStyle]="{
   left: nodes[1].x + 'px',
   top: nodes[1].y + 'px',
-  transition: applyTransition ? 'background-color .25s ease-in-out' : 'unset'
+  transform: 'rotate(' + rotation + 'deg)',
+  transition: applyTransition ? 'color .25s ease-in-out' : 'unset'
 }">
+  <fa-icon [icon]="faChevronRight" size="lg"></fa-icon>
 </div>
 <div
 class="link-line link-color-{{link.color}}"

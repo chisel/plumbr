@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angu
 import { PipelineLink } from '@plumbr/service/state';
 import { ToolbarService, Point } from '@plumbr/service/toolbar';
 import { Subscription } from 'rxjs';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-link',
@@ -18,6 +19,8 @@ export class LinkComponent implements OnInit, OnDestroy {
 
   @Output('onlinkclick')
   public onLinkClick = new EventEmitter<MouseEvent>();
+
+  public faChevronRight = faChevronRight;
 
   public nodes: [Point, Point];
   public distance: number;
