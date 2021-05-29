@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ModuleData, StateService } from '@plumbr/service/state';
+import { ModuleData, StateService, ModuleType } from '@plumbr/service/state';
 import { StackMoveEndEvent } from '@plumbr/directive/stackable';
 
 @Component({
@@ -29,6 +29,8 @@ export class ModuleComponent implements OnInit {
 
   @Output('onstackmoveend')
   public onStackMoveEndBridge = new EventEmitter<void>();
+
+  public ModuleType = ModuleType;
 
   constructor(
     private _state: StateService

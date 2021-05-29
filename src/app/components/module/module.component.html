@@ -1,6 +1,7 @@
 <div class="module">
   <div class="module-header module-type-{{data.type}}">
-    <span class="module-header-text">{{ data.name }}</span>
+    <span class="module-header-text">{{ data.name }}<span class="module-type">.{{ ModuleType[data.type] | lowercase }}</span>
+    </span>
     <span
     *ngIf="data.description"
     class="indicator-dot always-white info">

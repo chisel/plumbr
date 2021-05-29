@@ -102,6 +102,10 @@
   .module-header-text {
     width: 100%;
     text-align: center;
+
+    .module-type {
+      opacity: .5;
+    }
   }
 
 }
