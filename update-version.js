@@ -44,5 +44,5 @@ fs.writeFileSync(
 );
 
 spawn('git', 'add', 'ngsw-config.json', 'package.json', 'package-lock.json')
-.then(() => spawn('git', 'commit', '-m', `"v${version}"`))
+.then(() => spawn('git', 'commit', '-m', `v${version}`))
 .catch(console.error);
