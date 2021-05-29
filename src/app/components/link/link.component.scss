@@ -65,10 +65,12 @@
 }
 
 .link-line-text {
-  padding: rem(3px) rem(5px);
+  padding: rem(5px) rem(10px);
   border-radius: rem(3px);
   color: color('gray-lighter');
   font-weight: bold;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .link-color-0 { background-color: color('accent'); }
