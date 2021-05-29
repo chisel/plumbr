@@ -195,10 +195,17 @@ button {
 
 }
 
-.field-target span.variable {
-  color: color('accent-pink');
-  font-weight: bold;
-  transition: color .25s ease-in-out;
+.field-target {
+
+  span.variable {
+    color: color('accent-pink');
+    font-weight: bold;
+    transition: color .25s ease-in-out;
+  }
+
+  span.type {
+    opacity: .3;
+  }
 }
 
 app-module-field:hover.erase-mode,

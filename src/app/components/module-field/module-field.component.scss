@@ -16,11 +16,6 @@
   &.selected .module-field {
     color: color('gray-lighter');
 
-    .field-type {
-      background-color: transparent;
-      border-color: color('gray-lighter');
-    }
-
     .field-operation {
       color: color('gray-lighter');
     }
@@ -70,6 +65,7 @@
     font-weight: bold;
     margin-right: rem(10px);
     min-width: rem(65px);
+    text-align: right;
     transition: color .25s ease-in-out;
 
     &.field-operation-type-0 { color: color('accent-green'); }
@@ -83,19 +79,6 @@
     &.field-operation-type-5 { color: color('accent-red'); }
     &.field-operation-type-6 { color: color('accent-orange'); }
 
-  }
-
-  .field-type {
-    font-family: 'Roboto Mono', monospace;
-    font-size: rem(14px);
-    padding: rem(3px) rem(8px);
-    border-radius: rem(3px);
-    background-color: color('gray-medium');
-    margin-right: rem(10px);
-    min-width: rem(105px);
-    text-align: center;
-    border: rem(2px) solid transparent;
-    transition: border-color .25s ease-in-out, background-color .25s ease-in-out;
   }
 
   .field-target {

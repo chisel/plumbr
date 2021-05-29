@@ -21,7 +21,7 @@ export class ModuleFieldComponent implements OnInit {
 
   public interpolateVariables(text: string) {
 
-    return text.replace(/{{(.+?)}}/g, '<span class="variable">$1</span>');
+    return text.replace(/{{(.+?)}}/g, '<span class="variable">$1</span>') + `<span class="type">.${ModuleFieldType[this.data.type].toLowerCase().replace(/ /g, '-')}</span>`;
 
   }
 
