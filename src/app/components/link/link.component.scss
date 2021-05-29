@@ -10,14 +10,25 @@
 }
 
 :host.erase-mode:hover .link-node,
-:host.erase-mode:hover .link-line {
+:host.erase-mode:hover .link-line,
+:host.erase-mode:hover .link-line-text {
   cursor: pointer;
   background-color: color('accent-red') !important;
 }
 
 :host.erase-mode:hover .link-node-arrow {
-  cursor: pointer;
   color: color('accent-red') !important;
+}
+
+:host.edit-mode:hover .link-node,
+:host.edit-mode:hover .link-line,
+:host.edit-mode:hover .link-line-text {
+  cursor: pointer;
+  background-color: color('accent-orange') !important;
+}
+
+:host.edit-mode:hover .link-node-arrow {
+  color: color('accent-orange') !important;
 }
 
 .link-node {
@@ -46,8 +57,18 @@
 .link-line {
   position: absolute;
   height: rem(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transform-origin: top left;
   border-radius: rem(5px);
+}
+
+.link-line-text {
+  padding: rem(3px) rem(5px);
+  border-radius: rem(3px);
+  color: color('gray-lighter');
+  font-weight: bold;
 }
 
 .link-color-0 { background-color: color('accent'); }

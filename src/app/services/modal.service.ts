@@ -67,6 +67,7 @@ export enum ModalType {
   Module,
   ModuleField,
   Note,
+  Link,
   Confirmation,
   Prompt,
   Help,
@@ -117,5 +118,11 @@ export interface NoteContext {
 
   name: string;
   description: string;
+
+}
+
+export interface LinkContext {
+
+  name: string;
 
 }

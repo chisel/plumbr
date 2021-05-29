@@ -148,6 +148,10 @@ export class ModalComponent implements OnInit {
     )
       delete form.value.description;
 
+    // Delete empty link name
+    if ( this.currentModal.type === ModalType.Link && form.value.name === '' )
+      delete form.value.name;
+
     this._modal.closeModal(form.value);
 
   }

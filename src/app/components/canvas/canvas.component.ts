@@ -693,6 +693,8 @@ export class CanvasComponent implements OnInit {
       this._toolbar.cycleLinkColor(index);
     else if ( this._toolbar.selectedTool === Tools.Erase )
       this._toolbar.deleteLink(index);
+    else if ( this._toolbar.selectedTool === Tools.Edit )
+      this._toolbar.editLink(index);
     else if ( this._toolbar.selectedTool === Tools.Note )
       event.stopImmediatePropagation();
 

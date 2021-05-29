@@ -53,6 +53,18 @@
         </div>
       </form>
     </ng-template>
+    <ng-template [ngIf]="currentModal?.type === ModalType.Link">
+      <div class="modal-title">
+        <div class="modal-title-text">Update Link</div>
+      </div>
+      <form #linkForm="ngForm" (ngSubmit)="onFormSubmit(linkForm)">
+        <input name="name" type="text" placeholder="Name" [ngModel]="currentModal?.context?.name ?? ''">
+        <div class="button-group button-group-50">
+          <button class="button-secondary" type="button" (click)="onClose()">Cancel</button>
+          <button class="button-primary" type="submit">Update</button>
+        </div>
+      </form>
+    </ng-template>
     <ng-template [ngIf]="currentModal?.type === ModalType.Module">
       <div class="modal-title">
         <div class="modal-title-text">{{ currentModal.context ? 'Update' : 'New' }} Module</div>

@@ -19,7 +19,7 @@ The following tools are available in the top section of the toolbar:
   - **Move tool**: Allows moving components when dragged.
   - **Link tool**: Allows linking pipelines and changing links color.
   - **Erase tool**: Allows deleting components and links when clicked.
-  - **Note tool**: Allows inserting notes on the canvas.
+  - **Note tool**: Allows inserting notes on the canvas and changing notes color.
 
 The following functions are available in the mid section of the toolbar:
   - **Open project**: Opens a Plumbr project (`.flow` files).

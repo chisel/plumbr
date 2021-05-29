@@ -116,7 +116,8 @@ class="canvas"
   [linkIndex]="index"
   [ngClass]="{
     'link-mode': selectedTool === Tools.Link && ! canvasMoveMode,
-    'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode
+    'erase-mode': selectedTool === Tools.Erase && ! canvasMoveMode,
+    'edit-mode': selectedTool === Tools.Edit && ! canvasMoveMode
   }"
   [ngStyle]="{
     transform: 'scale(' + currentScale + ')',

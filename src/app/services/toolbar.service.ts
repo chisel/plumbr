@@ -1048,6 +1048,20 @@ export class ToolbarService {
 
   }
 
+  public editLink(index: number) {
+
+    this._modal.openModal(ModalType.Link, { name: this._state.links[index].name })
+    .then(data => {
+
+      if ( ! data ) return;
+
+      this._state.updateLinkText(index, data.name);
+
+    })
+    .catch(console.error);
+
+  }
+
   public cycleLinkColor(index: number) {
 
     const maxColorValue = (Object.keys(Color).length / 2) - 1;

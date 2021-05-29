@@ -662,6 +662,18 @@ export class StateService {
 
   }
 
+  public updateLinkText(index: number, name: string, skipHistory?: boolean, skipSave?: boolean) {
+
+    const newValue = this.links;
+
+    newValue[index].name = name;
+
+    if ( ! newValue[index].name ) delete newValue[index].name;
+
+    this._updateLinks(newValue, skipHistory, skipSave);
+
+  }
+
   public onLinksPositionOutdated(observer: (pipelineIndex: number) => void) {
 
     return this._onLinksPositionOutdated.subscribe(observer);
@@ -840,6 +852,7 @@ export interface PipelineLink {
 
   nodes: [number, number];
   color: Color;
+  name?: string;
 
 }
 

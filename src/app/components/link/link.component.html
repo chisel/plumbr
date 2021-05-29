@@ -30,4 +30,11 @@ class="link-line link-color-{{link.color}}"
   'margin-top': (topShiftMultiplier * (2.5)) + 'px',
   transition: applyTransition ? 'background-color .25s ease-in-out' : 'unset'
 }">
+  <div
+  *ngIf="link.name"
+  class="link-line-text link-color-{{link.color}}"
+  [ngStyle]="{
+    transform: 'rotate(' + -rotation + 'deg)',
+    transition: applyTransition ? 'background-color .25s ease-in-out' : 'unset'
+  }">{{ link.name }}</div>
 </div>
