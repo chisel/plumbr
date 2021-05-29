@@ -771,6 +771,15 @@ export class ToolbarService {
 
     }
 
+    // Hide indicator dots (info only)
+    const dots: NodeListOf<HTMLElement> = document.querySelectorAll('.indicator-dot.info:not(.conditional)');
+
+    for ( let i = 0; i < dots.length; i++ ) {
+
+      dots[i].style.display = 'none';
+
+    }
+
     // Render image from canvas
     const blob = await toBlob(canvas, {
       height: mostBottom - mostTop + (IMAGE_CANVAS_PADDING * 2),
@@ -800,6 +809,13 @@ export class ToolbarService {
       const element = document.getElementById(`note${i}`);
 
       element.style.opacity = '1';
+
+    }
+
+    // Reveal indicator dots (info only)
+    for ( let i = 0; i < dots.length; i++ ) {
+
+      dots[i].style.display = 'inline-block';
 
     }
 
