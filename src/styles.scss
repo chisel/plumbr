@@ -4,6 +4,10 @@
 @import 'spinner';
 @import 'syntax';
 
+$fa-font-path: '/assets/webfonts';
+@import './fontawesome/fontawesome';
+@import './fontawesome/solid';
+
 *,
 *::before,
 *::after {
@@ -369,4 +373,8 @@ article {
     }
   }
 
+}
+
+.stackable-moving-child {
+  z-index: 400;
 }

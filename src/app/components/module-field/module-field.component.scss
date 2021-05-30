@@ -20,6 +20,10 @@
       color: color('gray-lighter');
     }
 
+    .field-type-icon {
+      color: color('gray-lighter');
+    }
+
     .indicator-dot,
     .indicator-dot.conditional.info {
       background: color('gray-lighter');
@@ -81,12 +85,19 @@
 
   }
 
+  .field-type-icon {
+    margin-left: rem(5px);
+    margin-right: rem(10px);
+    font-size: rem(20px);
+    color: color('gray-dark-darker');
+    transition: color .25s ease-in-out;
+  }
+
   .field-target {
     flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
   }
 
 }

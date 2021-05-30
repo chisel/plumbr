@@ -1,5 +1,13 @@
 <div class="module-field">
   <div class="field-operation field-operation-type-{{data.operation}}">{{ ModuleFieldOperationType[data.operation] }}</div>
+  <span class="field-type-icon fas fa-fw" [ngClass]="{
+    'fa-globe-americas': data.type === ModuleFieldType['REST API'],
+    'fa-database': data.type === ModuleFieldType.Collection,
+    'fa-list-ul': data.type === ModuleFieldType.Dataset,
+    'fa-file-alt': data.type === ModuleFieldType.File,
+    'fa-chart-bar': data.type === ModuleFieldType.Report,
+    'fa-asterisk': data.type === ModuleFieldType.Variable
+  }"></span>
   <div class="field-target" [innerHTML]="interpolateVariables(data.target)"></div>
   <div
   *ngIf="data.conditional || data.description"
