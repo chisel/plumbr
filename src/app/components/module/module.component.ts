@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ModuleData, StateService, ModuleType } from '@plumbr/service/state';
 import { StackMoveEndEvent } from '@plumbr/directive/stackable';
+import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-module',
@@ -8,6 +9,8 @@ import { StackMoveEndEvent } from '@plumbr/directive/stackable';
   styleUrls: ['./module.component.scss']
 })
 export class ModuleComponent implements OnInit {
+
+  public faBoxOpen = faBoxOpen;
 
   @Input('moduleData')
   public data: ModuleData;

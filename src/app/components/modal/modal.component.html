@@ -75,6 +75,7 @@
           <option value="" disabled selected>Type</option>
           <option *ngFor="let moduleTypeKey of ModuleTypeKeys; let index = index" [value]="moduleTypeKey">{{ ModuleTypeValues[index] }}</option>
         </select>
+        <input name="dependencies" type="text" placeholder="Dependencies (e.g. lodash, axios@latest, mysql@^2.18.1)" [ngModel]="stringifyDependencies(currentModal?.context?.dependencies)">
         <textarea class="with-descriptor" name="description" placeholder="Description" [ngModel]="currentModal?.context?.description ?? ''"></textarea>
         <div class="textarea-descriptor">
           <fa-icon size="lg" [icon]="faMarkdown"></fa-icon>
@@ -128,6 +129,12 @@
     <ng-template [ngIf]="currentModal?.type === ModalType.Prompt">
       <div class="modal-title">
         <div class="modal-title-text">{{ currentModal.context.title }}</div>
+      </div>
+      <div *ngIf="currentModal.context.dependencies" class="module-dependencies-container">
+        <div *ngFor="let dependency of currentModal.context.dependencies" class="module-dependency">
+          <span class="name">{{ dependency.name }}</span>
+          <span *ngIf="dependency.version" class="version">@{{ dependency.version }}</span>
+        </div>
       </div>
       <p *ngIf="! currentModal.context.message" class="modal-no-context-message">
         No description provided!

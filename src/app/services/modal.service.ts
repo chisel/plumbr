@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ModuleType, ModuleFieldOperationType, ModuleFieldType } from './state.service';
+import { ModuleType, ModuleFieldOperationType, ModuleFieldType, ModuleDependency } from './state.service';
 
 @Injectable({
   providedIn: 'root'
@@ -101,6 +101,7 @@ export interface ModuleContext {
   name: string;
   type: ModuleType | '';
   description?: string;
+  dependencies?: ModuleDependency[];
 
 }
 

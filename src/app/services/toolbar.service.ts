@@ -96,6 +96,7 @@ export class ToolbarService {
         target.name,
         target.type,
         target.description,
+        target.dependencies,
         true
       );
 
@@ -133,7 +134,7 @@ export class ToolbarService {
       const pipelineIndex = this._state.newPipeline(
         target.name,
         position ? position.left + ((count > 1 ? spaceBetween?.left ?? 0 : 0) * (count - 1)) : target.position.left + ToolbarService.COPY_PIPELINE_WIDTH_OFFSET,
-        position ? position.top + ((count > 1 ? spaceBetween?.top ?? 0 : 0) * (count) - 1) : target.position.top + ToolbarService.COPY_PIPELINE_HEIGHT_OFFSET,
+        position ? position.top + ((count > 1 ? spaceBetween?.top ?? 0 : 0) * (count - 1)) : target.position.top + ToolbarService.COPY_PIPELINE_HEIGHT_OFFSET,
         target.description,
         true
       );
@@ -146,6 +147,7 @@ export class ToolbarService {
           m.name,
           m.type,
           m.description,
+          m.dependencies,
           true
         );
 
@@ -527,7 +529,8 @@ export class ToolbarService {
           this._selection$.value[0].pipelineIndex,
           data.name,
           data.type,
-          data.description
+          data.description,
+          data.dependencies
         );
 
       })
@@ -595,13 +598,14 @@ export class ToolbarService {
       this._modal.openModal<ModuleContext>(ModalType.Module, {
         name: module.name,
         type: module.type,
-        description: module.description
+        description: module.description,
+        dependencies: module.dependencies
       })
       .then((data: ModuleData) => {
 
         if ( ! data ) return;
 
-        this._state.updateModuleData(index, mindex, data.name, data.type, data.description);
+        this._state.updateModuleData(index, mindex, data.name, data.type, data.description, data.dependencies);
 
       })
       .catch(console.error)

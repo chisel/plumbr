@@ -76,7 +76,7 @@
   justify-content: center;
   width: 100%;
   height: rem(60px);
-  padding: 0 rem(12px);
+  padding: 0 rem(15px);
   color: color('gray-lighter');
   font-weight: bold;
   font-size: rem(18px);
@@ -99,9 +99,15 @@
     border-bottom: rem(3px) solid color('accent-orange-dark');
   }
 
+  .module-dependency-indicator {
+    font-size: rem(12px);
+    flex-shrink: 0;
+    flex-grow: 0;
+    margin-left: rem(10px);
+  }
+
   .module-header-text {
     width: 100%;
-    text-align: center;
 
     .module-type {
       opacity: .5;

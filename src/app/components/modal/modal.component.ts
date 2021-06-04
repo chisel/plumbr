@@ -24,7 +24,8 @@ import {
   ModuleFieldType,
   PipelineData,
   ModuleData,
-  ModuleFieldData
+  ModuleFieldData,
+  ModuleDependency
 } from '@plumbr/service/state';
 import packageJson from '../../../../package.json';
 
@@ -152,7 +153,42 @@ export class ModalComponent implements OnInit {
     if ( this.currentModal.type === ModalType.Link && form.value.name === '' )
       delete form.value.name;
 
+    // Parse module dependencies
+    if ( this.currentModal.type === ModalType.Module ) {
+
+      form.value.dependencies = (<string>form.value.dependencies)
+      // Split into array
+      .split(',')
+      // Parse into objects
+      .map((d: string) => {
+
+        const match = d.trim().match(/^(?<name>.+?)(@(?<version>.+))?$/);
+
+        if ( ! match || ! match.groups?.name || ! match.groups.name.length ) return null;
+
+        return {
+          name: match.groups.name.trim(),
+          version: match.groups.version?.trim()
+        };
+
+      })
+      // Remove nulls
+      .filter(d => !! d);
+
+      // Delete empty module dependencies
+      if ( ! form.value.dependencies.length ) delete form.value.dependencies;
+
+    }
+
     this._modal.closeModal(form.value);
+
+  }
+
+  public stringifyDependencies(dependencies: ModuleDependency[]): string {
+
+    if ( ! dependencies?.length ) return '';
+
+    return dependencies.map(d => `${d.name}` + (d.version ? `@${d.version}` : '')).join(', ');
 
   }
 

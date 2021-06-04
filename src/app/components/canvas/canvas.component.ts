@@ -387,7 +387,7 @@ export class CanvasComponent implements OnInit {
 
         if ( ! data ) return;
 
-        this._state.newModule(index, data.name, data.type, data.description);
+        this._state.newModule(index, data.name, data.type, data.description, data.dependencies);
 
       })
       .catch(console.error);
@@ -523,13 +523,14 @@ export class CanvasComponent implements OnInit {
       this._modal.openModal<ModuleContext>(ModalType.Module, {
         name: this.data[index].modules[mindex].name,
         type: this.data[index].modules[mindex].type,
-        description: this.data[index].modules[mindex].description
+        description: this.data[index].modules[mindex].description,
+        dependencies: this.data[index].modules[mindex].dependencies
       })
       .then((data: ModuleData) => {
 
         if ( ! data ) return;
 
-        this._state.updateModuleData(index, mindex, data.name, data.type, data.description);
+        this._state.updateModuleData(index, mindex, data.name, data.type, data.description, data.dependencies);
 
       })
       .catch(console.error);
@@ -548,7 +549,8 @@ export class CanvasComponent implements OnInit {
 
       this._modal.openModal(ModalType.Prompt, {
         title: `${this.data[index].modules[mindex].name} Module`,
-        message: this.data[index].modules[mindex].description
+        message: this.data[index].modules[mindex].description,
+        dependencies: this.data[index].modules[mindex].dependencies
       });
 
     }

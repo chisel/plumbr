@@ -191,6 +191,7 @@ export class StateService {
     name: string,
     type: ModuleType,
     description?: string,
+    dependencies?: ModuleDependency[],
     skipHistory?: boolean
   ): number {
 
@@ -200,6 +201,7 @@ export class StateService {
       name,
       type,
       description,
+      dependencies,
       fields: []
     });
 
@@ -223,13 +225,21 @@ export class StateService {
 
   }
 
-  public updateModuleData(pipelineIndex: number, moduleIndex: number, name: string, type: ModuleType, description?: string) {
+  public updateModuleData(
+    pipelineIndex: number,
+    moduleIndex: number,
+    name: string,
+    type: ModuleType,
+    description?: string,
+    dependencies?: ModuleDependency[]
+  ) {
 
     let newValue = this.data;
 
     newValue[pipelineIndex].modules[moduleIndex].name = name;
     newValue[pipelineIndex].modules[moduleIndex].type = type;
     newValue[pipelineIndex].modules[moduleIndex].description = description;
+    newValue[pipelineIndex].modules[moduleIndex].dependencies = dependencies;
 
     this._updateData(newValue);
 
@@ -795,6 +805,14 @@ export interface ModuleData {
   type: ModuleType;
   description?: string;
   fields: ModuleFieldData[];
+  dependencies?: ModuleDependency[];
+
+}
+
+export interface ModuleDependency {
+
+  name: string;
+  version?: string;
 
 }
 

@@ -60,7 +60,7 @@
   height: rem(45px);
   display: flex;
   align-items: center;
-  padding: rem(7px) rem(12px);
+  padding: rem(7px) rem(15px);
   flex-wrap: nowrap;
   transition: background-color .25s ease-in-out, color .25s ease-in-out;
 
@@ -69,7 +69,6 @@
     font-weight: bold;
     margin-right: rem(10px);
     min-width: rem(65px);
-    text-align: right;
     transition: color .25s ease-in-out;
 
     &.field-operation-type-0 { color: color('accent-green'); }

@@ -2,6 +2,12 @@
   <div class="module-header module-type-{{data.type}}">
     <span class="module-header-text">{{ data.name }}<span class="module-type">.{{ ModuleType[data.type] | lowercase }}</span>
     </span>
+    <fa-icon
+    *ngIf="data.dependencies"
+    class="module-dependency-indicator"
+    [fixedWidth]="true"
+    size="lg"
+    [icon]="faBoxOpen"></fa-icon>
     <span
     *ngIf="data.description"
     class="indicator-dot always-white info">
